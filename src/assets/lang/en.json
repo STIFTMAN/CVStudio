@@ -1,5 +1,13 @@
 {
     "language_package_name": "English",
-    "window": "",
-    "error_settings_loading": "Settings could not be loaded!"
+    "main_window_ctkdropdownmenu_file": "File",
+    "main_window_ctkdropdownmenu_file_save": "Save last Picture",
+    "main_window_ctkdropdownmenu_file_save_all": "Save all Pictures",
+    "main_window_ctkdropdownmenu_filterqueue": "Filterqueue",
+    "main_window_ctkdropdownmenu_testing": "Testing",
+    "main_window_ctkdropdownmenu_settings": "Settings",
+    "main_window_ctkdropdownmenu_settings_look": "Look",
+    "main_window_ctkdropdownmenu_settings_keybindings": "Keybindings",
+    "main_window_ctkdropdownmenu_settings_help": "Help",
+    "main_window_ctkdropdownmenu_settings_about": "About"
 }

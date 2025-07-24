@@ -1,6 +1,6 @@
 import json
 from ..state.root import settings
-from ..utils.lang_loader import get
+from ..state.error import Error
 
 
 def load():
@@ -8,12 +8,12 @@ def load():
     with open("./src/assets/settings.json", "r", encoding="utf-8") as f:
         settings = json.load(f)
     if settings is None:
-        raise Exception("Settings could not be loaded!")
+        raise Exception(Error.SETTINGS_LOADING.value)
 
 
 def get_setting(key: str):
     if settings is None:
-        raise Exception("Settings could not be loaded!")
+        raise Exception(Error.SETTINGS_LOADING.value)
     if key in settings:
         return settings[key]
-    return None
+    raise Exception(Error.SETTINGS_KEY_NOT_EXIST.value)

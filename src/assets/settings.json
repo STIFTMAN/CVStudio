@@ -1,12 +1,24 @@
 {
-    "lang": "de",
+    "lang": "en",
+    "default_lang": "en",
     "darkmode": true,
     "window_size": {
-        "main": [1000, 800],
-        "filterqueue": [800, 600],
-        "testing": [800, 600],
-        "error": [300, 400]
+        "main": [
+            1000,
+            800
+        ],
+        "filterqueue": [
+            800,
+            600
+        ],
+        "testing": [
+            800,
+            600
+        ],
+        "error": [
+            300,
+            400
+        ]
     },
-    "components": {
-    }
+    "components": {}
 }

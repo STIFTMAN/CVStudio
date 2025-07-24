@@ -1,4 +1,13 @@
 {
-    "language_package_name": "Deutsch"
-    
+    "language_package_name": "Deutsch",
+    "main_window_ctkdropdownmenu_file": "Datei",
+    "main_window_ctkdropdownmenu_file_save": "Speichere letztes Bild",
+    "main_window_ctkdropdownmenu_file_save_all": "Speichere alle Bilder",
+    "main_window_ctkdropdownmenu_filterqueue": "Filtermenu",
+    "main_window_ctkdropdownmenu_testing": "Testen",
+    "main_window_ctkdropdownmenu_settings": "Einstellungen",
+    "main_window_ctkdropdownmenu_settings_look": "Aussehen",
+    "main_window_ctkdropdownmenu_settings_keybindings": "Tastenbelegungen",
+    "main_window_ctkdropdownmenu_settings_help": "Hilfe",
+    "main_window_ctkdropdownmenu_settings_about": "Über uns"
 }

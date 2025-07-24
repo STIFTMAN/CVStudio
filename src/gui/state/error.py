@@ -1,0 +1,9 @@
+from enum import Enum
+
+
+class Error(Enum):
+    SETTINGS_LOADING = "Settings could not be loaded!"
+    SETTINGS_KEY_NOT_EXIST = "Settings key does not exists!"
+    LANG_TRANSLATION_MISSING = "Translation missing!"
+    LANG_KEY_NOT_EXIST = "Translation key does not exist!"
+    LANG_INVALID_SIZE = "Length of translation file is different than default lang file!"
