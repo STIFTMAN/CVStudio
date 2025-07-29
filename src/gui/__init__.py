@@ -1,4 +1,4 @@
-from . import layout, state, utils, components
+from . import utils, state, layout, components
 
 
 print("loading src/gui/layout")

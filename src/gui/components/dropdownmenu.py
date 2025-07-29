@@ -1,13 +1,13 @@
 from typing import Any, Callable
 import customtkinter
-from ..state.root import app
 
 
-class CTKDropdownmenu(customtkinter.CTkFrame):
+class Dropdownmenu(customtkinter.CTkFrame):
     menu: dict[str, list[tuple[customtkinter.StringVar, Callable]]] = {}
     menu_visible: None | str = None
     menu_top_widgets: dict[str, dict[str, customtkinter.CTkButton | customtkinter.CTkFrame | Any]] = {}
 
+    root: None | customtkinter.CTk
     grid_size: int = 0
 
     def __init__(self, *args, **kwargs):
@@ -19,6 +19,7 @@ class CTKDropdownmenu(customtkinter.CTkFrame):
             "<Configure>",
             lambda event: self.after(50, self.resize)
         )
+        self.root = root
 
     def resize(self):
         if self.menu_visible is not None and self.menu_top_widgets[self.menu_visible]["frame"].winfo_ismapped():
@@ -58,9 +59,9 @@ class CTKDropdownmenu(customtkinter.CTkFrame):
         frame_width = self.menu_top_widgets[menu_name]["button"].winfo_width()
         frame_height = self.menu_top_widgets[menu_name]["button"].winfo_height()
         self.hide_menu(menu_name)
-        self.menu_top_widgets[menu_name]["frame"] = customtkinter.CTkFrame(app, corner_radius=0, width=frame_width, height=frame_height * len(self.menu[menu_name]))
+        self.menu_top_widgets[menu_name]["frame"] = customtkinter.CTkFrame(self.root, corner_radius=0, width=frame_width, height=frame_height * len(self.menu[menu_name]))
         for entry in self.menu[menu_name]:
-            btn = customtkinter.CTkButton(self.menu_top_widgets[menu_name]["frame"], textvariable=entry[0], corner_radius=0, width=frame_width, command=lambda: [entry[1](), self.hide_menu_all()])
+            btn = customtkinter.CTkButton(self.menu_top_widgets[menu_name]["frame"], textvariable=entry[0], corner_radius=0, width=frame_width, command=lambda cmd=entry[1]: [cmd(), self.hide_menu_all()])
             btn.pack(fill="both", expand=True)
         self.menu_top_widgets[menu_name]["frame"].place(x=frame_x, y=frame_y)
         self.menu_top_widgets[menu_name]["frame"].update_idletasks()

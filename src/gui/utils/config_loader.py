@@ -1,19 +1,24 @@
 import json
-from ..state.root import settings
+import src.gui.state.root as root
 from ..state.error import Error
 
 
 def load():
-    global settings
     with open("./src/assets/settings.json", "r", encoding="utf-8") as f:
-        settings = json.load(f)
-    if settings is None:
+        root.settings = json.load(f)
+    if root.settings is None:
         raise Exception(Error.SETTINGS_LOADING.value)
 
 
 def get_setting(key: str):
-    if settings is None:
+    if root.settings is None:
         raise Exception(Error.SETTINGS_LOADING.value)
-    if key in settings:
-        return settings[key]
+    if key in root.settings:
+        return root.settings[key]
     raise Exception(Error.SETTINGS_KEY_NOT_EXIST.value)
+
+
+def save_settings():
+    if root.settings is not None:
+        with open("./src/assets/settings.json", "w", encoding="utf-8") as f:
+            json.dump(root.settings, f, indent=4)

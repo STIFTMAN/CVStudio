@@ -1,11 +1,12 @@
 {
-    "lang": "en",
+    "lang": "de",
     "default_lang": "en",
-    "darkmode": true,
+    "darkmode": "dark",
+    "color_theme": "green",
     "window_size": {
         "main": [
             1000,
-            800
+            600
         ],
         "filterqueue": [
             800,
@@ -20,5 +21,6 @@
             400
         ]
     },
+    "help_url": "https://github.com/STIFTMAN/Bachelorarbeit",
     "components": {}
 }
