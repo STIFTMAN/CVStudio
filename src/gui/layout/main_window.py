@@ -1,3 +1,4 @@
+from typing import Callable
 import customtkinter
 from ..layout import filterqueue_window
 from ..utils.config_loader import get_setting, save_settings
@@ -5,35 +6,28 @@ import src.gui.state.root as root
 from ..components.dropdownmenu import Dropdownmenu
 from ..components.tabviewextended import TabviewExtended
 import webbrowser
+import re
 
 
 class MainWindow(customtkinter.CTk):
     nav_frame: Dropdownmenu | None = None
     container_frame: customtkinter.CTkFrame | customtkinter.CTkScrollableFrame | None = None
 
-    layout_settings: dict = {
-        "settings": {
-            "label": {
-                "font_size": 30,
-                "padding": 20
-            },
-            "tabview": {
-                "padding": 20
-            }
-        }
-    }
+    layout_settings: dict = {}
 
     def build(self):
-        self.title("Bildverabeitungs & Analysetool")
+        self.title(get_setting("name"))
         window_size = get_setting("window_size")["main"]
         screen_coords = (int((self.winfo_screenwidth() - window_size[0]) / 2), int((self.winfo_screenheight() - window_size[1]) / 2))
         self.geometry(f"{window_size[0]}x{window_size[1]}+{screen_coords[0]}+{screen_coords[1]}")
         self.minsize(window_size[0], window_size[1])
+        self.layout_settings = get_setting("styles")["main_window"]
         self.build_nav_frame()
         self.build_container_frame()
         if root.all_keybindings is not None:
             for key in root.all_keybindings:
                 self.bind_all(root.all_keybindings[key], lambda event, k=key: self.event(k))
+        print("Version: ", root.version)
 
     def build_nav_frame(self):
         self.nav_frame = Dropdownmenu(master=self)
@@ -41,7 +35,7 @@ class MainWindow(customtkinter.CTk):
         self.nav_frame.add("main_window_dropdownmenu_file_save", root.current_lang.get("main_window_dropdownmenu_file"), root.current_lang.get("main_window_dropdownmenu_file_save_all"), msg1)
         self.nav_frame.addButton("main_window_dropdownmenu_filterqueue", root.current_lang.get("main_window_dropdownmenu_filterqueue"), lambda: filterqueue_window.build(self))
         self.nav_frame.addButton("main_window_dropdownmenu_testing", root.current_lang.get("main_window_dropdownmenu_testing"), msg1)
-        
+
         self.nav_frame.add("main_window_dropdownmenu_settings", root.current_lang.get("main_window_dropdownmenu_settings"), root.current_lang.get("main_window_settings_look"), lambda: self.build_settings("main_window_settings_look"))
         self.nav_frame.add("main_window_dropdownmenu_settings", root.current_lang.get("main_window_dropdownmenu_settings"), root.current_lang.get("main_window_settings_keybindings"), lambda: self.build_settings("main_window_settings_keybindings"))
         self.nav_frame.add("main_window_dropdownmenu_settings", root.current_lang.get("main_window_dropdownmenu_settings"), root.current_lang.get("main_window_settings_help"), lambda: self.build_settings("main_window_settings_help"))
@@ -63,6 +57,7 @@ class MainWindow(customtkinter.CTk):
                 widget.destroy()
 
     def build_settings(self, tabindex: str):
+        assert root.all_keybindings is not None
         self.reset_container_frame()
         headline_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=self.container_frame, textvariable=root.current_lang.get("main_window_dropdownmenu_settings"), font=("Roboto", self.layout_settings["settings"]["label"]["font_size"]))
         headline_label.pack(fill="x", side="top", padx=self.layout_settings["settings"]["label"]["padding"], pady=(self.layout_settings["settings"]["label"]["padding"], 0))
@@ -77,66 +72,78 @@ class MainWindow(customtkinter.CTk):
         tabview.set(tabindex)
         tabview.tab("main_window_settings_look").grid_columnconfigure(0, weight=1)
         tabview.tab("main_window_settings_keybindings").grid_columnconfigure(0, weight=1)
+        tabview.tab("main_window_settings_help").grid_columnconfigure(0, weight=1)
+        tabview.tab("main_window_settings_help").grid_rowconfigure(0, weight=1)
+        tabview.tab("main_window_settings_about").grid_columnconfigure(0, weight=1)
 
-        settings_look_lang_frame: customtkinter.CTkFrame = customtkinter.CTkFrame(master=tabview.tab("main_window_settings_look"))
-        settings_look_lang_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
-        [settings_look_lang_frame.grid_columnconfigure(i, weight=1) for i in range(5)]
+        settings_look_keys: list[tuple[customtkinter.StringVar, Callable, list, str]] = [
+            (root.current_lang.get("main_window_settings_look_lang_label"), self.settings_look_lang_output, [root.all_lang[key] for key in root.all_lang], root.all_lang[get_setting("lang")]),
+            (root.current_lang.get("main_window_settings_look_darkmode_label"), self.settings_look_darkmode_output, ["system", "dark", "light"], get_setting("darkmode")),
+            (root.current_lang.get("main_window_settings_look_theme_label"), self.settings_look_theme_output, [key for key in root.all_styles], get_setting("color_theme"))
+        ]
 
-        settings_look_lang_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=settings_look_lang_frame, textvariable=root.current_lang.get("main_window_settings_look_lang_label"))
-        settings_look_lang_label.grid(row=0, column=1, padx=10, pady=10)
+        for key in range(len(settings_look_keys)):
+            settings_look_temp_frame: customtkinter.CTkFrame = customtkinter.CTkFrame(master=tabview.tab("main_window_settings_look"))
+            settings_look_temp_frame.grid(row=key, column=0, padx=self.layout_settings["settings"]["look"]["frame"]["padding"], pady=self.layout_settings["settings"]["look"]["frame"]["padding"], sticky="nsew")
+            [settings_look_temp_frame.grid_columnconfigure(i, weight=1) for i in range(3)]
 
-        settings_look_lang_optionmenu: customtkinter.CTkOptionMenu = customtkinter.CTkOptionMenu(master=settings_look_lang_frame, anchor="center", values=[root.all_lang[key] for key in root.all_lang], command=self.settings_look_lang_output)
-        settings_look_lang_optionmenu.grid(row=0, column=3, padx=10, pady=10)
+            settings_look_temp_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=settings_look_temp_frame, anchor="w", width=self.layout_settings["settings"]["look"]["label"]["width"], textvariable=settings_look_keys[key][0])
+            settings_look_temp_label.grid(row=0, column=1, padx=self.layout_settings["settings"]["look"]["label"]["padding"], pady=self.layout_settings["settings"]["look"]["label"]["padding"])
 
-        settings_look_darkmode_frame: customtkinter.CTkFrame = customtkinter.CTkFrame(master=tabview.tab("main_window_settings_look"))
-        settings_look_darkmode_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
-        [settings_look_darkmode_frame.grid_columnconfigure(i, weight=1) for i in range(5)]
+            settings_look_lang_optionmenu: customtkinter.CTkOptionMenu = customtkinter.CTkOptionMenu(master=settings_look_temp_frame, width=self.layout_settings["settings"]["look"]["optionmenu"]["width"], anchor="center", values=settings_look_keys[key][2], command=settings_look_keys[key][1])
+            settings_look_lang_optionmenu.grid(row=0, column=3, padx=self.layout_settings["settings"]["look"]["optionmenu"]["padding"], pady=self.layout_settings["settings"]["look"]["optionmenu"]["padding"])
+            settings_look_lang_optionmenu.set(settings_look_keys[key][3])
 
-        settings_look_darkmode_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=settings_look_darkmode_frame, textvariable=root.current_lang.get("main_window_settings_look_darkmode_label"))
-        settings_look_darkmode_label.grid(row=0, column=1, padx=10, pady=10)
+        settings_keybindings_keys: list[tuple[str, str]] = [
+            ("main_window_settings_keybindings_save_label", "save"),
+            ("main_window_settings_keybindings_quick_test_label", "quick_test"),
+            ("main_window_settings_keybindings_help_label", "help"),
+            ("main_window_settings_keybindings_license_label", "license")
+        ]
+        for key in range(len(settings_keybindings_keys)):
 
-        settings_look_darkmode_optionmenu: customtkinter.CTkOptionMenu = customtkinter.CTkOptionMenu(master=settings_look_darkmode_frame, anchor="center", values=["system", "dark", "light"], command=self.settings_look_darkmode_output)
-        settings_look_darkmode_optionmenu.grid(row=0, column=3, padx=10, pady=10)
+            settings_keybindings_temp_frame: customtkinter.CTkFrame = customtkinter.CTkFrame(master=tabview.tab("main_window_settings_keybindings"))
+            settings_keybindings_temp_frame.grid(row=key, column=0, padx=self.layout_settings["settings"]["keybindings"]["frame"]["padding"], pady=self.layout_settings["settings"]["keybindings"]["frame"]["padding"], sticky="nsew")
+            [settings_keybindings_temp_frame.grid_columnconfigure(i, weight=1) for i in range(3)]
 
-        settings_look_theme_frame: customtkinter.CTkFrame = customtkinter.CTkFrame(master=tabview.tab("main_window_settings_look"))
-        settings_look_theme_frame.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
-        [settings_look_theme_frame.grid_columnconfigure(i, weight=1) for i in range(5)]
+            settings_keybindings_temp_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=settings_keybindings_temp_frame, width=self.layout_settings["settings"]["keybindings"]["label"]["width"], anchor="w", textvariable=root.current_lang.get(settings_keybindings_keys[key][0]))
+            settings_keybindings_temp_label.grid(row=0, column=1, padx=self.layout_settings["settings"]["keybindings"]["label"]["padding"], pady=self.layout_settings["settings"]["keybindings"]["label"]["padding"])
 
-        settings_look_theme_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=settings_look_theme_frame, textvariable=root.current_lang.get("main_window_settings_look_theme_label"))
-        settings_look_theme_label.grid(row=0, column=1, padx=10, pady=10)
+            settings_keybindings_temp_binding_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=settings_keybindings_temp_frame, width=self.layout_settings["settings"]["keybindings"]["binding_label"]["width"], fg_color=("grey", "black"), text_color=("white", "white"), corner_radius=5, text=re.sub(r"[<>]", "", root.all_keybindings[settings_keybindings_keys[key][1]]).replace("Control", "Ctrl").replace("-", " + "))
+            settings_keybindings_temp_binding_label.grid(row=0, column=3, padx=self.layout_settings["settings"]["keybindings"]["binding_label"]["padding"], pady=self.layout_settings["settings"]["keybindings"]["binding_label"]["padding"])
 
-        settings_look_theme_optionmenu: customtkinter.CTkOptionMenu = customtkinter.CTkOptionMenu(master=settings_look_theme_frame, anchor="center", values=[key for key in root.all_styles], command=self.settings_look_theme_output)
-        settings_look_theme_optionmenu.grid(row=0, column=3, padx=10, pady=10)
+        settings_help_frame: customtkinter.CTkScrollableFrame = customtkinter.CTkScrollableFrame(master=tabview.tab("main_window_settings_help"))
+        settings_help_frame.grid(row=0, column=0, sticky="nswe", padx=self.layout_settings["settings"]["help"]["frame"]["padding"], pady=self.layout_settings["settings"]["help"]["frame"]["padding"])
+        settings_help_frame.grid_columnconfigure(0, weight=1)
 
-        settings_keybindings_save_frame: customtkinter.CTkFrame = customtkinter.CTkFrame(master=tabview.tab("main_window_settings_keybindings"))
-        settings_keybindings_save_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
-        [settings_keybindings_save_frame.grid_columnconfigure(i, weight=1) for i in range(5)]
 
-        settings_keybindings_save_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=settings_keybindings_save_frame, textvariable=root.current_lang.get("main_window_settings_keybindings_save_label"))
-        settings_keybindings_save_label.grid(row=0, column=1, padx=10, pady=10)
+# WIRD SPÄTER GEMACHT
+        settings_help_keys: list[str | customtkinter.StringVar] = [
+            root.current_lang.get("main_window_settings_help_label_1")
+        ]
 
-        settings_keybindings_save_binding_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=settings_keybindings_save_frame, fg_color=("grey", "black"), text_color=("white", "white"), corner_radius=5, padx=10, pady=10, text=root.all_keybindings["save"])
-        settings_keybindings_save_binding_label.grid(row=0, column=3, padx=10, pady=10)
+        for key in range(len(settings_help_keys)):
+            if isinstance(settings_help_keys[key], customtkinter.StringVar):
+                settings_help_temp_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=settings_help_frame, padx=self.layout_settings["settings"]["help"]["label"]["padding_inline"][0], pady=self.layout_settings["settings"]["help"]["label"]["padding_inline"][1], anchor="w", wraplength=800, justify="left", textvariable=settings_help_keys[key])
+            else:
+                settings_help_temp_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=settings_help_frame, wraplength=800, justify="left", padx=self.layout_settings["settings"]["help"]["label"]["padding_inline"][0], pady=self.layout_settings["settings"]["help"]["label"]["padding_inline"][1], anchor="w", text=settings_help_keys[key])
+            settings_help_temp_label.grid(row=key, column=0, padx=self.layout_settings["settings"]["help"]["label"]["padding"][0], pady=self.layout_settings["settings"]["help"]["label"]["padding"][1], sticky="w")
 
-        settings_keybindings_quick_test_frame: customtkinter.CTkFrame = customtkinter.CTkFrame(master=tabview.tab("main_window_settings_keybindings"))
-        settings_keybindings_quick_test_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
-        [settings_keybindings_quick_test_frame.grid_columnconfigure(i, weight=1) for i in range(5)]
+        settings_about_keys: list[customtkinter.StringVar | str] = [
+            get_setting("name"),
+            root.version,
+            root.current_lang.get("main_window_settings_about_label_description"),
+            root.current_lang.get("main_window_settings_about_label_developer"),
+            root.current_lang.get("main_window_settings_about_label_license"),
+            get_setting("license_url")
+        ]
 
-        settings_keybindings_quick_test_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=settings_keybindings_quick_test_frame, textvariable=root.current_lang.get("main_window_settings_keybindings_quick_test_label"))
-        settings_keybindings_quick_test_label.grid(row=0, column=1, padx=10, pady=10)
-
-        settings_keybindings_quick_test_binding_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=settings_keybindings_quick_test_frame, fg_color=("grey", "black"), text_color=("white", "white"), corner_radius=5, padx=10, pady=10, text=root.all_keybindings["quick_test"])
-        settings_keybindings_quick_test_binding_label.grid(row=0, column=3, padx=10, pady=10)
-
-        settings_keybindings_help_frame: customtkinter.CTkFrame = customtkinter.CTkFrame(master=tabview.tab("main_window_settings_keybindings"))
-        settings_keybindings_help_frame.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
-        [settings_keybindings_help_frame.grid_columnconfigure(i, weight=1) for i in range(5)]
-
-        settings_keybindings_help_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=settings_keybindings_help_frame, textvariable=root.current_lang.get("main_window_settings_keybindings_help_label"))
-        settings_keybindings_help_label.grid(row=0, column=1, padx=10, pady=10)
-
-        settings_keybindings_help_binding_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=settings_keybindings_help_frame, fg_color=("grey", "black"), text_color=("white", "white"), corner_radius=5, padx=10, pady=10, text=root.all_keybindings["help"])
-        settings_keybindings_help_binding_label.grid(row=0, column=3, padx=10, pady=10)
+        for key in range(len(settings_about_keys)):
+            if isinstance(settings_about_keys[key], customtkinter.StringVar):
+                settings_about_temp_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=tabview.tab("main_window_settings_about"), padx=self.layout_settings["settings"]["about"]["label"]["padding_inline"][0], pady=self.layout_settings["settings"]["about"]["label"]["padding_inline"][1], anchor="w", wraplength=800, justify="left", textvariable=settings_about_keys[key])
+            else:
+                settings_about_temp_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=tabview.tab("main_window_settings_about"), wraplength=800, justify="left", padx=self.layout_settings["settings"]["about"]["label"]["padding_inline"][0], pady=self.layout_settings["settings"]["about"]["label"]["padding_inline"][1], anchor="w", text=settings_about_keys[key])
+            settings_about_temp_label.grid(row=key, column=0, padx=self.layout_settings["settings"]["about"]["label"]["padding"][0], pady=self.layout_settings["settings"]["about"]["label"]["padding"][1], sticky="w")
 
     def settings_look_lang_output(self, choice):
         from src.gui.utils.lang_loader import change_lang, get_translation_from_all_lang
@@ -172,6 +179,9 @@ class MainWindow(customtkinter.CTk):
                 pass
             case "help":
                 webbrowser.open_new(get_setting("help_url"))
+            case "license":
+                webbrowser.open_new(get_setting("license_url"))
+
 
 def msg1():
     print("msg1")

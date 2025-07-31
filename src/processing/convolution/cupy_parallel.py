@@ -15,14 +15,14 @@ def cupy_parallel_slice(image_slice, kernel, y_start, out_height) -> tuple:
 
     kernel_mask = kernel != 0
 
-    weighted_sum = cp.tensordot(windows, kernel, axes=((2,3), (0,1)))
+    weighted_sum = cp.tensordot(windows, kernel, axes=((2, 3), (0, 1)))
 
     valid_mask = cp.ones_like(image_slice, dtype=bool)
     valid_windows = cp.lib.stride_tricks.sliding_window_view(valid_mask, (kh, kw))
 
     valid_kernel_mask = valid_windows & kernel_mask
 
-    weight_sum_per_pixel = cp.sum(valid_kernel_mask * kernel, axis=(2,3))
+    weight_sum_per_pixel = cp.sum(valid_kernel_mask * kernel, axis=(2, 3))
 
     convolved = cp.zeros_like(weighted_sum)
     mask_nonzero = weight_sum_per_pixel != 0

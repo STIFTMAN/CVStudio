@@ -10,3 +10,4 @@ all_styles: dict[str, str | None] = {"blue": None,
                                      "dark-blue": None,
                                      "green": None}
 all_keybindings: dict[str, str] | None = None
+version: str = "unknown"

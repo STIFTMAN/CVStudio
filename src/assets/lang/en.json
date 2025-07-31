@@ -15,6 +15,11 @@
     "main_window_settings_look_theme_label": "Color Theme",
     "main_window_settings_keybindings_save_label": "Save Project",
     "main_window_settings_keybindings_quick_test_label": "Quick Test",
-    "main_window_settings_keybindings_help_label": "Get Help with URL",
+    "main_window_settings_keybindings_help_label": "Help in Web",
+    "main_window_settings_keybindings_license_label": "License in Web",
+    "main_window_settings_help_label_1": "Help Page",
+    "main_window_settings_about_label_description": "This application enables interactive application and comparison of image processing procedures, including local filters (e.g. Sobel, Laplace) and feature recognition procedures (Sift, Orb, Hough, almost). So you can visually understand the effects.",
+    "main_window_settings_about_label_developer": "© 2025 Daniel Hagemann",
+    "main_window_settings_about_label_license": "License: Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)",
     "main_window_container_init_label": "Create a  new project or open one"
 }

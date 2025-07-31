@@ -1,6 +1,7 @@
 import json
 import src.gui.state.root as root
 from ..state.error import Error
+from .version import get_git_version
 
 
 def load():
@@ -8,6 +9,7 @@ def load():
         root.settings = json.load(f)
     if root.settings is None:
         raise Exception(Error.SETTINGS_LOADING.value)
+    root.version = "v" + get_setting("version") + "-" + get_git_version()
 
 
 def get_setting(key: str):

@@ -15,6 +15,11 @@
     "main_window_settings_look_theme_label": "Farbthema",
     "main_window_settings_keybindings_save_label": "Speichere Projekt",
     "main_window_settings_keybindings_quick_test_label": "Schnelltest",
-    "main_window_settings_keybindings_help_label": "Bekomme mit einer URL Hilfe",
+    "main_window_settings_keybindings_help_label": "Web Hilfe",
+    "main_window_settings_keybindings_license_label": "Lizenz im Web",
+    "main_window_settings_help_label_1": "Hilfe Seite",
+    "main_window_settings_about_label_description": "Diese Anwendung ermöglicht die interaktive Anwendung und den Vergleich von Bildverarbeitungsverfahren, einschließlich lokaler Filter (z. B. Sobel, Laplace) und Feature-Erkennungsverfahren (SIFT, ORB, Hough, FAST). So können Sie die Effekte direkt visuell nachvollziehen.",
+    "main_window_settings_about_label_developer": "© 2025 Daniel Hagemann",
+    "main_window_settings_about_label_license": "Lizenz: Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)",
     "main_window_container_init_label": "Erstelle ein neues Projekt oder öffne eines"
 }

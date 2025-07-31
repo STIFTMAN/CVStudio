@@ -1,8 +1,10 @@
 {
-    "lang": "de",
+    "name": "CVStudio",
+    "lang": "en",
     "default_lang": "en",
     "darkmode": "dark",
-    "color_theme": "green",
+    "color_theme": "dark-blue",
+    "version": "0.1.0",
     "window_size": {
         "main": [
             1000,
@@ -22,5 +24,72 @@
         ]
     },
     "help_url": "https://github.com/STIFTMAN/Bachelorarbeit",
-    "components": {}
+    "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+    "components": {},
+    "styles": {
+        "main_window": {
+            "settings": {
+                "label": {
+                    "font_size": 30,
+                    "padding": 20
+                },
+                "tabview": {
+                    "padding": 20
+                },
+                "look": {
+                    "frame": {
+                        "padding": 10
+                    },
+                    "label": {
+                        "padding": 10,
+                        "width": 200
+                    },
+                    "optionmenu": {
+                        "padding": 10,
+                        "width": 200
+                    }
+                },
+                "keybindings": {
+                    "frame": {
+                        "padding": 10
+                    },
+                    "label": {
+                        "padding": 10,
+                        "width": 200
+                    },
+                    "binding_label": {
+                        "padding": 10,
+                        "width": 200
+                    }
+                },
+                "help": {
+                    "frame": {
+                        "padding": 10
+                    },
+                    "label": {
+                        "padding": [
+                            10,
+                            0
+                        ],
+                        "padding_inline": [
+                            0,
+                            0
+                        ]
+                    }
+                },
+                "about": {
+                    "label": {
+                        "padding": [
+                            10,
+                            5
+                        ],
+                        "padding_inline": [
+                            0,
+                            0
+                        ]
+                    }
+                }
+            }
+        }
+    }
 }
