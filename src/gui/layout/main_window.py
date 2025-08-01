@@ -1,22 +1,33 @@
 from typing import Callable
 import customtkinter
-from ..layout import filterqueue_window
+from ..layout.filterqueue_window import FilterqueueWindow
 from ..utils.config_loader import get_setting, save_settings
 import src.gui.state.root as root
 from ..components.dropdownmenu import Dropdownmenu
 from ..components.tabviewextended import TabviewExtended
 import webbrowser
 import re
+from tkinterdnd2 import TkinterDnD, DND_FILES
+import os
+import cv2
+from PIL import Image
 
 
-class MainWindow(customtkinter.CTk):
+class MainWindow(TkinterDnD.Tk):
     nav_frame: Dropdownmenu | None = None
     container_frame: customtkinter.CTkFrame | customtkinter.CTkScrollableFrame | None = None
+    filterqueue_window: FilterqueueWindow | None = None
 
     layout_settings: dict = {}
 
+    image_label = None
+
+    def __init__(self):
+        super().__init__()
+
     def build(self):
         self.title(get_setting("name"))
+        self.iconbitmap("src/assets/favicon.ico")
         window_size = get_setting("window_size")["main"]
         screen_coords = (int((self.winfo_screenwidth() - window_size[0]) / 2), int((self.winfo_screenheight() - window_size[1]) / 2))
         self.geometry(f"{window_size[0]}x{window_size[1]}+{screen_coords[0]}+{screen_coords[1]}")
@@ -33,7 +44,7 @@ class MainWindow(customtkinter.CTk):
         self.nav_frame = Dropdownmenu(master=self)
         self.nav_frame.add("main_window_dropdownmenu_file_save", root.current_lang.get("main_window_dropdownmenu_file"), root.current_lang.get("main_window_dropdownmenu_file_save"), msg1)
         self.nav_frame.add("main_window_dropdownmenu_file_save", root.current_lang.get("main_window_dropdownmenu_file"), root.current_lang.get("main_window_dropdownmenu_file_save_all"), msg1)
-        self.nav_frame.addButton("main_window_dropdownmenu_filterqueue", root.current_lang.get("main_window_dropdownmenu_filterqueue"), lambda: filterqueue_window.build(self))
+        self.nav_frame.addButton("main_window_dropdownmenu_filterqueue", root.current_lang.get("main_window_dropdownmenu_filterqueue"), self.open_filterqueue_window)
         self.nav_frame.addButton("main_window_dropdownmenu_testing", root.current_lang.get("main_window_dropdownmenu_testing"), msg1)
 
         self.nav_frame.add("main_window_dropdownmenu_settings", root.current_lang.get("main_window_dropdownmenu_settings"), root.current_lang.get("main_window_settings_look"), lambda: self.build_settings("main_window_settings_look"))
@@ -46,10 +57,37 @@ class MainWindow(customtkinter.CTk):
     def build_container_frame(self):
         self.container_frame = customtkinter.CTkFrame(master=self, corner_radius=0)
 
-        info_label = customtkinter.CTkLabel(master=self.container_frame, textvariable=root.current_lang.get("main_window_container_init_label"))
-        info_label.place(relx=0.5, rely=0.5, anchor="center")
+        self.image_label = customtkinter.CTkLabel(master=self.container_frame, textvariable=root.current_lang.get("main_window_container_init_label"))
+        self.image_label.place(relx=0.5, rely=0.5, anchor="center")
+
+        self.image_label.drop_target_register(DND_FILES)
+        self.image_label.dnd_bind('<<Drop>>', self.on_drop)
 
         self.container_frame.pack(fill="both", side="top", expand=True)
+
+    def on_drop(self, event):
+        filepath = event.data.strip("{}")
+        if os.path.isfile(filepath) and filepath.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif')):
+            img_cv = cv2.imread(filepath)
+            img_cv = cv2.cvtColor(img_cv, cv2.COLOR_BGR2RGB)
+
+            # Originalgröße holen
+            h, w = img_cv.shape[:2]
+
+            # In PIL konvertieren
+            img_pil = Image.fromarray(img_cv)
+
+            # Zielgröße für das Label
+            target_w, target_h = 600, 400
+            scale = min(target_w / w, target_h / h)  # Aspect Ratio beibehalten
+            new_w, new_h = int(w * scale), int(h * scale)
+
+            # CTkImage mit skaliertem Bild
+            img_ctk = customtkinter.CTkImage(light_image=img_pil, size=(new_w, new_h))
+
+            # Bild anzeigen
+            self.image_label.configure(image=img_ctk, text="")
+            self.image_label.image = img_ctk  # Referenz halten!
 
     def reset_container_frame(self):
         if self.container_frame is not None:
@@ -112,7 +150,7 @@ class MainWindow(customtkinter.CTk):
             settings_keybindings_temp_binding_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=settings_keybindings_temp_frame, width=self.layout_settings["settings"]["keybindings"]["binding_label"]["width"], fg_color=("grey", "black"), text_color=("white", "white"), corner_radius=5, text=re.sub(r"[<>]", "", root.all_keybindings[settings_keybindings_keys[key][1]]).replace("Control", "Ctrl").replace("-", " + "))
             settings_keybindings_temp_binding_label.grid(row=0, column=3, padx=self.layout_settings["settings"]["keybindings"]["binding_label"]["padding"], pady=self.layout_settings["settings"]["keybindings"]["binding_label"]["padding"])
 
-        settings_help_frame: customtkinter.CTkScrollableFrame = customtkinter.CTkScrollableFrame(master=tabview.tab("main_window_settings_help"))
+        settings_help_frame: customtkinter.CTkScrollableFrame = customtkinter.CTkScrollableFrame(master=tabview.tab("main_window_settings_help"), fg_color="transparent")
         settings_help_frame.grid(row=0, column=0, sticky="nswe", padx=self.layout_settings["settings"]["help"]["frame"]["padding"], pady=self.layout_settings["settings"]["help"]["frame"]["padding"])
         settings_help_frame.grid_columnconfigure(0, weight=1)
 
@@ -168,6 +206,12 @@ class MainWindow(customtkinter.CTk):
             save_settings()
             from src.gui.utils.restart import restart
             restart()
+    
+    def open_filterqueue_window(self):
+        if self.filterqueue_window is not None and self.filterqueue_window.winfo_exists():
+            self.filterqueue_window.focus()
+        else:
+            self.filterqueue_window = FilterqueueWindow(master=self)
 
 # WIRD SPÄTER GEMACHT
     def event(self, key):

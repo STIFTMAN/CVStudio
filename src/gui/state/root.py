@@ -1,3 +1,4 @@
+from src.gui.state.project_type import Project_Type
 from ..utils.string_list import StringList
 from .settings_type import Settings_Type
 
@@ -11,3 +12,4 @@ all_styles: dict[str, str | None] = {"blue": None,
                                      "green": None}
 all_keybindings: dict[str, str] | None = None
 version: str = "unknown"
+project: Project_Type | None = None
