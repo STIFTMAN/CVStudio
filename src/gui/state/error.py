@@ -11,3 +11,4 @@ class Error(Enum):
     STYLE_LOADING = "Not allowed to  override default theme ('blue', 'dark-blue', 'green'). Chose different file name"
     STYLE_NOT_EXIST = "Style does not exist!"
     KEYBINDINGS_LOADING = "Keybindings could not be loaded!"
+    INVALID_PROJECT_FILE = "Project file ist invalid!"

@@ -1,9 +1,10 @@
 {
     "language_package_name": "English",
-    "main_window_dropdownmenu_file": "File",
-    "main_window_dropdownmenu_file_save": "Save last Picture",
-    "main_window_dropdownmenu_file_save_all": "Save all Pictures",
-    "main_window_dropdownmenu_filterqueue": "Filterqueue",
+    "main_window_dropdownmenu_home": "Home",
+    "main_window_dropdownmenu_project": "Project",
+    "main_window_dropdownmenu_project_save_image_result": "Save last Picture",
+    "main_window_dropdownmenu_project_save_image_result_all": "Save all Pictures",
+    "main_window_dropdownmenu_filterqueue": "Open Filterqueue",
     "main_window_dropdownmenu_testing": "Testing",
     "main_window_dropdownmenu_settings": "Settings",
     "main_window_settings_look": "Look",
@@ -21,5 +22,10 @@
     "main_window_settings_about_label_description": "This application enables interactive application and comparison of image processing procedures, including local filters (e.g. Sobel, Laplace) and feature recognition procedures (Sift, Orb, Hough, FAST). So you can visually understand the effects.",
     "main_window_settings_about_label_developer": "© 2025 Daniel Hagemann",
     "main_window_settings_about_label_license": "License: Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)",
-    "main_window_container_init_label": "Create a  new project or open one"
+    "main_window_init_create_label": "Create a New Project",
+    "main_window_init_create_entry_placeholder": "Enter Project Name",
+    "main_window_init_create_button": "Create",
+    "main_window_init_open_button": "Create",
+    "main_window_init_open_label": "Open Project",
+    "main_window_init_open_label_no_project": "You have not created a project yet"
 }

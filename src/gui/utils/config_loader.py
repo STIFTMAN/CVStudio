@@ -1,4 +1,7 @@
 import json
+from typing import Any
+
+import customtkinter
 import src.gui.state.root as root
 from ..state.error import Error
 from .version import get_git_version
@@ -10,9 +13,10 @@ def load():
     if root.settings is None:
         raise Exception(Error.SETTINGS_LOADING.value)
     root.version = "v" + get_setting("version") + "-" + get_git_version()
+    customtkinter.set_appearance_mode(get_setting("darkmode"))
 
 
-def get_setting(key: str):
+def get_setting(key: str) -> Any:
     if root.settings is None:
         raise Exception(Error.SETTINGS_LOADING.value)
     if key in root.settings:
@@ -20,7 +24,7 @@ def get_setting(key: str):
     raise Exception(Error.SETTINGS_KEY_NOT_EXIST.value)
 
 
-def save_settings():
+def save_settings() -> None:
     if root.settings is not None:
         with open("./src/assets/settings.json", "w", encoding="utf-8") as f:
             json.dump(root.settings, f, indent=4)

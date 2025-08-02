@@ -1,5 +1,6 @@
 from typing import Any, Callable
 import customtkinter
+import tkinterdnd2
 
 
 class Dropdownmenu(customtkinter.CTkFrame):
@@ -7,13 +8,13 @@ class Dropdownmenu(customtkinter.CTkFrame):
     menu_visible: None | str = None
     menu_top_widgets: dict[str, dict[str, customtkinter.CTkButton | customtkinter.CTkFrame | Any]] = {}
 
-    root: None | customtkinter.CTk
+    root: None | customtkinter.CTk | tkinterdnd2.Tk
     grid_size: int = 0
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs, corner_radius=0)
 
-    def outside_tracking(self, root: customtkinter.CTk):
+    def outside_tracking(self, root: customtkinter.CTk | tkinterdnd2.Tk):
         root.bind("<Button-1>", self.click_outside)
         self.bind(
             "<Configure>",

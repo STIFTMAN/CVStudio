@@ -1,6 +1,6 @@
 {
     "name": "CVStudio",
-    "lang": "de",
+    "lang": "en",
     "default_lang": "en",
     "darkmode": "dark",
     "color_theme": "dark-blue",
@@ -21,6 +21,10 @@
         "error": [
             300,
             400
+        ],
+        "upload": [
+            500,
+            500
         ]
     },
     "help_url": "https://github.com/STIFTMAN/Bachelorarbeit",
@@ -28,6 +32,24 @@
     "components": {},
     "styles": {
         "main_window": {
+            "init": {
+                "create": {
+                    "padding": [
+                        0,
+                        20,
+                        20,
+                        20
+                    ]
+                },
+                "open": {
+                    "padding": [
+                        20,
+                        20,
+                        20,
+                        20
+                    ]
+                }
+            },
             "settings": {
                 "label": {
                     "font_size": 30,
