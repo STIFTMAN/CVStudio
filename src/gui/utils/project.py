@@ -1,16 +1,43 @@
 from typing import Any
+from src.gui.state.project_file_type import Project_File_Type, template
+import src.gui.state.root as root
+import re
 
 
 class Project:
-    json: dict | None = None
+    data: Project_File_Type | None = None
     image = None
 
-    def get_json(self, data):
-        self.json = data
+    def ready(self) -> bool:
+        if self.data is None:
+            return False
+        return True
+
+    def load_data(self, data):
+        self.data = data
 
     def reset(self):
-        pass
+        self.data = None
+        self.image = None
 
     @staticmethod
     def validate(data: Any) -> bool:
+        return True
+
+    @staticmethod
+    def valid_filename(name: str) -> bool:
+        if len(name) <= 0:
+            return False
+        if name in root.all_projects:
+            return False
+        elif re.search("^[A-Za-z-_0-9]+$", name) is None:
+            return False
+        return True
+
+    @staticmethod
+    def create(name: str) -> bool:
+        if not Project.valid_filename(name):
+            return False
+        from src.gui.utils.project_loader import save_project
+        save_project(name, template)
         return True

@@ -2,6 +2,7 @@ from typing import Callable
 import customtkinter
 
 from src.gui.layout.upload_window import UploadWindow
+from src.gui.utils.project import Project
 from ..layout.filterqueue_window import FilterqueueWindow
 from ..utils.config_loader import get_setting, save_settings
 import src.gui.state.root as root
@@ -33,7 +34,7 @@ class MainWindow(TkinterDnD.Tk):
         self.minsize(window_size[0], window_size[1])
         self.layout_settings = get_setting("styles")["main_window"]
         self.build_nav_frame()
-        self.build_container_frame()
+        self.build_init_container_frame()
         if root.all_keybindings is not None:
             for key in root.all_keybindings:
                 self.bind_all(root.all_keybindings[key], lambda event, k=key: self.event(k))
@@ -44,7 +45,7 @@ class MainWindow(TkinterDnD.Tk):
         self.nav_frame.addButton("main_window_dropdownmenu_home", root.current_lang.get("main_window_dropdownmenu_home"), self.build_home)
         self.nav_frame.add("main_window_dropdownmenu_project", root.current_lang.get("main_window_dropdownmenu_project"), root.current_lang.get("main_window_dropdownmenu_project_save_image_result"), msg1)
         self.nav_frame.add("main_window_dropdownmenu_project", root.current_lang.get("main_window_dropdownmenu_project"), root.current_lang.get("main_window_dropdownmenu_project_save_image_result_all"), msg1)
-        self.nav_frame.add("main_window_dropdownmenu_project", root.current_lang.get("main_window_dropdownmenu_project"), root.current_lang.get("main_window_dropdownmenu_filterqueue"), self.open_filterqueue_window)
+        self.nav_frame.add("main_window_dropdownmenu_project", root.current_lang.get("main_window_dropdownmenu_project"), root.current_lang.get("main_window_dropdownmenu_close"), self.reset_project)
         self.nav_frame.addButton("main_window_dropdownmenu_testing", root.current_lang.get("main_window_dropdownmenu_testing"), msg1)
         self.nav_frame.add("main_window_dropdownmenu_settings", root.current_lang.get("main_window_dropdownmenu_settings"), root.current_lang.get("main_window_settings_look"), lambda: self.build_settings("main_window_settings_look"))
         self.nav_frame.add("main_window_dropdownmenu_settings", root.current_lang.get("main_window_dropdownmenu_settings"), root.current_lang.get("main_window_settings_keybindings"), lambda: self.build_settings("main_window_settings_keybindings"))
@@ -53,11 +54,18 @@ class MainWindow(TkinterDnD.Tk):
         self.nav_frame.pack(fill="x", side="top")
         self.nav_frame.outside_tracking(self)
 
+    def reset_project(self):
+        root.current_project.reset()
+        self.build_init_container_frame()
+
     def build_home(self):
         self.reset_container_frame()
-        self.build_container_frame()
+        if root.current_project.ready():
+            self.build_image_container()
+        else:
+            self.build_init_container_frame()
 
-    def build_container_frame(self):
+    def build_init_container_frame(self):
         if self.container_frame is None:
             self.container_frame = customtkinter.CTkFrame(master=self, corner_radius=0)
             self.container_frame.pack(fill="both", side="top", expand=True)
@@ -75,10 +83,10 @@ class MainWindow(TkinterDnD.Tk):
             open_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=open_frame, font=("Arial", 20), textvariable=root.current_lang.get("main_window_init_open_label"))
             open_label.grid(row=1, column=0, sticky="we", padx=20, pady=20)
 
-            open_optionmenu: customtkinter.CTkOptionMenu = customtkinter.CTkOptionMenu(master=open_frame, font=("Arial", 20), values=["test"], anchor="center")
+            open_optionmenu: customtkinter.CTkOptionMenu = customtkinter.CTkOptionMenu(master=open_frame, font=("Arial", 20), values=[key for key in root.all_projects], anchor="center")
             open_optionmenu.grid(row=2, column=0, sticky="we", padx=20, pady=20)
 
-            open_button: customtkinter.CTkButton = customtkinter.CTkButton(master=open_frame, textvariable=root.current_lang.get("main_window_init_open_label"))
+            open_button: customtkinter.CTkButton = customtkinter.CTkButton(master=open_frame, textvariable=root.current_lang.get("main_window_init_open_label"), command=lambda: self.init_open_button_submit(open_optionmenu))
             open_button.grid(row=3, column=0, sticky="we", padx=20, pady=20)
         else:
             open_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=open_frame, font=("Arial", 20), textvariable=root.current_lang.get("main_window_init_open_label_no_project"))
@@ -96,8 +104,34 @@ class MainWindow(TkinterDnD.Tk):
         create_entry: customtkinter.CTkEntry = customtkinter.CTkEntry(master=create_frame, justify="center", placeholder_text=root.current_lang.get("main_window_init_create_entry_placeholder").get())
         create_entry.grid(row=2, column=0, sticky="we", padx=20, pady=20)
 
-        create_button: customtkinter.CTkButton = customtkinter.CTkButton(master=create_frame, textvariable=root.current_lang.get("main_window_init_create_button"))
+        create_button: customtkinter.CTkButton = customtkinter.CTkButton(master=create_frame, state="disabled", textvariable=root.current_lang.get("main_window_init_create_button"))
         create_button.grid(row=3, column=0, sticky="we", padx=20, pady=20)
+
+        create_button.configure(command=lambda: self.init_create_button_submit(create_entry))
+        create_entry.bind("<KeyRelease>", lambda e: self.init_create_entry_validate(create_entry, create_button))
+
+    def init_create_entry_validate(self, entry: customtkinter.CTkEntry, button: customtkinter.CTkButton):
+        if Project.valid_filename(str(entry.get())):
+            entry.configure(border_color="green")
+            button.configure(state="normal")
+        else:
+            entry.configure(border_color="red")
+            button.configure(state="disabled")
+
+    def init_create_button_submit(self, entry: customtkinter.CTkEntry):
+        if Project.create(entry.get()):
+            self.build_image_container()
+        else:
+            print("Error creating FIle")
+
+    def init_open_button_submit(self, optionmenu: customtkinter.CTkOptionMenu):
+        data = optionmenu.get()
+        root.current_project.load_data(root.all_projects[data])
+        self.build_image_container()
+
+    def build_image_container(self):
+        self.reset_container_frame()
+        print("build picture screen incontainer")
 
     def reset_container_frame(self):
         if self.container_frame is not None:

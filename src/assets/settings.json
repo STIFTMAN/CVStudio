@@ -2,7 +2,7 @@
     "name": "CVStudio",
     "lang": "en",
     "default_lang": "en",
-    "darkmode": "dark",
+    "darkmode": "light",
     "color_theme": "dark-blue",
     "version": "0.1.0",
     "window_size": {

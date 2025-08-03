@@ -1,3 +1,4 @@
+from src.gui.state.project_file_type import Project_File_Type
 from src.gui.utils.project import Project
 from ..utils.string_list import StringList
 from .settings_type import Settings_Type
@@ -12,5 +13,5 @@ all_styles: dict[str, str | None] = {"blue": None,
                                      "green": None}
 all_keybindings: dict[str, str] | None = None
 version: str = "unknown"
-all_projects: dict[str, dict] = {}
+all_projects: dict[str, Project_File_Type] = {}
 current_project: Project = Project()
