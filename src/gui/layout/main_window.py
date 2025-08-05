@@ -64,6 +64,12 @@ class MainWindow(TkinterDnD.Tk):
         root.current_project.reset()
         self.reset_container_frame()
         self.build_init_container_frame()
+        if self.filterqueue_window is not None:
+            self.filterqueue_window.destroy()
+            self.filterqueue_window = None
+        if self.upload_window is not None:
+            self.upload_window.destroy()
+            self.upload_window = None
 
     def build_home(self):
         self.reset_container_frame()
@@ -133,7 +139,7 @@ class MainWindow(TkinterDnD.Tk):
 
     def init_open_button_submit(self, optionmenu: customtkinter.CTkOptionMenu):
         data = optionmenu.get()
-        root.current_project.load_data(root.all_projects[data])
+        root.current_project.load_data(data, root.all_projects[data])
         self.build_image_container()
 
     def build_image_container(self):
@@ -315,24 +321,27 @@ class MainWindow(TkinterDnD.Tk):
                 self.upload_window = None
             restart()
 
+    def close_upload_window(self, event):
+        if self.upload_window is not None and self.upload_window.winfo_exists():
+            self.upload_window.destroy()
+            self.upload_window = None
+            if len(root.current_project.temp_images) <= 0 and root.current_project.image is not None:
+                if self.image_labels[0] is not None:
+                    self.image_labels[0].bind("<Configure>", self.resize_images)
+                if self.image_labels[1] is not None:
+                    self.image_labels[1].bind("<Configure>", self.resize_images)
+                self.processing_images()
+
+    def processing_images(self):
+        self.resize_images(None)
+
     def open_upload_window(self):
         if root.current_project.ready():
             if self.upload_window is not None and self.upload_window.winfo_exists():
                 self.upload_window.focus()
             else:
                 self.upload_window = UploadWindow(master=self)
-
-            self.wait_window(self.upload_window)
-            self.upload_window.destroy()
-            self.upload_window = None
-            if len(root.current_project.temp_images) <= 0:
-                assert root.current_project.image is not None
-                if self.image_labels[0] is not None:
-                    self.image_labels[0].bind("<Configure>", self.resize_images)
-                if self.image_labels[1] is not None:
-                    self.image_labels[1].bind("<Configure>", self.resize_images)
-                self.resize_images(None)
-                pass  # processing ...
+                self.bind("<<UploadClosed>>", self.close_upload_window)  # type: ignore
 
     def resize_images(self, event):
         assert root.current_project.image is not None

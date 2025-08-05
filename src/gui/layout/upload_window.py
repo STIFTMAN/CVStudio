@@ -33,13 +33,19 @@ class UploadWindow(customtkinter.CTkToplevel):
         self.upload_label.drop_target_register(DND_FILES)  # type: ignore
         self.upload_label.dnd_bind('<<Drop>>', self.on_drop)  # type: ignore
 
-        self.upload_filedialog_button = customtkinter.CTkButton(master=self, text="Search File")
+        self.upload_filedialog_button = customtkinter.CTkButton(master=self, text="Search File", command=self.filediloag_submit)
         self.upload_filedialog_button.grid(row=1, column=0, sticky="ew", padx=30, pady=(0, 30))
+
+    def filediloag_submit(self):
+        filepath = filedialog.askopenfilename(title="Select Picture", filetypes=[("Bilddateien", "*.jpg;*.jpeg;*.png;*.bmp;*.gif"), ("Alle Dateien", "*.*")])
+        if os.path.isfile(filepath) and filepath.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif')):
+            root.current_project.load_image(cv2.imread(filepath))
+            self.master.event_generate("<<UploadClosed>>")
+            self.destroy()
 
     def on_drop(self, event):
         filepath = event.data.strip("{}")
         if os.path.isfile(filepath) and filepath.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif')):
             root.current_project.load_image(cv2.imread(filepath))
+            self.master.event_generate("<<UploadClosed>>")
             self.destroy()
-        else:
-            print("Kein Unterstütztes Format!")

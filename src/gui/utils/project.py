@@ -7,6 +7,7 @@ import re
 class Project:
     data: Project_File_Type | None = None
     image = None
+    name: str = ""
 
     temp_images = []
 
@@ -22,12 +23,14 @@ class Project:
         self.image = img
         self.temp_images = []
 
-    def load_data(self, data):
+    def load_data(self, name, data):
         self.data = data
+        self.name = name
 
     def reset(self):
         self.data = None
         self.image = None
+        self.name = ""
 
     @staticmethod
     def validate(data: Any) -> bool:
