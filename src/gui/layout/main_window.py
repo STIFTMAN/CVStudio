@@ -3,6 +3,7 @@ import customtkinter
 
 from src.gui.layout.upload_window import UploadWindow
 from src.gui.utils.project import Project
+from src.gui.utils.resize_image import resize_image_to_label
 from ..layout.filterqueue_window import FilterqueueWindow
 from ..utils.config_loader import get_setting, save_settings
 import src.gui.state.root as root
@@ -22,6 +23,9 @@ class MainWindow(TkinterDnD.Tk):
 
     layout_settings: dict = {}
 
+    image_labels: list[customtkinter.CTkLabel | None] = [None, None]
+    image_start: list[str] = ["Start"]
+
     def __init__(self):
         super().__init__()
 
@@ -33,6 +37,8 @@ class MainWindow(TkinterDnD.Tk):
         self.geometry(f"{window_size[0]}x{window_size[1]}+{screen_coords[0]}+{screen_coords[1]}")
         self.minsize(window_size[0], window_size[1])
         self.layout_settings = get_setting("styles")["main_window"]
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=1)
         self.build_nav_frame()
         self.build_init_container_frame()
         if root.all_keybindings is not None:
@@ -51,11 +57,12 @@ class MainWindow(TkinterDnD.Tk):
         self.nav_frame.add("main_window_dropdownmenu_settings", root.current_lang.get("main_window_dropdownmenu_settings"), root.current_lang.get("main_window_settings_keybindings"), lambda: self.build_settings("main_window_settings_keybindings"))
         self.nav_frame.add("main_window_dropdownmenu_settings", root.current_lang.get("main_window_dropdownmenu_settings"), root.current_lang.get("main_window_settings_help"), lambda: self.build_settings("main_window_settings_help"))
         self.nav_frame.add("main_window_dropdownmenu_settings", root.current_lang.get("main_window_dropdownmenu_settings"), root.current_lang.get("main_window_settings_about"), lambda: self.build_settings("main_window_settings_about"))
-        self.nav_frame.pack(fill="x", side="top")
+        self.nav_frame.grid(row=0, column=0, sticky="we")
         self.nav_frame.outside_tracking(self)
 
     def reset_project(self):
         root.current_project.reset()
+        self.reset_container_frame()
         self.build_init_container_frame()
 
     def build_home(self):
@@ -68,7 +75,7 @@ class MainWindow(TkinterDnD.Tk):
     def build_init_container_frame(self):
         if self.container_frame is None:
             self.container_frame = customtkinter.CTkFrame(master=self, corner_radius=0)
-            self.container_frame.pack(fill="both", side="top", expand=True)
+            self.container_frame.grid(row=1, column=0, sticky="nswe")
         self.container_frame.grid_columnconfigure(0, weight=1)
         self.container_frame.grid_columnconfigure(1, weight=1)
         self.container_frame.grid_rowconfigure(0, weight=1)
@@ -131,12 +138,66 @@ class MainWindow(TkinterDnD.Tk):
 
     def build_image_container(self):
         self.reset_container_frame()
-        print("build picture screen incontainer")
+
+        select_frame: customtkinter.CTkFrame = customtkinter.CTkFrame(master=self.container_frame)
+        select_frame.grid(row=0, column=0, padx=10, pady=10, sticky="ne")
+        select_frame.grid_columnconfigure(0, weight=1)
+        select_frame.grid_columnconfigure(1, weight=1)
+        select_frame.grid_columnconfigure(2, weight=1)
+        assert self.container_frame is not None
+        self.container_frame.grid_rowconfigure(0, weight=0)
+        self.container_frame.grid_rowconfigure(1, weight=1)
+
+        select_start: customtkinter.CTkOptionMenu = customtkinter.CTkOptionMenu(master=select_frame, values=["First Picture"])
+        select_start.grid(row=0, column=0, padx=10, pady=10)
+
+        select_end: customtkinter.CTkOptionMenu = customtkinter.CTkOptionMenu(master=select_frame, values=["Last Picture"])
+        select_end.grid(row=0, column=1, padx=10, pady=10)
+
+        switch_mode: customtkinter.CTkSwitch = customtkinter.CTkSwitch(master=select_frame, text="Compare")
+        switch_mode.grid(row=0, column=2, padx=10, pady=10)
+
+        assert root.current_project.data is not None
+        switch_mode.select(root.current_project.data["image_view_mode"])
+
+        image_frame: customtkinter.CTkFrame = customtkinter.CTkFrame(master=self.container_frame)
+        image_frame.grid(row=1, column=0, padx=10, pady=(0, 10), sticky="nswe")
+
+        switch_mode.configure(command=lambda: self.build_image_container_image_frame(image_frame, bool(switch_mode.get())))
+        self.build_image_container_image_frame(image_frame, root.current_project.data["image_view_mode"])
+
+        self.open_filterqueue_window()
+
+    def build_image_container_image_frame(self, image_frame: customtkinter.CTkFrame, mode: bool):
+        for widget in image_frame.winfo_children():
+            widget.destroy()
+        image_frame.columnconfigure(0, weight=1)
+        self.image_labels = [None, None]
+        image_frame.rowconfigure(0, weight=1)
+        self.image_labels[0] = customtkinter.CTkLabel(master=image_frame, text="")
+        self.image_labels[0].grid(row=0, column=0, padx=10, pady=10, sticky="nswe")
+        if mode:
+            self.image_labels[1] = customtkinter.CTkLabel(master=image_frame, text="")
+            self.image_labels[1].grid(row=0, column=1, padx=10, pady=10, sticky="nswe")
+            image_frame.columnconfigure(1, weight=1)
+        else:
+            image_frame.columnconfigure(1, weight=0)
+        if root.current_project.image_ready():
+            assert root.current_project.image is not None
+            if self.image_labels[0] is not None:
+                self.image_labels[0].bind("<Configure>", self.resize_images)
+            if self.image_labels[1] is not None:
+                self.image_labels[1].bind("<Configure>", self.resize_images)
+            self.resize_images(None)
 
     def reset_container_frame(self):
         if self.container_frame is not None:
             for widget in self.container_frame.winfo_children():
                 widget.destroy()
+            [self.container_frame.grid_columnconfigure(i, weight=0) for i in range(20)]
+            [self.container_frame.grid_rowconfigure(i, weight=0) for i in range(20)]
+            self.container_frame.grid_columnconfigure(0, weight=1)
+            self.container_frame.grid_rowconfigure(0, weight=1)
 
     def build_settings(self, tabindex: str):
         assert root.all_keybindings is not None
@@ -246,17 +307,43 @@ class MainWindow(TkinterDnD.Tk):
             root.settings["color_theme"] = choice
             save_settings()
             from src.gui.utils.restart import restart
+            if self.filterqueue_window is not None and self.filterqueue_window.winfo_exists():
+                self.filterqueue_window.destroy()
+                self.filterqueue_window = None
+            if self.upload_window is not None and self.upload_window.winfo_exists():
+                self.upload_window.destroy()
+                self.upload_window = None
             restart()
 
-    def open_filterqueue_window(self):
-        if self.upload_window is not None and self.upload_window.winfo_exists():
-            self.upload_window.focus()
-        else:
-            self.upload_window = UploadWindow(master=self)
+    def open_upload_window(self):
+        if root.current_project.ready():
+            if self.upload_window is not None and self.upload_window.winfo_exists():
+                self.upload_window.focus()
+            else:
+                self.upload_window = UploadWindow(master=self)
 
-        self.wait_window(self.upload_window)
-        self.upload_window.destroy()
-        self.upload_window = None
+            self.wait_window(self.upload_window)
+            self.upload_window.destroy()
+            self.upload_window = None
+            if len(root.current_project.temp_images) <= 0:
+                assert root.current_project.image is not None
+                if self.image_labels[0] is not None:
+                    self.image_labels[0].bind("<Configure>", self.resize_images)
+                if self.image_labels[1] is not None:
+                    self.image_labels[1].bind("<Configure>", self.resize_images)
+                self.resize_images(None)
+                pass  # processing ...
+
+    def resize_images(self, event):
+        assert root.current_project.image is not None
+        if self.image_labels[0] is not None:
+            self.image_labels[0].configure(image=resize_image_to_label(self.image_labels[0], root.current_project.image))
+        if self.image_labels[1] is not None:
+            self.image_labels[1].configure(image=resize_image_to_label(self.image_labels[1], root.current_project.image))
+
+    def open_filterqueue_window(self):
+        if not root.current_project.image_ready():
+            self.open_upload_window()
         if self.filterqueue_window is not None and self.filterqueue_window.winfo_exists():
             self.filterqueue_window.focus()
         else:

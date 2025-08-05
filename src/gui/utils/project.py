@@ -8,10 +8,19 @@ class Project:
     data: Project_File_Type | None = None
     image = None
 
+    temp_images = []
+
     def ready(self) -> bool:
         if self.data is None:
             return False
         return True
+
+    def image_ready(self) -> bool:
+        return self.image is not None
+
+    def load_image(self, img):
+        self.image = img
+        self.temp_images = []
 
     def load_data(self, data):
         self.data = data
