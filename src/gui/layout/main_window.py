@@ -1,14 +1,16 @@
 from typing import Callable
 import customtkinter
 
+from src.gui.layout.error_window import ErrorWindow
 from src.gui.layout.upload_window import UploadWindow
+from src.gui.state.error import Error
 from src.gui.utils.project import Project
 from src.gui.utils.resize_image import resize_image_to_label
-from ..layout.filterqueue_window import FilterqueueWindow
-from ..utils.config_loader import get_setting, save_settings
+from src.gui.layout.filterqueue_window import FilterqueueWindow
+from src.gui.utils.config_loader import get_setting, save_settings
 import src.gui.state.root as root
-from ..components.dropdownmenu import Dropdownmenu
-from ..components.tabviewextended import TabviewExtended
+from src.gui.components.dropdownmenu import Dropdownmenu
+from src.gui.components.tabviewextended import TabviewExtended
 import webbrowser
 import re
 from tkinterdnd2 import TkinterDnD
@@ -20,7 +22,7 @@ class MainWindow(TkinterDnD.Tk):
     filterqueue_window: FilterqueueWindow | None = None
 
     upload_window: UploadWindow | None = None
-
+    error_window: ErrorWindow | None = None
     layout_settings: dict = {}
 
     image_labels: list[customtkinter.CTkLabel | None] = [None, None]
@@ -51,7 +53,9 @@ class MainWindow(TkinterDnD.Tk):
         self.nav_frame.addButton("main_window_dropdownmenu_home", root.current_lang.get("main_window_dropdownmenu_home"), self.build_home)
         self.nav_frame.add("main_window_dropdownmenu_project", root.current_lang.get("main_window_dropdownmenu_project"), root.current_lang.get("main_window_dropdownmenu_project_save_image_result"), msg1)
         self.nav_frame.add("main_window_dropdownmenu_project", root.current_lang.get("main_window_dropdownmenu_project"), root.current_lang.get("main_window_dropdownmenu_project_save_image_result_all"), msg1)
-        self.nav_frame.add("main_window_dropdownmenu_project", root.current_lang.get("main_window_dropdownmenu_project"), root.current_lang.get("main_window_dropdownmenu_close"), self.reset_project)
+        self.nav_frame.add("main_window_dropdownmenu_project", root.current_lang.get("main_window_dropdownmenu_project"), root.current_lang.get("main_window_dropdownmenu_project_close"), self.reset_project)
+        self.nav_frame.add("main_window_dropdownmenu_project", root.current_lang.get("main_window_dropdownmenu_project"), root.current_lang.get("main_window_dropdownmenu_project_open_filterqueue"), self.open_filterqueue_window)
+        self.nav_frame.add("main_window_dropdownmenu_project", root.current_lang.get("main_window_dropdownmenu_project"), root.current_lang.get("main_window_dropdownmenu_project_open_upload_image"), self.open_upload_window)
         self.nav_frame.addButton("main_window_dropdownmenu_testing", root.current_lang.get("main_window_dropdownmenu_testing"), msg1)
         self.nav_frame.add("main_window_dropdownmenu_settings", root.current_lang.get("main_window_dropdownmenu_settings"), root.current_lang.get("main_window_settings_look"), lambda: self.build_settings("main_window_settings_look"))
         self.nav_frame.add("main_window_dropdownmenu_settings", root.current_lang.get("main_window_dropdownmenu_settings"), root.current_lang.get("main_window_settings_keybindings"), lambda: self.build_settings("main_window_settings_keybindings"))
@@ -93,17 +97,18 @@ class MainWindow(TkinterDnD.Tk):
         if len(root.all_projects) > 0:
             open_frame.grid_rowconfigure(4, weight=2)
 
-            open_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=open_frame, font=("Arial", 20), textvariable=root.current_lang.get("main_window_init_open_label"))
-            open_label.grid(row=1, column=0, sticky="we", padx=20, pady=20)
+            open_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=open_frame, font=(self.layout_settings["init"]["open"]["label"]["font"], self.layout_settings["init"]["open"]["label"]["font_size"]), textvariable=root.current_lang.get("main_window_init_open_label"))
+            open_label.grid(row=1, column=0, sticky="we", padx=self.layout_settings["init"]["open"]["label"]["padding"][0:2], pady=self.layout_settings["init"]["open"]["label"]["padding"][2:4])
 
-            open_optionmenu: customtkinter.CTkOptionMenu = customtkinter.CTkOptionMenu(master=open_frame, font=("Arial", 20), values=[key for key in root.all_projects], anchor="center")
-            open_optionmenu.grid(row=2, column=0, sticky="we", padx=20, pady=20)
+            open_optionmenu: customtkinter.CTkOptionMenu = customtkinter.CTkOptionMenu(master=open_frame, values=[key for key in root.all_projects], anchor="center")
+            open_optionmenu.grid(row=2, column=0, sticky="we", padx=self.layout_settings["init"]["open"]["optionmenu"]["padding"][0:2], pady=self.layout_settings["init"]["open"]["optionmenu"]["padding"][2:4])
 
             open_button: customtkinter.CTkButton = customtkinter.CTkButton(master=open_frame, textvariable=root.current_lang.get("main_window_init_open_label"), command=lambda: self.init_open_button_submit(open_optionmenu))
-            open_button.grid(row=3, column=0, sticky="we", padx=20, pady=20)
+            open_button.grid(row=3, column=0, sticky="we", padx=self.layout_settings["init"]["open"]["button"]["padding"][0:2], pady=self.layout_settings["init"]["open"]["button"]["padding"][2:4])
         else:
-            open_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=open_frame, font=("Arial", 20), textvariable=root.current_lang.get("main_window_init_open_label_no_project"))
+            open_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=open_frame, font=(self.layout_settings["init"]["open"]["label"]["font"], self.layout_settings["init"]["open"]["label"]["font_size"]), textvariable=root.current_lang.get("main_window_init_open_label_no_project"))
             open_label.grid(row=0, column=0, sticky="nswe")
+
         create_frame: customtkinter.CTkFrame = customtkinter.CTkFrame(master=self.container_frame)
         create_frame.grid(row=0, column=1, sticky="nswe", padx=self.layout_settings["init"]["create"]["padding"][0:2], pady=self.layout_settings["init"]["create"]["padding"][2:4])
 
@@ -111,14 +116,14 @@ class MainWindow(TkinterDnD.Tk):
         create_frame.grid_rowconfigure(0, weight=1)
         create_frame.grid_rowconfigure(4, weight=2)
 
-        create_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=create_frame, font=("Arial", 20), textvariable=root.current_lang.get("main_window_init_create_label"))
-        create_label.grid(row=1, column=0, sticky="we", padx=20, pady=20)
+        create_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=create_frame, font=(self.layout_settings["init"]["create"]["label"]["font"], self.layout_settings["init"]["create"]["label"]["font_size"]), textvariable=root.current_lang.get("main_window_init_create_label"))
+        create_label.grid(row=1, column=0, sticky="we", padx=self.layout_settings["init"]["create"]["label"]["padding"][0:2], pady=self.layout_settings["init"]["create"]["label"]["padding"][2:4])
 
         create_entry: customtkinter.CTkEntry = customtkinter.CTkEntry(master=create_frame, justify="center", placeholder_text=root.current_lang.get("main_window_init_create_entry_placeholder").get())
-        create_entry.grid(row=2, column=0, sticky="we", padx=20, pady=20)
+        create_entry.grid(row=2, column=0, sticky="we", padx=self.layout_settings["init"]["create"]["entry"]["padding"][0:2], pady=self.layout_settings["init"]["create"]["entry"]["padding"][2:4])
 
         create_button: customtkinter.CTkButton = customtkinter.CTkButton(master=create_frame, state="disabled", textvariable=root.current_lang.get("main_window_init_create_button"))
-        create_button.grid(row=3, column=0, sticky="we", padx=20, pady=20)
+        create_button.grid(row=3, column=0, sticky="we", padx=self.layout_settings["init"]["create"]["button"]["padding"][0:2], pady=self.layout_settings["init"]["create"]["button"]["padding"][2:4])
 
         create_button.configure(command=lambda: self.init_create_button_submit(create_entry))
         create_entry.bind("<KeyRelease>", lambda e: self.init_create_entry_validate(create_entry, create_button))
@@ -135,7 +140,14 @@ class MainWindow(TkinterDnD.Tk):
         if Project.create(entry.get()):
             self.build_image_container()
         else:
-            print("Error creating FIle")
+            self.open_errow_window(Error.CREATE_PROJECT.value)
+
+    def open_errow_window(self, text: str):
+        print(text)
+        if self.error_window is not None and self.error_window.winfo_exists():
+            self.error_window.focus()
+        else:
+            self.error_window = ErrorWindow(master=self, text=text)
 
     def init_open_button_submit(self, optionmenu: customtkinter.CTkOptionMenu):
         data = optionmenu.get()
@@ -146,7 +158,7 @@ class MainWindow(TkinterDnD.Tk):
         self.reset_container_frame()
 
         select_frame: customtkinter.CTkFrame = customtkinter.CTkFrame(master=self.container_frame)
-        select_frame.grid(row=0, column=0, padx=10, pady=10, sticky="ne")
+        select_frame.grid(row=0, column=0, padx=self.layout_settings["image_container"]["padding"][0:2], pady=self.layout_settings["image_container"]["padding"][2:4], sticky="ne")
         select_frame.grid_columnconfigure(0, weight=1)
         select_frame.grid_columnconfigure(1, weight=1)
         select_frame.grid_columnconfigure(2, weight=1)
@@ -155,19 +167,19 @@ class MainWindow(TkinterDnD.Tk):
         self.container_frame.grid_rowconfigure(1, weight=1)
 
         select_start: customtkinter.CTkOptionMenu = customtkinter.CTkOptionMenu(master=select_frame, values=["First Picture"])
-        select_start.grid(row=0, column=0, padx=10, pady=10)
+        select_start.grid(row=0, column=0, padx=self.layout_settings["image_container"]["select_frame"]["optionmenu_start"]["padding"][0:2], pady=self.layout_settings["image_container"]["select_frame"]["optionmenu_start"]["padding"][2:4])
 
         select_end: customtkinter.CTkOptionMenu = customtkinter.CTkOptionMenu(master=select_frame, values=["Last Picture"])
-        select_end.grid(row=0, column=1, padx=10, pady=10)
+        select_end.grid(row=0, column=1, padx=self.layout_settings["image_container"]["select_frame"]["optionmenu_end"]["padding"][0:2], pady=self.layout_settings["image_container"]["select_frame"]["optionmenu_end"]["padding"][2:4])
 
-        switch_mode: customtkinter.CTkSwitch = customtkinter.CTkSwitch(master=select_frame, text="Compare")
-        switch_mode.grid(row=0, column=2, padx=10, pady=10)
+        switch_mode: customtkinter.CTkSwitch = customtkinter.CTkSwitch(master=select_frame, textvariable=root.current_lang.get("main_window_image_container_select_compare"))
+        switch_mode.grid(row=0, column=2, padx=self.layout_settings["image_container"]["select_frame"]["switch_mode"]["padding"][0:2], pady=self.layout_settings["image_container"]["select_frame"]["switch_mode"]["padding"][2:4])
 
         assert root.current_project.data is not None
         switch_mode.select(root.current_project.data["image_view_mode"])
 
         image_frame: customtkinter.CTkFrame = customtkinter.CTkFrame(master=self.container_frame)
-        image_frame.grid(row=1, column=0, padx=10, pady=(0, 10), sticky="nswe")
+        image_frame.grid(row=1, column=0, padx=self.layout_settings["image_container"]["image_frame"]["padding"][0:2], pady=self.layout_settings["image_container"]["image_frame"]["padding"][2:4], sticky="nswe")
 
         switch_mode.configure(command=lambda: self.build_image_container_image_frame(image_frame, bool(switch_mode.get())))
         self.build_image_container_image_frame(image_frame, root.current_project.data["image_view_mode"])
@@ -181,10 +193,10 @@ class MainWindow(TkinterDnD.Tk):
         self.image_labels = [None, None]
         image_frame.rowconfigure(0, weight=1)
         self.image_labels[0] = customtkinter.CTkLabel(master=image_frame, text="")
-        self.image_labels[0].grid(row=0, column=0, padx=10, pady=10, sticky="nswe")
+        self.image_labels[0].grid(row=0, column=0, padx=self.layout_settings["image_container"]["image_frame"]["image_label_1"]["padding"][0:2], pady=self.layout_settings["image_container"]["image_frame"]["image_label_1"]["padding"][2:4], sticky="nswe")
         if mode:
             self.image_labels[1] = customtkinter.CTkLabel(master=image_frame, text="")
-            self.image_labels[1].grid(row=0, column=1, padx=10, pady=10, sticky="nswe")
+            self.image_labels[1].grid(row=0, column=1, padx=self.layout_settings["image_container"]["image_frame"]["image_label_2"]["padding"][0:2], pady=self.layout_settings["image_container"]["image_frame"]["image_label_2"]["padding"][2:4], sticky="nswe")
             image_frame.columnconfigure(1, weight=1)
         else:
             image_frame.columnconfigure(1, weight=0)
@@ -286,9 +298,9 @@ class MainWindow(TkinterDnD.Tk):
 
         for key in range(len(settings_about_keys)):
             if isinstance(settings_about_keys[key], customtkinter.StringVar):
-                settings_about_temp_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=tabview.tab("main_window_settings_about"), padx=self.layout_settings["settings"]["about"]["label"]["padding_inline"][0], pady=self.layout_settings["settings"]["about"]["label"]["padding_inline"][1], anchor="w", wraplength=800, justify="left", textvariable=settings_about_keys[key])
+                settings_about_temp_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=tabview.tab("main_window_settings_about"), padx=self.layout_settings["settings"]["about"]["label"]["padding_inline"][0], pady=self.layout_settings["settings"]["about"]["label"]["padding_inline"][1], anchor="w", wraplength=self.layout_settings["settings"]["about"]["label"]["wraplength"], justify="left", textvariable=settings_about_keys[key])
             else:
-                settings_about_temp_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=tabview.tab("main_window_settings_about"), wraplength=800, justify="left", padx=self.layout_settings["settings"]["about"]["label"]["padding_inline"][0], pady=self.layout_settings["settings"]["about"]["label"]["padding_inline"][1], anchor="w", text=settings_about_keys[key])  # type: ignore
+                settings_about_temp_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=tabview.tab("main_window_settings_about"), wraplength=self.layout_settings["settings"]["about"]["label"]["wraplength"], justify="left", padx=self.layout_settings["settings"]["about"]["label"]["padding_inline"][0], pady=self.layout_settings["settings"]["about"]["label"]["padding_inline"][1], anchor="w", text=settings_about_keys[key])  # type: ignore
             settings_about_temp_label.grid(row=key, column=0, padx=self.layout_settings["settings"]["about"]["label"]["padding"][0], pady=self.layout_settings["settings"]["about"]["label"]["padding"][1], sticky="w")
 
     def settings_look_lang_output(self, choice):
@@ -351,12 +363,13 @@ class MainWindow(TkinterDnD.Tk):
             self.image_labels[1].configure(image=resize_image_to_label(self.image_labels[1], root.current_project.image))
 
     def open_filterqueue_window(self):
-        if not root.current_project.image_ready():
-            self.open_upload_window()
-        if self.filterqueue_window is not None and self.filterqueue_window.winfo_exists():
-            self.filterqueue_window.focus()
-        else:
-            self.filterqueue_window = FilterqueueWindow(master=self)
+        if root.current_project.ready():
+            if not root.current_project.image_ready():
+                self.open_upload_window()
+            if self.filterqueue_window is not None and self.filterqueue_window.winfo_exists():
+                self.filterqueue_window.focus()
+            else:
+                self.filterqueue_window = FilterqueueWindow(master=self)
 
 # WIRD SPÄTER GEMACHT
     def event(self, key):

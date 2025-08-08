@@ -4,7 +4,9 @@
     "main_window_dropdownmenu_project": "Project",
     "main_window_dropdownmenu_project_save_image_result": "Save last Picture",
     "main_window_dropdownmenu_project_save_image_result_all": "Save all Pictures",
-    "main_window_dropdownmenu_close": "Close Project",
+    "main_window_dropdownmenu_project_close": "Close Project",
+    "main_window_dropdownmenu_project_open_filterqueue": "Open Filterqueue",
+    "main_window_dropdownmenu_project_open_upload_image": "Upload Image",
     "main_window_dropdownmenu_testing": "Testing",
     "main_window_dropdownmenu_settings": "Settings",
     "main_window_settings_look": "Look",
@@ -27,5 +29,10 @@
     "main_window_init_create_button": "Create",
     "main_window_init_open_button": "Create",
     "main_window_init_open_label": "Open Project",
-    "main_window_init_open_label_no_project": "You have not created a project yet"
+    "main_window_init_open_label_no_project": "You have not created a project yet",
+    "main_window_image_container_select_compare": "Compare",
+    "upload_window_upload_label": "Drag & Drop your image in here",
+    "upload_window_upload_filedialog_button": "Browse for Image",
+    "upload_window_filedialog_window_title": "Select Images",
+    "upload_window_filedialog_select_type_pretext": "Images only"
 }

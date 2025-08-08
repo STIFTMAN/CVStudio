@@ -16,14 +16,19 @@ class Filter_Cell_Type(TypedDict):
 class Filter_Type(TypedDict):
     settings: Filter_Settings_Type
     grid: list[list[Filter_Cell_Type]]
+    name: str
+    hash: str | None
 
 
 class Project_File_Type(TypedDict):
     filterqueue: list[Filter_Type | str]
+    name: str
     image_view_mode: bool
+    hash: str | None
 
 
 template: Project_File_Type = {
+    "name": "my project",
     "filterqueue": [
         {
             "settings":
@@ -40,8 +45,11 @@ template: Project_File_Type = {
                         "disabled": False
                     }
                 ]
-            ]
+            ],
+            "name": "my first filter",
+            "hash": None
         }
     ],
-    "image_view_mode": True
+    "image_view_mode": True,
+    "hash": None
 }

@@ -39,7 +39,33 @@
                         20,
                         20,
                         20
-                    ]
+                    ],
+                    "label": {
+                        "font_size": 20,
+                        "font": "Arial",
+                        "padding": [
+                            20,
+                            20,
+                            20,
+                            20
+                        ]
+                    },
+                    "entry": {
+                        "padding": [
+                            20,
+                            20,
+                            20,
+                            20
+                        ]
+                    },
+                    "button": {
+                        "padding": [
+                            20,
+                            20,
+                            20,
+                            20
+                        ]
+                    }
                 },
                 "open": {
                     "padding": [
@@ -47,7 +73,91 @@
                         20,
                         20,
                         20
-                    ]
+                    ],
+                    "label": {
+                        "font_size": 20,
+                        "font": "Arial",
+                        "padding": [
+                            20,
+                            20,
+                            20,
+                            20
+                        ]
+                    },
+                    "optionmenu": {
+                        "padding": [
+                            20,
+                            20,
+                            20,
+                            20
+                        ]
+                    },
+                    "button": {
+                        "padding": [
+                            20,
+                            20,
+                            20,
+                            20
+                        ]
+                    }
+                }
+            },
+            "image_container": {
+                "padding": [
+                    10,
+                    10,
+                    10,
+                    10
+                ],
+                "select_frame": {
+                    "optionmenu_start": {
+                        "padding": [
+                            10,
+                            10,
+                            10,
+                            10
+                        ]
+                    },
+                    "optionmenu_end": {
+                        "padding": [
+                            10,
+                            10,
+                            10,
+                            10
+                        ]
+                    },
+                    "switch_mode": {
+                        "padding": [
+                            10,
+                            10,
+                            10,
+                            10
+                        ]
+                    }
+                },
+                "image_frame": {
+                    "padding": [
+                        10,
+                        10,
+                        0,
+                        10
+                    ],
+                    "image_label_1": {
+                        "padding": [
+                            10,
+                            10,
+                            10,
+                            10
+                        ]
+                    },
+                    "image_label_2": {
+                        "padding": [
+                            10,
+                            10,
+                            10,
+                            10
+                        ]
+                    }
                 }
             },
             "settings": {
@@ -108,9 +218,30 @@
                         "padding_inline": [
                             0,
                             0
-                        ]
+                        ],
+                        "wraplength": 800
                     }
                 }
+            }
+        },
+        "upload_window": {
+            "upload_label": {
+                "corner_radius": 7,
+                "fg_color": "green",
+                "padding": [
+                    20,
+                    20,
+                    20,
+                    20
+                ]
+            },
+            "upload_filedialog_button": {
+                "padding": [
+                    20,
+                    20,
+                    0,
+                    20
+                ]
             }
         }
     }
