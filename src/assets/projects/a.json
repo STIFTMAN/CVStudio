@@ -1,1 +1,1 @@
-{"filterqueue": [{"settings": {"size": [1, 1], "spatial_sampling_rate": [1, 1], "factor": 1.0, "type": "custom"}, "grid": [[{"value": 1.0, "disabled": false}]]}], "image_view_mode": "single"}
+{"filterqueue": [], "image_view_mode": true, "hash": null}

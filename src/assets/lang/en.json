@@ -34,5 +34,8 @@
     "upload_window_upload_label": "Drag & Drop your image in here",
     "upload_window_upload_filedialog_button": "Browse for Image",
     "upload_window_filedialog_window_title": "Select Images",
-    "upload_window_filedialog_select_type_pretext": "Images only"
+    "upload_window_filedialog_select_type_pretext": "Images only",
+    "filterqueue_window_func_bar_save_button": "Save Project",
+    "filterqueue_window_func_bar_create_new_filter_button": "Create new Filter",
+    "filterqueue_window_func_bar_filter_add_button": "+"
 }

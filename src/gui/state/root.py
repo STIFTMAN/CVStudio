@@ -15,3 +15,4 @@ all_keybindings: dict[str, str] | None = None
 version: str = "unknown"
 all_projects: dict[str, Project_File_Type] = {}
 current_project: Project = Project()
+all_filters: dict = {}

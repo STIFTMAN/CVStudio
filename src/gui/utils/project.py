@@ -1,5 +1,5 @@
 from typing import Any
-from src.gui.state.project_file_type import Project_File_Type, template
+from src.gui.state.project_file_type import Project_File_Type, empty_project
 import src.gui.state.root as root
 import re
 
@@ -10,6 +10,17 @@ class Project:
     name: str = ""
 
     temp_images = []
+
+    def get_filternames(self) -> list[str]:
+        temp: list[str] = []
+        if self.data is not None:
+            for key in range(len(self.data["filterqueue"])):
+                temp_val = self.data["filterqueue"][key]
+                if isinstance(temp_val, str):
+                    temp.append(temp_val)
+                else:
+                    temp.append(temp_val["name"])
+        return temp
 
     def ready(self) -> bool:
         if self.data is None:
@@ -32,6 +43,9 @@ class Project:
         self.image = None
         self.name = ""
 
+    def save(self) -> bool:
+        return True
+
     @staticmethod
     def validate(data: Any) -> bool:
         return True
@@ -51,5 +65,6 @@ class Project:
         if not Project.valid_filename(name):
             return False
         from src.gui.utils.project_loader import save_project
-        save_project(name, template)
+        save_project(name, empty_project)
+        root.current_project.load_data(name, empty_project)
         return True

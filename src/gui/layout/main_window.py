@@ -1,7 +1,7 @@
 from typing import Callable
 import customtkinter
 
-from src.gui.layout.error_window import ErrorWindow
+from src.gui.layout.info_window import InfoWindow, WindowType
 from src.gui.layout.upload_window import UploadWindow
 from src.gui.state.error import Error
 from src.gui.utils.project import Project
@@ -22,7 +22,7 @@ class MainWindow(TkinterDnD.Tk):
     filterqueue_window: FilterqueueWindow | None = None
 
     upload_window: UploadWindow | None = None
-    error_window: ErrorWindow | None = None
+    info_window: InfoWindow | None = None
     layout_settings: dict = {}
 
     image_labels: list[customtkinter.CTkLabel | None] = [None, None]
@@ -143,11 +143,7 @@ class MainWindow(TkinterDnD.Tk):
             self.open_errow_window(Error.CREATE_PROJECT.value)
 
     def open_errow_window(self, text: str):
-        print(text)
-        if self.error_window is not None and self.error_window.winfo_exists():
-            self.error_window.focus()
-        else:
-            self.error_window = ErrorWindow(master=self, text=text)
+        InfoWindow(master=self, text=text, type=WindowType.ERROR)
 
     def init_open_button_submit(self, optionmenu: customtkinter.CTkOptionMenu):
         data = optionmenu.get()
@@ -376,7 +372,10 @@ class MainWindow(TkinterDnD.Tk):
         print("Event | " + key)
         match key:
             case "save":
-                pass
+                InfoWindow(master=self)
+                # if not root.current_project.save():
+                # InfoWindow(master=self)
+                # pass
             case "quick_test":
                 pass
             case "help":

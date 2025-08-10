@@ -1,13 +1,18 @@
+from src.gui.components.comboboxextended import ComboBoxExtended
 from src.gui.components.drag_and_drop import DragAndDropLockedFrame
+from src.gui.layout.info_window import InfoWindow, WindowType
+from src.gui.state import root
 from src.gui.utils.config_loader import get_setting
 import customtkinter
 
 
 class FilterqueueWindow(customtkinter.CTkToplevel):
 
+    func_bar: customtkinter.CTkFrame | None = None
+
     drag_and_drop_frame: DragAndDropLockedFrame | None = None
 
-    def __init__(self, master, *args, **kwargs):
+    def __init__(self, master, *args, **kwargs) -> None:
         super().__init__(master=master, *args, **kwargs)
         self.title(get_setting("name"))
         self.iconbitmap("src/assets/favicon.ico")
@@ -17,14 +22,43 @@ class FilterqueueWindow(customtkinter.CTkToplevel):
         self.after(100, self.focus)
 
         self.grid_columnconfigure(0, weight=1)
-        self.grid_rowconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=1)
+        self.build_func_bar()
 
         self.drag_and_drop_frame = DragAndDropLockedFrame(self)
 
-        for i in range(10):
+        for i in range(5):
             frame = customtkinter.CTkFrame(master=self.drag_and_drop_frame, border_width=10, corner_radius=0)
             label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=frame, text=str(i), corner_radius=0)
             label.pack(padx=10, pady=20)
             self.drag_and_drop_frame.add(frame)
-        self.drag_and_drop_frame.grid(sticky="nswe")
+        self.drag_and_drop_frame.grid(row=1, column=0, sticky="nswe")
         self.drag_and_drop_frame.show()
+
+    def build_func_bar(self) -> None:
+        self.func_bar = customtkinter.CTkFrame(master=self, fg_color="transparent")
+        self.func_bar.grid(row=0, column=0, sticky="we")
+
+        self.func_bar.grid_columnconfigure(3, weight=1)
+        self.func_bar.grid_rowconfigure(0, weight=1)
+
+        save_button: customtkinter.CTkButton = customtkinter.CTkButton(master=self.func_bar, textvariable=root.current_lang.get("filterqueue_window_func_bar_save_button"), command=self.save_filter)
+        save_button.grid(row=0, column=0, padx=10, pady=10, sticky="nsw")
+
+        create_new_filter_button: customtkinter.CTkButton = customtkinter.CTkButton(master=self.func_bar, textvariable=root.current_lang.get("filterqueue_window_func_bar_create_new_filter_button"))
+        create_new_filter_button.grid(row=0, column=1, padx=[0, 10], pady=10, sticky="nsw")
+
+        filter_add_frame: customtkinter.CTkFrame = customtkinter.CTkFrame(master=self.func_bar, fg_color="transparent")
+        filter_add_frame.grid(row=0, column=3, sticky="nse")
+
+        filter_add_optionmenu: ComboBoxExtended = ComboBoxExtended(master=filter_add_frame, values=[key for key in root.all_filters])
+        filter_add_optionmenu.grid(row=0, column=0, padx=10, pady=10, sticky="ns")
+
+        filter_add_button: customtkinter.CTkButton = customtkinter.CTkButton(master=filter_add_frame, textvariable=root.current_lang.get("filterqueue_window_func_bar_filter_add_button"), width=28)
+        filter_add_button.grid(row=0, column=1, padx=[0, 10], pady=10, sticky="nse")
+
+    def save_filter(self):
+        if not root.current_project.save():
+            InfoWindow(master=self, text="Error", type=WindowType.ERROR)
+        else:
+            InfoWindow(master=self, text="saved!", type=WindowType.INFO)

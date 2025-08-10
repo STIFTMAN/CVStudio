@@ -18,38 +18,38 @@ class Filter_Type(TypedDict):
     grid: list[list[Filter_Cell_Type]]
     name: str
     hash: str | None
+    mutable: bool
 
 
 class Project_File_Type(TypedDict):
     filterqueue: list[Filter_Type | str]
-    name: str
     image_view_mode: bool
     hash: str | None
 
 
-template: Project_File_Type = {
-    "name": "my project",
-    "filterqueue": [
-        {
-            "settings":
-            {
-                "size": [1, 1],
-                "spatial_sampling_rate": [1, 1],
-                "factor": 1.0,
-                "type": "custom"
-            },
-            "grid": [
-                [
-                    {
-                        "value": 1.0,
-                        "disabled": False
-                    }
-                ]
-            ],
-            "name": "my first filter",
-            "hash": None
-        }
-    ],
+empty_project: Project_File_Type = {
+    "filterqueue": [],
     "image_view_mode": True,
     "hash": None
+}
+
+empty_filter: Filter_Type = {
+    "settings":
+    {
+        "size": [1, 1],
+        "spatial_sampling_rate": [1, 1],
+        "factor": 1.0,
+        "type": "custom"
+    },
+    "grid": [
+        [
+            {
+                "value": 1.0,
+                "disabled": False
+            }
+        ]
+    ],
+    "name": "my_first_filter",
+    "hash": None,
+    "mutable": True
 }

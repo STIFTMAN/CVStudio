@@ -4,6 +4,7 @@ from src.gui.state.project_file_type import Project_File_Type
 import src.gui.state.root as root
 from src.gui.utils.project import Project
 from ..state.error import Error
+import src.processing.load_filters as filters
 
 
 def load():
@@ -16,6 +17,11 @@ def load():
                 root.all_projects[name] = data
             else:
                 print(Error.INVALID_PROJECT_FILE.value, name)
+    load_filters()
+
+
+def load_filters():
+    root.all_filters = filters.load()
 
 
 def save_project(name: str, data: Project_File_Type):
