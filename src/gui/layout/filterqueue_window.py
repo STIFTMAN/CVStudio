@@ -1,5 +1,6 @@
 from src.gui.components.comboboxextended import ComboBoxExtended
 from src.gui.components.drag_and_drop import DragAndDropLockedFrame
+from src.gui.components.filter_entry_frame import FilterEntryFrame
 from src.gui.layout.info_window import InfoWindow, WindowType
 from src.gui.state import root
 from src.gui.utils.config_loader import get_setting
@@ -20,18 +21,18 @@ class FilterqueueWindow(customtkinter.CTkToplevel):
         screen_coords = (int((master.winfo_screenwidth() - filterqueue_window_size[0]) / 2), int((master.winfo_screenheight() - filterqueue_window_size[1]) / 2))
         self.geometry(f"{filterqueue_window_size[0]}x{filterqueue_window_size[1]}+{screen_coords[0]}+{screen_coords[1]}")
         self.after(100, self.focus)
-
+        self.minsize(filterqueue_window_size[0], filterqueue_window_size[1])
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
         self.build_func_bar()
 
         self.drag_and_drop_frame = DragAndDropLockedFrame(self)
 
-        for i in range(5):
-            frame = customtkinter.CTkFrame(master=self.drag_and_drop_frame, border_width=10, corner_radius=0)
-            label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=frame, text=str(i), corner_radius=0)
-            label.pack(padx=10, pady=20)
-            self.drag_and_drop_frame.add(frame)
+        filter = root.current_project.get_filter()
+        if filter is not None:
+            for i in filter:
+                frame = FilterEntryFrame(master=self.drag_and_drop_frame, filter=i, border_width=2, corner_radius=0)
+                self.drag_and_drop_frame.add(frame)
         self.drag_and_drop_frame.grid(row=1, column=0, sticky="nswe")
         self.drag_and_drop_frame.show()
 
@@ -61,4 +62,4 @@ class FilterqueueWindow(customtkinter.CTkToplevel):
         if not root.current_project.save():
             InfoWindow(master=self, text="Error", type=WindowType.ERROR)
         else:
-            InfoWindow(master=self, text="saved!", type=WindowType.INFO)
+            InfoWindow(master=self, text="Saved!", type=WindowType.INFO)

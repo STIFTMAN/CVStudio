@@ -1,5 +1,5 @@
 from typing import Any
-from src.gui.state.project_file_type import Project_File_Type, empty_project
+from src.gui.state.project_file_type import Filter_Type, Project_File_Type, empty_project
 import src.gui.state.root as root
 import re
 
@@ -21,6 +21,11 @@ class Project:
                 else:
                     temp.append(temp_val["name"])
         return temp
+
+    def get_filter(self) -> list[Filter_Type | str] | None:
+        if self.data is not None:
+            return self.data["filterqueue"]
+        return None
 
     def ready(self) -> bool:
         if self.data is None:

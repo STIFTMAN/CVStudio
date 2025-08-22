@@ -6,6 +6,8 @@ class Filter_Settings_Type(TypedDict):
     spatial_sampling_rate: list[int]
     factor: float
     type: str
+    mutable: bool
+    args: int
 
 
 class Filter_Cell_Type(TypedDict):
@@ -18,7 +20,6 @@ class Filter_Type(TypedDict):
     grid: list[list[Filter_Cell_Type]]
     name: str
     hash: str | None
-    mutable: bool
 
 
 class Project_File_Type(TypedDict):
@@ -39,7 +40,9 @@ empty_filter: Filter_Type = {
         "size": [1, 1],
         "spatial_sampling_rate": [1, 1],
         "factor": 1.0,
-        "type": "custom"
+        "type": "custom",
+        "mutable": True,
+        "args": 0
     },
     "grid": [
         [
@@ -50,6 +53,5 @@ empty_filter: Filter_Type = {
         ]
     ],
     "name": "my_first_filter",
-    "hash": None,
-    "mutable": True
+    "hash": None
 }
