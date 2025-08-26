@@ -21,6 +21,9 @@ class DragAndDropLockedFrame(customtkinter.CTkScrollableFrame):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs, corner_radius=0)
 
+    def clear(self):
+        pass
+
     def toggle_grid(self, columns: int):
         self._type_pack = _DragAndDropLockedFrame_Type.GRID
 

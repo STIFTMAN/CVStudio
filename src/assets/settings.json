@@ -25,6 +25,10 @@
         "upload": [
             500,
             500
+        ],
+        "filter": [
+            800,
+            500
         ]
     },
     "help_url": "https://github.com/STIFTMAN/Bachelorarbeit",

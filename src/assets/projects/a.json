@@ -1,0 +1,1 @@
+{"filterqueue": [{"settings": {"size": [1, 1], "spatial_sampling_rate": [1, 1], "factor": 1.0, "type": "custom", "mutable": true, "args": 0}, "grid": [[{"value": 1.0, "disabled": false}]], "name": "my_first_filter", "hash": null}], "image_view_mode": true, "hash": null}

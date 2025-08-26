@@ -29,7 +29,29 @@ class Project_File_Type(TypedDict):
 
 
 empty_project: Project_File_Type = {
-    "filterqueue": [],
+    "filterqueue": [
+        {
+            "settings":
+            {
+                "size": [1, 1],
+                "spatial_sampling_rate": [1, 1],
+                "factor": 1.0,
+                "type": "custom",
+                "mutable": True,
+                "args": 0
+            },
+            "grid": [
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": False
+                    }
+                ]
+            ],
+            "name": "my_first_filter",
+            "hash": None
+        }
+    ],
     "image_view_mode": True,
     "hash": None
 }

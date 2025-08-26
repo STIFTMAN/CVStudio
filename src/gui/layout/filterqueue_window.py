@@ -3,6 +3,7 @@ from src.gui.components.drag_and_drop import DragAndDropLockedFrame
 from src.gui.components.filter_entry_frame import FilterEntryFrame
 from src.gui.layout.info_window import InfoWindow, WindowType
 from src.gui.state import root
+from src.gui.state.project_file_type import Filter_Type
 from src.gui.utils.config_loader import get_setting
 import customtkinter
 
@@ -27,14 +28,24 @@ class FilterqueueWindow(customtkinter.CTkToplevel):
         self.build_func_bar()
 
         self.drag_and_drop_frame = DragAndDropLockedFrame(self)
-
-        filter = root.current_project.get_filter()
-        if filter is not None:
-            for i in filter:
-                frame = FilterEntryFrame(master=self.drag_and_drop_frame, filter=i, border_width=2, corner_radius=0)
-                self.drag_and_drop_frame.add(frame)
         self.drag_and_drop_frame.grid(row=1, column=0, sticky="nswe")
         self.drag_and_drop_frame.show()
+        self.build_filter_list()
+
+    def build_filter_list(self):
+        if self.drag_and_drop_frame is not None:
+            self.drag_and_drop_frame.clear()
+            filter = root.current_project.get_filter()
+            if filter is not None:
+                for i in range(len(filter)):
+                    frame = FilterEntryFrame(master=self.drag_and_drop_frame, filter=filter[i], border_width=2, corner_radius=0)
+                    frame.set_updater(updater=self.update_filter)
+                    self.drag_and_drop_frame.add(frame)
+            self.drag_and_drop_frame.show()
+
+    def update_filter(self, frame: FilterEntryFrame, data: Filter_Type | str | None):
+        print("Frame:", frame)
+        print("New Data:", data)
 
     def build_func_bar(self) -> None:
         self.func_bar = customtkinter.CTkFrame(master=self, fg_color="transparent")

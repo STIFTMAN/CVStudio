@@ -372,7 +372,7 @@ class MainWindow(TkinterDnD.Tk):
         print("Event | " + key)
         match key:
             case "save":
-                InfoWindow(master=self)
+                InfoWindow(master=self, text="Saved!")
                 # if not root.current_project.save():
                 # InfoWindow(master=self)
                 # pass
