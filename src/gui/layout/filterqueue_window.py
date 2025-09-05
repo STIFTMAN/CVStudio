@@ -1,11 +1,13 @@
+import copy
 from src.gui.components.comboboxextended import ComboBoxExtended
 from src.gui.components.drag_and_drop import DragAndDropLockedFrame
 from src.gui.components.filter_entry_frame import FilterEntryFrame
 from src.gui.layout.info_window import InfoWindow, WindowType
 from src.gui.state import root
-from src.gui.state.project_file_type import Filter_Type
+from src.gui.state.project_file_type import Filter_Type, empty_filter
 from src.gui.utils.config_loader import get_setting
 import customtkinter
+import uuid
 
 
 class FilterqueueWindow(customtkinter.CTkToplevel):
@@ -17,7 +19,7 @@ class FilterqueueWindow(customtkinter.CTkToplevel):
     def __init__(self, master, *args, **kwargs) -> None:
         super().__init__(master=master, *args, **kwargs)
         self.title(get_setting("name"))
-        self.iconbitmap("src/assets/favicon.ico")
+        self.after(250, lambda: self.iconbitmap("src/assets/favicon.ico"))
         filterqueue_window_size = get_setting("window_size")["filterqueue"]
         screen_coords = (int((master.winfo_screenwidth() - filterqueue_window_size[0]) / 2), int((master.winfo_screenheight() - filterqueue_window_size[1]) / 2))
         self.geometry(f"{filterqueue_window_size[0]}x{filterqueue_window_size[1]}+{screen_coords[0]}+{screen_coords[1]}")
@@ -28,6 +30,7 @@ class FilterqueueWindow(customtkinter.CTkToplevel):
         self.build_func_bar()
 
         self.drag_and_drop_frame = DragAndDropLockedFrame(self)
+        self.drag_and_drop_frame.set_border_width(get_setting("components")["filter_entry_frame"]["padding"])
         self.drag_and_drop_frame.grid(row=1, column=0, sticky="nswe")
         self.drag_and_drop_frame.show()
         self.build_filter_list()
@@ -35,17 +38,38 @@ class FilterqueueWindow(customtkinter.CTkToplevel):
     def build_filter_list(self):
         if self.drag_and_drop_frame is not None:
             self.drag_and_drop_frame.clear()
-            filter = root.current_project.get_filter()
-            if filter is not None:
-                for i in range(len(filter)):
-                    frame = FilterEntryFrame(master=self.drag_and_drop_frame, filter=filter[i], border_width=2, corner_radius=0)
+            filter_ids = root.current_project.get_filter()
+            for i in range(len(filter_ids)):
+                filter = root.current_project.get_filter_by_id(filter_ids[i])
+                if filter is not None:
+                    frame = FilterEntryFrame(master=self.drag_and_drop_frame, filter=filter, id=filter_ids[i])
                     frame.set_updater(updater=self.update_filter)
                     self.drag_and_drop_frame.add(frame)
             self.drag_and_drop_frame.show()
 
-    def update_filter(self, frame: FilterEntryFrame, data: Filter_Type | str | None):
-        print("Frame:", frame)
-        print("New Data:", data)
+    def update_filter(self, frame: FilterEntryFrame, data: Filter_Type):
+        if frame.id is not None:
+            self.save_filter(frame.id, data)
+
+    def create_new_filter(self):
+        id = str(uuid.uuid4())
+        new_filter = copy.deepcopy(empty_filter)
+        new_filter["name"] = "NewFilter-" + id
+        root.all_filters[id] = new_filter
+        root.current_project.add_filter(id)
+        from src.gui.utils.project_loader import save_filter
+        save_filter()
+        self.save_project()
+        self.build_filter_list()
+
+    def destroy(self):
+        """
+        try:
+            self.drag_and_drop_frame.clear_widgets_cache()
+        except Exception:
+            pass
+        """
+        super().destroy()
 
     def build_func_bar(self) -> None:
         self.func_bar = customtkinter.CTkFrame(master=self, fg_color="transparent")
@@ -54,10 +78,10 @@ class FilterqueueWindow(customtkinter.CTkToplevel):
         self.func_bar.grid_columnconfigure(3, weight=1)
         self.func_bar.grid_rowconfigure(0, weight=1)
 
-        save_button: customtkinter.CTkButton = customtkinter.CTkButton(master=self.func_bar, textvariable=root.current_lang.get("filterqueue_window_func_bar_save_button"), command=self.save_filter)
+        save_button: customtkinter.CTkButton = customtkinter.CTkButton(master=self.func_bar, textvariable=root.current_lang.get("filterqueue_window_func_bar_save_button"), command=self.save_project)
         save_button.grid(row=0, column=0, padx=10, pady=10, sticky="nsw")
 
-        create_new_filter_button: customtkinter.CTkButton = customtkinter.CTkButton(master=self.func_bar, textvariable=root.current_lang.get("filterqueue_window_func_bar_create_new_filter_button"))
+        create_new_filter_button: customtkinter.CTkButton = customtkinter.CTkButton(master=self.func_bar, textvariable=root.current_lang.get("filterqueue_window_func_bar_create_new_filter_button"), command=self.create_new_filter)
         create_new_filter_button.grid(row=0, column=1, padx=[0, 10], pady=10, sticky="nsw")
 
         filter_add_frame: customtkinter.CTkFrame = customtkinter.CTkFrame(master=self.func_bar, fg_color="transparent")
@@ -69,8 +93,11 @@ class FilterqueueWindow(customtkinter.CTkToplevel):
         filter_add_button: customtkinter.CTkButton = customtkinter.CTkButton(master=filter_add_frame, textvariable=root.current_lang.get("filterqueue_window_func_bar_filter_add_button"), width=28)
         filter_add_button.grid(row=0, column=1, padx=[0, 10], pady=10, sticky="nse")
 
-    def save_filter(self):
+    def save_project(self):
         if not root.current_project.save():
-            InfoWindow(master=self, text="Error", type=WindowType.ERROR)
+            InfoWindow(master=self, text="Error!", type=WindowType.ERROR)
         else:
             InfoWindow(master=self, text="Saved!", type=WindowType.INFO)
+
+    def save_filter(self, id: str, f: Filter_Type):
+        root.current_project.save_filter(id, f)

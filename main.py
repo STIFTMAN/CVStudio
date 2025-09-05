@@ -1,4 +1,9 @@
-import src
+import src.gui.utils.config_loader
+import src.gui.utils.lang_loader
+import src.gui.utils.style_loader
+import src.gui.utils.keybindings_loader
+import src.gui.utils.project_loader
+import src.gui.state.app
 
 
 def main():

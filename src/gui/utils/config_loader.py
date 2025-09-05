@@ -1,6 +1,7 @@
 import json
+from pathlib import Path
 from typing import Any
-
+from PIL import Image
 import customtkinter
 import src.gui.state.root as root
 from ..state.error import Error
@@ -13,6 +14,10 @@ def load():
     if root.settings is None:
         raise Exception(Error.SETTINGS_LOADING.value)
     root.version = "v" + get_setting("version") + "-" + get_git_version()
+    folder = Path("./src/assets/img")
+    for file in folder.glob("*.png"):
+        name = file.stem
+        root.all_icons[name] = customtkinter.CTkImage(light_image=Image.open(file))
     customtkinter.set_appearance_mode(get_setting("darkmode"))
 
 

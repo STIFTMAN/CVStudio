@@ -1,6 +1,8 @@
 from enum import IntEnum
 import uuid
 import customtkinter
+from src.gui.components.filter_entry_frame import FilterEntryFrame
+from src.gui.utils.config_loader import get_setting
 
 
 class _DragAndDropLockedFrame_Type(IntEnum):
@@ -17,12 +19,23 @@ class DragAndDropLockedFrame(customtkinter.CTkScrollableFrame):
     _frame_to_id: dict[customtkinter.CTkFrame, str] = {}
     _focus_old: customtkinter.CTkFrame | None = None
     _focus_dropable: customtkinter.CTkFrame | None = None
+    _layout_settings: dict = {}
+    _border_width: int = 0
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs, corner_radius=0)
+        self._layout_settings = get_setting("components")["drag_and_drop"]
 
     def clear(self):
-        pass
+        self.hide()
+        self._focus_old = None
+        self._focus_dropable = None
+        self._id_to_index.clear()
+        self._frame_to_id.clear()
+        self._items.clear()
+        self._items_order.clear()
+        for child in self.winfo_children():
+            child.destroy()
 
     def toggle_grid(self, columns: int):
         self._type_pack = _DragAndDropLockedFrame_Type.GRID
@@ -37,6 +50,13 @@ class DragAndDropLockedFrame(customtkinter.CTkScrollableFrame):
         frame.bind("<ButtonRelease-1>", self.drop)
         frame.bind("<B1-Motion>", self.dropable)
 
+        if isinstance(frame, FilterEntryFrame):
+            for child in frame.winfo_children():
+                if isinstance(child, customtkinter.CTkLabel):
+                    child.bind("<Button-1>", self.drag)
+                    child.bind("<ButtonRelease-1>", self.drop)
+                    child.bind("<B1-Motion>", self.dropable)
+
     def get_frames(self) -> list[customtkinter.CTkFrame]:
         return [self._items[i] for i in self._items_order]
 
@@ -50,8 +70,12 @@ class DragAndDropLockedFrame(customtkinter.CTkScrollableFrame):
 
     def show(self):
         if self._type_pack == _DragAndDropLockedFrame_Type.PACK:
-            for f in self.get_frames():
-                f.pack(fill="x")
+            for i in self._items_order:
+                if not self._items[i].winfo_exists():
+                    del self._items[i]
+                    self._items_order.remove(i)
+                else:
+                    self._items[i].pack(fill="x")
             return
 
         if self._type_pack == _DragAndDropLockedFrame_Type.GRID:
@@ -69,26 +93,39 @@ class DragAndDropLockedFrame(customtkinter.CTkScrollableFrame):
                     column = 0
                     row += 1
 
+    def set_border_width(self, w: int):
+        self._border_width = w
+
     def drag(self, event) -> None:
         self.clear_focus()
-        widget = event.widget.winfo_containing(event.x_root, event.y_root)
+        if not isinstance(event.widget, customtkinter.CTkFrame):
+            widget = event.widget.winfo_containing(event.x_root, event.y_root).master
+        else:
+            widget = event.widget.winfo_containing(event.x_root, event.y_root)
         if widget is None:
             return
         master = getattr(widget, "master", None)
         if isinstance(master, customtkinter.CTkFrame) and master.master == self:
             self._focus_old = master
             self._focus_dropable = None
-            self._focus_old.configure(border_color="orange")
+            if self._border_width > 0:
+                self._focus_old.configure(border_width=self._border_width, border_color=self._layout_settings["drag_color"])
+            else:
+                self._focus_old.configure(border_color=self._layout_settings["drag_color"])
+            self.clear_focus()
 
     def drop(self, event):
         if self._focus_old is not None and self._focus_dropable is not None:
             self.switch_frames(self._focus_old, self._focus_dropable)
-            self._focus_old = None
-            self._focus_dropable = None
-            self.clear_focus()
+        self._focus_old = None
+        self._focus_dropable = None
+        self.clear_focus()
 
     def dropable(self, event) -> None:
-        widget_pre = event.widget.winfo_containing(event.x_root, event.y_root)
+        if not isinstance(event.widget, customtkinter.CTkFrame):
+            widget_pre = event.widget.winfo_containing(event.x_root, event.y_root).master
+        else:
+            widget_pre = event.widget.winfo_containing(event.x_root, event.y_root)
         if widget_pre is None:
             return
         widget = getattr(widget_pre, "master", None)
@@ -98,7 +135,10 @@ class DragAndDropLockedFrame(customtkinter.CTkScrollableFrame):
 
         if widget is not self._focus_old and isinstance(widget, customtkinter.CTkFrame) and widget.master == self:
             self._focus_dropable = widget
-            self._focus_dropable.configure(border_color="green")
+            if self._border_width > 0:
+                self._focus_dropable.configure(border_width=self._border_width, border_color=self._layout_settings["dropable_color"])
+            else:
+                self._focus_old.configure(border_color=self._layout_settings["drag_color"])
             self.clear_focus()
         else:
             self._focus_dropable = None
@@ -108,7 +148,7 @@ class DragAndDropLockedFrame(customtkinter.CTkScrollableFrame):
         for child in self.winfo_children():
             if child is not self._focus_old and child is not self._focus_dropable:
                 if isinstance(child, customtkinter.CTkFrame):
-                    child.configure(border_color="grey")
+                    child.configure(border_width=0, border_color=self._layout_settings["default_color"])
 
     def get_id_by_frame(self, frame: customtkinter.CTkFrame) -> str | None:
         return self._frame_to_id.get(frame)

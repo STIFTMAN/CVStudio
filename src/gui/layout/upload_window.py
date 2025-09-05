@@ -21,7 +21,7 @@ class UploadWindow(customtkinter.CTkToplevel):
         super().__init__(master=master, *args, **kwargs)
         self.title(get_setting("name"))
         self.layout_settings = get_setting("styles")["upload_window"]
-        self.iconbitmap("src/assets/favicon.ico")
+        self.after(250, lambda: self.iconbitmap("src/assets/favicon.ico"))
         upload_window_size = get_setting("window_size")["upload"]
         screen_coords = (int((master.winfo_screenwidth() - upload_window_size[0]) / 2), int((master.winfo_screenheight() - upload_window_size[1]) / 2))
         self.geometry(f"{upload_window_size[0]}x{upload_window_size[1]}+{screen_coords[0]}+{screen_coords[1]}")

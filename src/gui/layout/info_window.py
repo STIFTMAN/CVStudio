@@ -15,7 +15,7 @@ class InfoWindow(customtkinter.CTkToplevel):
     def __init__(self, master, text: str = "", type: WindowType = WindowType.INFO, *args, **kwargs):
         super().__init__(master=master, *args, **kwargs)
         self.title(get_setting("name"))
-        self.iconbitmap("src/assets/favicon.ico")
+        self.after(250, lambda: self.iconbitmap("src/assets/favicon.ico"))
         info_window_size = get_setting("window_size")["info"]
         screen_coords = (int((master.winfo_screenwidth() - info_window_size[0]) / 2), int((master.winfo_screenheight() - info_window_size[1]) / 2))
         self.geometry(f"{info_window_size[0]}x{info_window_size[1]}+{screen_coords[0]}+{screen_coords[1]}")

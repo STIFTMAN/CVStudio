@@ -37,5 +37,21 @@
     "upload_window_filedialog_select_type_pretext": "Images only",
     "filterqueue_window_func_bar_save_button": "Save Project",
     "filterqueue_window_func_bar_create_new_filter_button": "Create new Filter",
-    "filterqueue_window_func_bar_filter_add_button": "+"
+    "filterqueue_window_func_bar_filter_add_button": "+",
+    "components_comboboxextendet_no_result": "-- No Result --",
+    "components_filter_entry_frame_name_none": "Invalid Name",
+    "components_filter_entry_frame_button_delete": "Delete",
+    "components_filter_entry_frame_button_edit": "Edit",
+    "filter_window_settings_container_name": "Filtername",
+    "filter_window_settings_container_name_default": "My New Filter",
+    "filter_window_settings_container_size": "Gridsize",
+    "filter_window_settings_container_spatial_sampling_rate": "Spatial Sampling Rate",
+    "filter_window_settings_container_type": "Type",
+    "smoothing": "Smoothing",
+    "edge_detection": "Edge Detection",
+    "median": "Median",
+    "maximum": "Maximum",
+    "minimum": "Minimum",
+    "25%_quantile": "25% Quantile",
+    "75%_quantile": "75% Quantile"
 }

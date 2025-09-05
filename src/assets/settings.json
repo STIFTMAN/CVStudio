@@ -2,7 +2,7 @@
     "name": "CVStudio",
     "lang": "en",
     "default_lang": "en",
-    "darkmode": "dark",
+    "darkmode": "light",
     "color_theme": "blue",
     "version": "0.1.0",
     "window_size": {
@@ -33,7 +33,55 @@
     },
     "help_url": "https://github.com/STIFTMAN/Bachelorarbeit",
     "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
-    "components": {},
+    "components": {
+        "comboboxextended": {
+            "placeholder_text": "",
+            "width": 260,
+            "max_visible": 10,
+            "open_button": {
+                "width": 34,
+                "padding": [
+                    6,
+                    0,
+                    0,
+                    0
+                ]
+            },
+            "popup": {
+                "diff_w": 6,
+                "diff_y": 6,
+                "item_height": 32
+            }
+        },
+        "drag_and_drop": {
+            "drag_color": "orange",
+            "dropable_color": "green",
+            "default_color": "grey"
+        },
+        "filter_entry_frame": {
+            "padding": 5
+        },
+        "filter_grid_cell": {
+            "enabled_color": "#335831",
+            "disabled_color": "#702C1F",
+            "switch": {
+                "padding": [
+                    10,
+                    10,
+                    10,
+                    10
+                ]
+            },
+            "entry": {
+                "padding": [
+                    10,
+                    10,
+                    10,
+                    10
+                ]
+            }
+        }
+    },
     "styles": {
         "main_window": {
             "init": {
@@ -246,6 +294,134 @@
                     0,
                     20
                 ]
+            }
+        },
+        "filter_window": {
+            "grid_container": {
+                "padding": [
+                    10,
+                    10,
+                    10,
+                    10
+                ],
+                "cell": {
+                    "padding": [
+                        5,
+                        5,
+                        5,
+                        5
+                    ]
+                }
+            },
+            "settings_container": {
+                "padding": [
+                    0,
+                    10,
+                    10,
+                    10
+                ],
+                "name_container": {
+                    "padding": [
+                        10,
+                        10,
+                        10,
+                        10
+                    ],
+                    "border_width": 1,
+                    "label": {
+                        "padding": [
+                            10,
+                            10,
+                            10,
+                            0
+                        ]
+                    },
+                    "entry": {
+                        "padding": [
+                            0,
+                            0,
+                            10,
+                            10
+                        ]
+                    }
+                },
+                "size_container": {
+                    "padding": [
+                        10,
+                        10,
+                        10,
+                        10
+                    ],
+                    "border_width": 1,
+                    "label": {
+                        "padding": [
+                            10,
+                            10,
+                            10,
+                            0
+                        ]
+                    },
+                    "entry": {
+                        "padding": [
+                            10,
+                            10,
+                            10,
+                            10
+                        ],
+                        "width": 30
+                    }
+                },
+                "spatial_sampling_rate_container": {
+                    "padding": [
+                        10,
+                        10,
+                        10,
+                        10
+                    ],
+                    "border_width": 1,
+                    "label": {
+                        "padding": [
+                            10,
+                            10,
+                            10,
+                            0
+                        ]
+                    },
+                    "entry": {
+                        "padding": [
+                            10,
+                            10,
+                            10,
+                            10
+                        ],
+                        "width": 30
+                    }
+                },
+                "type_container": {
+                    "padding": [
+                        10,
+                        10,
+                        10,
+                        10
+                    ],
+                    "border_width": 1,
+                    "label": {
+                        "padding": [
+                            10,
+                            10,
+                            10,
+                            0
+                        ]
+                    },
+                    "combobox": {
+                        "padding": [
+                            10,
+                            10,
+                            10,
+                            10
+                        ]
+                    }
+                }
             }
         }
     }

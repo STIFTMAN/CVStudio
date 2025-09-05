@@ -22,10 +22,21 @@ class Project:
                     temp.append(temp_val["name"])
         return temp
 
-    def get_filter(self) -> list[Filter_Type | str] | None:
+    @staticmethod
+    def get_filterid_by_name(name: str = "") -> str | None:
+        for key in root.all_filters:
+            if root.all_filters[key]["name"] == name:
+                return key
+        return None
+
+    def add_filter(self, id: str):
+        if self.data is not None:
+            self.data["filterqueue"].append(id)
+
+    def get_filter(self) -> list[str]:
         if self.data is not None:
             return self.data["filterqueue"]
-        return None
+        return []
 
     def ready(self) -> bool:
         if self.data is None:
@@ -49,11 +60,32 @@ class Project:
         self.name = ""
 
     def save(self) -> bool:
-        return True
+        if self.data is not None:
+            from src.gui.utils.project_loader import save_project
+            save_project(self.name, self.data)
+            return True
+        return False
+
+    @staticmethod
+    def get_filter_by_id(id: str) -> Filter_Type | None:
+        if id in root.all_filters:
+            return root.all_filters[id]
+        return None
 
     @staticmethod
     def validate(data: Any) -> bool:
         return True
+
+    @staticmethod
+    def save_filter(id: str, filter: Filter_Type):
+        root.all_filters[id] = filter
+        import src.gui.utils.project_loader
+        src.gui.utils.project_loader.save_filter()
+
+    @staticmethod
+    def delete_filter(id: str):
+        if root.all_filters[id]["settings"]["mutable"]:
+            del root.all_filters[id]
 
     @staticmethod
     def valid_filename(name: str) -> bool:
