@@ -1,8 +1,10 @@
 import json
 
+from src.gui.state.project_file_type import Action_Type
+
 
 def load() -> dict:
-    temp: dict = {}
+    temp: dict[str, Action_Type] = {}
     """
     with open("./src/assets/filters/default.json", "r", encoding="utf-8") as f:
         temp = json.load(f)

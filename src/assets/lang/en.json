@@ -53,5 +53,8 @@
     "maximum": "Maximum",
     "minimum": "Minimum",
     "25%_quantile": "25% Quantile",
-    "75%_quantile": "75% Quantile"
+    "75%_quantile": "75% Quantile",
+    "filter": "Locale Filter",
+    "operation": "Globale Operation",
+    "feature": "Feature"
 }

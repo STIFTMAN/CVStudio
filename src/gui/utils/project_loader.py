@@ -33,7 +33,9 @@ def save_project(name: str, data: Project_File_Type):
 def save_filter():
     data = {}
     for key in root.all_filters:
-        if root.all_filters[key]["settings"]["mutable"]:
-            data[key] = root.all_filters[key]
+        temp_data = root.all_filters[key]["data"]
+        if root.all_filters[key]["type"] == "filter" and isinstance(temp_data, dict):
+            if temp_data["settings"]["mutable"]:
+                data[key] = root.all_filters[key]
     with open("src/assets/filters/additional.json", "w", encoding="utf-8") as f:
         f.write(json.dumps(data))

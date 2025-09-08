@@ -2,7 +2,7 @@
     "name": "CVStudio",
     "lang": "en",
     "default_lang": "en",
-    "darkmode": "light",
+    "darkmode": "dark",
     "color_theme": "blue",
     "version": "0.1.0",
     "window_size": {
@@ -11,7 +11,7 @@
             600
         ],
         "filterqueue": [
-            800,
+            1000,
             600
         ],
         "testing": [
@@ -36,7 +36,7 @@
     "components": {
         "comboboxextended": {
             "placeholder_text": "",
-            "width": 260,
+            "width": 400,
             "max_visible": 10,
             "open_button": {
                 "width": 34,
@@ -67,15 +67,7 @@
             "switch": {
                 "padding": [
                     10,
-                    10,
-                    10,
-                    10
-                ]
-            },
-            "entry": {
-                "padding": [
-                    10,
-                    10,
+                    5,
                     10,
                     10
                 ]
@@ -273,6 +265,35 @@
                         ],
                         "wraplength": 800
                     }
+                }
+            }
+        },
+        "filterqueue_window": {
+            "func_bar": {
+                "create_new_filter_button": {
+                    "padding": [
+                        10,
+                        10,
+                        10,
+                        10
+                    ]
+                },
+                "filter_add_comboboxextended": {
+                    "padding": [
+                        10,
+                        10,
+                        10,
+                        10
+                    ]
+                },
+                "filter_add_button": {
+                    "padding": [
+                        0,
+                        10,
+                        10,
+                        10
+                    ],
+                    "width": 28
                 }
             }
         },

@@ -25,4 +25,4 @@ class InfoWindow(customtkinter.CTkToplevel):
         self.label = customtkinter.CTkLabel(master=self, text=text)
         self.label.grid(sticky="nswe", row=0, column=0)
         if type == WindowType.INFO:
-            self.after(2000, self.destroy)
+            self.after(1000, self.destroy)

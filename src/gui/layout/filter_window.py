@@ -229,13 +229,23 @@ class FilterWindow(customtkinter.CTkToplevel):
         if self.filter is not None:
             if self.filter["settings"]["mutable"] is True:
                 self.filter["grid"] = []
+                sum: float = 0.0
                 for x in range(self.grid_size[0]):
                     y_list = []
                     for y in range(self.grid_size[1]):
                         cell = self.grid[x][y]
                         if cell is not None:
-                            y_list.append(cell.get_cell_data())
+                            data = cell.get_cell_data()
+                            sum += data["value"]
+                            y_list.append(data)
                     self.filter["grid"].append(y_list)
+                if self.filter["settings"]["type"] == "smoothing":
+                    if sum != 0.0:
+                        self.filter["settings"]["factor"] = 1 / sum
+                    else:
+                        self.filter["settings"]["factor"] = 0.0
+                else:
+                    self.filter["settings"]["factor"] = 0.0
                 self.updater(self.filter)
 
     def update(self, *args):

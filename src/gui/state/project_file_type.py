@@ -25,6 +25,11 @@ class Project_File_Type(TypedDict):
     image_view_mode: bool
 
 
+class Action_Type(TypedDict):
+    type: str
+    data: Filter_Type | str
+
+
 empty_project: Project_File_Type = {
     "filterqueue": [],
     "image_view_mode": True

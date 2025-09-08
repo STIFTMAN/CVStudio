@@ -1,5 +1,5 @@
 from typing import Any
-from src.gui.state.project_file_type import Filter_Type, Project_File_Type, empty_project
+from src.gui.state.project_file_type import Action_Type, Filter_Type, Project_File_Type, empty_project
 import src.gui.state.root as root
 import re
 
@@ -25,7 +25,8 @@ class Project:
     @staticmethod
     def get_filterid_by_name(name: str = "") -> str | None:
         for key in root.all_filters:
-            if root.all_filters[key]["name"] == name:
+            temp = root.all_filters[key]
+            if isinstance(temp["data"], dict) and temp["data"]["name"] == name:
                 return key
         return None
 
@@ -33,7 +34,7 @@ class Project:
         if self.data is not None:
             self.data["filterqueue"].append(id)
 
-    def get_filter(self) -> list[str]:
+    def get_queue(self) -> list[str]:
         if self.data is not None:
             return self.data["filterqueue"]
         return []
@@ -67,7 +68,7 @@ class Project:
         return False
 
     @staticmethod
-    def get_filter_by_id(id: str) -> Filter_Type | None:
+    def get_action_by_id(id: str) -> Action_Type | None:
         if id in root.all_filters:
             return root.all_filters[id]
         return None
@@ -78,14 +79,37 @@ class Project:
 
     @staticmethod
     def save_filter(id: str, filter: Filter_Type):
-        root.all_filters[id] = filter
+        root.all_filters[id] = {"type": "filter", "data": filter}
         import src.gui.utils.project_loader
         src.gui.utils.project_loader.save_filter()
 
-    @staticmethod
-    def delete_filter(id: str):
-        if root.all_filters[id]["settings"]["mutable"]:
-            del root.all_filters[id]
+    def count_ids(self, id: str) -> list[int]:
+        temp = []
+        if self.data:
+            for key in range(len(self.data["filterqueue"])):
+                if self.data["filterqueue"][key] == id:
+                    temp.append(key)
+        return temp
+
+    def delete_filter(self, id: str, index: int):
+        data = root.all_filters[id]["data"]
+        if isinstance(data, dict) and data["settings"]["mutable"]:
+            if self.data:
+                if index >= 0 and index < len(self.data["filterqueue"]) and id == self.data["filterqueue"][index]:
+                    del self.data["filterqueue"][index]
+                    self.save()
+            used = False
+            for key in root.all_projects:
+                for f_key in root.all_projects[key]["filterqueue"]:
+                    if f_key == id:
+                        used = True
+                        break
+                if used:
+                    break
+            if not used:
+                del root.all_filters[id]
+                import src.gui.utils.project_loader
+                src.gui.utils.project_loader.save_filter()
 
     @staticmethod
     def valid_filename(name: str) -> bool:

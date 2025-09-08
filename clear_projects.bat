@@ -16,4 +16,5 @@ REM Falls Unterordner auch geleert werden sollen
 for /d %%p in ("%target%\*") do del /q "%%p\*.*"
 
 echo Alle Dateien in "%target%" wurden gelöscht.
+start clear_additional_filter.bat
 pause

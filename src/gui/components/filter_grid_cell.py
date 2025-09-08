@@ -49,8 +49,8 @@ class FilterGridCell(customtkinter.CTkFrame):
     def check_switch_visability(self):
         assert self.switch is not None and self.entry is not None
         if self.enabled_disabled:
-            self.switch.grid(row=0, column=1, sticky="nswe", padx=self._layout_settings["switch"]["padding"][0:2], pady=self._layout_settings["switch"]["padding"][2:4])
-            self.entry.grid(row=0, column=0, sticky="nswe", padx=self._layout_settings["entry"]["padding"][0:2], pady=self._layout_settings["entry"]["padding"][2:4])
+            self.entry.grid_forget()
+            self.switch.grid(row=0, column=0, sticky="nswe", padx=self._layout_settings["switch"]["padding"][0:2], pady=self._layout_settings["switch"]["padding"][2:4])
         else:
             self.switch.grid_forget()
             self.entry.grid(row=0, column=0, sticky="nswe", padx=0, pady=0)

@@ -1,4 +1,5 @@
 from enum import IntEnum
+from typing import Callable
 import uuid
 import customtkinter
 from src.gui.components.filter_entry_frame import FilterEntryFrame
@@ -21,6 +22,7 @@ class DragAndDropLockedFrame(customtkinter.CTkScrollableFrame):
     _focus_dropable: customtkinter.CTkFrame | None = None
     _layout_settings: dict = {}
     _border_width: int = 0
+    _updater: Callable | None = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs, corner_radius=0)
@@ -59,6 +61,24 @@ class DragAndDropLockedFrame(customtkinter.CTkScrollableFrame):
 
     def get_frames(self) -> list[customtkinter.CTkFrame]:
         return [self._items[i] for i in self._items_order]
+
+    def delete_item_by_index(self, index: int):
+        if index >= 0 and index <= len(self._items_order):
+            id = self._items_order[index]
+            del self._id_to_index[id]
+            del self._frame_to_id[self._items[self._items_order[index]]]
+            self._items[self._items_order[index]].destroy()
+            del self._items[self._items_order[index]]
+            del self._items_order[index]
+            self._id_to_index = {}
+            for i in range(len(self._items_order)):
+                self._id_to_index[self._items_order[i]] = i
+                self._frame_to_id[self._items[self._items_order[i]]] = self._items_order[i]
+            if self._updater:
+                self._updater()
+
+    def set_updater(self, updater: Callable):
+        self._updater = updater
 
     def hide(self) -> None:
         if self._type_pack == _DragAndDropLockedFrame_Type.PACK:
@@ -117,6 +137,8 @@ class DragAndDropLockedFrame(customtkinter.CTkScrollableFrame):
     def drop(self, event):
         if self._focus_old is not None and self._focus_dropable is not None:
             self.switch_frames(self._focus_old, self._focus_dropable)
+            if self._updater:
+                self._updater()
         self._focus_old = None
         self._focus_dropable = None
         self.clear_focus()
