@@ -3,7 +3,7 @@
     "lang": "en",
     "default_lang": "en",
     "darkmode": "dark",
-    "color_theme": "blue",
+    "color_theme": "dark-blue",
     "version": "0.1.0",
     "window_size": {
         "main": [
@@ -154,7 +154,7 @@
                     10
                 ],
                 "select_frame": {
-                    "optionmenu_start": {
+                    "status_label": {
                         "padding": [
                             10,
                             10,
@@ -162,7 +162,7 @@
                             10
                         ]
                     },
-                    "optionmenu_end": {
+                    "progressbar": {
                         "padding": [
                             10,
                             10,
@@ -278,22 +278,13 @@
                         10
                     ]
                 },
-                "filter_add_comboboxextended": {
+                "comboboxextended": {
                     "padding": [
                         10,
                         10,
                         10,
                         10
                     ]
-                },
-                "filter_add_button": {
-                    "padding": [
-                        0,
-                        10,
-                        10,
-                        10
-                    ],
-                    "width": 28
                 }
             }
         },

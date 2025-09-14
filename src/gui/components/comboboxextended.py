@@ -6,8 +6,8 @@ import src.gui.state.root as root
 
 
 class ComboBoxExtended(ctk.CTkFrame):
-    _all_values: list[str] = []
-    _filtered: list[str] = []
+    _all_values: list[tuple[str, str]] = []
+    _filtered: list[tuple[str, str]] = []
     _command: Callable | None = None
     _selection_index: int = -1
     _is_open: bool = False
@@ -16,13 +16,13 @@ class ComboBoxExtended(ctk.CTkFrame):
     _popup: ctk.CTkToplevel | None = None
     _list_frame: ctk.CTkScrollableFrame | None = None
     _item_widgets: list[ctk.CTkButton | ctk.CTkLabel] = []
-
+    _selected_id: str = ""
     _layout_settings: dict = {}
 
-    def __init__(self, master, values=None, command=None, **kwargs):
+    def __init__(self, master, values: list[tuple[str, str]] = [], command=None, **kwargs):
         super().__init__(master, fg_color="transparent", **kwargs)
         self._layout_settings = get_setting("components")["comboboxextended"]
-        self._all_values = list(values or [])
+        self._all_values = values
         self._all_values.sort()
         self._filtered = self._all_values
         self._command = command
@@ -49,27 +49,28 @@ class ComboBoxExtended(ctk.CTkFrame):
 
         self._refresh_list()
 
+    def add_value(self, value: tuple[str, str]):
+        self._all_values.append(value)
+        self._all_values = list(set(self._all_values))
+        self._all_values.sort()
+
     def get(self) -> str:
         return self._entry.get() if self._entry else ""
 
-    def set(self, value: str):
+    def set(self, value: tuple[str, str]):
         if self._entry:
             self._entry.delete(0, "end")
-            self._entry.insert(0, value)
+            self._entry.insert(0, value[0])
+            self._selected_id = value[1]
             self._filter_and_show()
 
-    def set_values(self, values: list[str]):
-        self._all_values = list(values or [])
+    def set_values(self, values: list[tuple[str, str]] = []):
+        self._all_values = values
+        self._all_values.sort()
         self._filter_and_show()
 
-    def configure(self, **kwargs):
-        if "command" in kwargs:
-            self._command = kwargs.pop("command")
-        if kwargs:
-            try:
-                super().configure(**kwargs)
-            except Exception:
-                pass
+    def set_updater(self, updater: Callable):
+        self._command = updater
 
     def toggle_dropdown(self):
         if self._is_open:
@@ -149,7 +150,7 @@ class ComboBoxExtended(ctk.CTkFrame):
             self._entry.delete(0, "end")
             self._entry.insert(0, needle)
 
-        self._filtered = [v for v in self._all_values if v.lower().startswith(needle.lower())] if needle else self._all_values[:]
+        self._filtered = [v for v in self._all_values if v[0].lower().startswith(needle.lower())] if needle else self._all_values[:]
         self._selection_index = -1
         if self._is_open:
             self._rebuild_list()
@@ -182,11 +183,11 @@ class ComboBoxExtended(ctk.CTkFrame):
 
         for i, val in enumerate(data):
             self._list_frame.grid_rowconfigure(i, weight=1)
-            b = ctk.CTkButton(self._list_frame, text=val, anchor="w", height=self._layout_settings["popup"]["item_height"], command=lambda v=val: self._select_value(v), corner_radius=0, border_spacing=1, border_width=1)
+            b = ctk.CTkButton(self._list_frame, text=f"{val[0]} # {val[1][0:8]}...", anchor="w", height=self._layout_settings["popup"]["item_height"], command=lambda v=val: self._select_value(v), corner_radius=0, border_spacing=1, border_width=1)
             b.grid(row=i, column=0, sticky="nswe")
             self._item_widgets.append(b)
 
-    def _select_value(self, value: str):
+    def _select_value(self, value: tuple[str, str]):
         self.set(value)
         self._close_popup()
         if callable(self._command):

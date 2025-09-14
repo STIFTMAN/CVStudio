@@ -16,6 +16,8 @@ class FilterqueueWindow(customtkinter.CTkToplevel):
 
     drag_and_drop_frame: DragAndDropLockedFrame | None = None
 
+    comboboxextended: ComboBoxExtended | None = None
+
     _layout_settings: dict = {}
 
     def __init__(self, master, *args, **kwargs) -> None:
@@ -24,7 +26,7 @@ class FilterqueueWindow(customtkinter.CTkToplevel):
         self.after(250, lambda: self.iconbitmap("src/assets/favicon.ico"))
         filterqueue_window_size = get_setting("window_size")["filterqueue"]
         screen_coords = (int((master.winfo_screenwidth() - filterqueue_window_size[0]) / 2), int((master.winfo_screenheight() - filterqueue_window_size[1]) / 2))
-        self.geometry(f"{filterqueue_window_size[0]}x{filterqueue_window_size[1]}+{screen_coords[0]}+{screen_coords[1]}")
+        self.geometry(f"{filterqueue_window_size[0]}x{filterqueue_window_size[1]}+{screen_coords[0] + 10 }+{screen_coords[1] + 10}")
         self.after(100, self.focus)
         self._layout_settings = get_setting("styles")["filterqueue_window"]
         self.minsize(filterqueue_window_size[0], filterqueue_window_size[1])
@@ -42,6 +44,7 @@ class FilterqueueWindow(customtkinter.CTkToplevel):
     def save_new_order(self):
         root.current_project.data["filterqueue"] = [i.id for i in self.drag_and_drop_frame.get_frames()]  # type: ignore
         self.save_project()
+        self.update_combobox()
 
     def build_filter_list(self):
         if self.drag_and_drop_frame is not None:
@@ -74,12 +77,13 @@ class FilterqueueWindow(customtkinter.CTkToplevel):
     def create_new_filter(self):
         id = str(uuid.uuid4())
         new_filter = copy.deepcopy(empty_filter)
-        new_filter["name"] = "NewFilter-" + id
+        new_filter["name"] = "NewFilter-" + id[0:8]
         root.all_filters[id] = {"type": "filter", "data": new_filter}
         root.current_project.add_filter(id)
         from src.gui.utils.project_loader import save_filter
         save_filter()
         self.save_project()
+        self.update_combobox()
         self.build_filter_list()
 
     def delete_action(self, frame: FilterEntryFrame):
@@ -103,20 +107,33 @@ class FilterqueueWindow(customtkinter.CTkToplevel):
         self.func_bar = customtkinter.CTkFrame(master=self, fg_color="transparent")
         self.func_bar.grid(row=0, column=0, sticky="we")
 
-        self.func_bar.grid_columnconfigure(2, weight=1)
+        [self.func_bar.grid_columnconfigure(i, weight=1) for i in range(3)]
         self.func_bar.grid_rowconfigure(0, weight=1)
 
         create_new_filter_button: customtkinter.CTkButton = customtkinter.CTkButton(master=self.func_bar, textvariable=root.current_lang.get("filterqueue_window_func_bar_create_new_filter_button"), command=self.create_new_filter)
         create_new_filter_button.grid(row=0, column=0, padx=self._layout_settings["func_bar"]["create_new_filter_button"]["padding"][0:2], pady=self._layout_settings["func_bar"]["create_new_filter_button"]["padding"][2:4], sticky="nsw")
 
-        filter_add_frame: customtkinter.CTkFrame = customtkinter.CTkFrame(master=self.func_bar, fg_color="transparent")
-        filter_add_frame.grid(row=0, column=2, sticky="nse")
+        self.comboboxextended = ComboBoxExtended(master=self.func_bar, values=[])
+        self.comboboxextended.grid(row=0, column=2, padx=self._layout_settings["func_bar"]["comboboxextended"]["padding"][0:2], pady=self._layout_settings["func_bar"]["comboboxextended"]["padding"][2:4], sticky="ns")
+        self.comboboxextended.set_updater(self.get_comobox_value)
 
-        filter_add_comboboxextended: ComboBoxExtended = ComboBoxExtended(master=filter_add_frame, values=[key for key in root.all_filters])
-        filter_add_comboboxextended.grid(row=0, column=0, padx=self._layout_settings["func_bar"]["filter_add_comboboxextended"]["padding"][0:2], pady=self._layout_settings["func_bar"]["filter_add_comboboxextended"]["padding"][2:4], sticky="ns")
+        self.update_combobox()
 
-        filter_add_button: customtkinter.CTkButton = customtkinter.CTkButton(master=filter_add_frame, textvariable=root.current_lang.get("filterqueue_window_func_bar_filter_add_button"), width=self._layout_settings["func_bar"]["filter_add_button"]["width"])
-        filter_add_button.grid(row=0, column=1, padx=self._layout_settings["func_bar"]["filter_add_button"]["padding"][0:2], pady=self._layout_settings["func_bar"]["filter_add_button"]["padding"][2:4], sticky="nse")
+    def get_comobox_value(self, data: tuple[str, str]):
+        root.current_project.add_filter(data[1])
+        self.save_project()
+        self.build_filter_list()
+
+    def update_combobox(self):
+        values: list[tuple[str, str]] = []
+        for key in root.all_filters:
+            f = root.all_filters[key]["data"]
+            if type(f) is str:
+                values.append((f, key))
+            else:
+                values.append((f["name"], key))  # type: ignore
+        if self.comboboxextended is not None:
+            self.comboboxextended.set_values(values)
 
     def save_project(self):
         if not root.current_project.save():
@@ -124,3 +141,4 @@ class FilterqueueWindow(customtkinter.CTkToplevel):
 
     def save_filter(self, id: str, f: Filter_Type):
         root.current_project.save_filter(id, f)
+        self.update_combobox()

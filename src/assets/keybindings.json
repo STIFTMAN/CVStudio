@@ -2,5 +2,6 @@
     "save": "<Control-s>",
     "quick_test": "<Control-t>",
     "help": "<Control-h>",
-    "license": "<Control-l>"
+    "license": "<Control-l>",
+    "reload_images": "<Control-r>"
 }

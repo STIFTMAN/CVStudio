@@ -14,19 +14,21 @@ from src.gui.components.tabviewextended import TabviewExtended
 import webbrowser
 import re
 from tkinterdnd2 import TkinterDnD
+import threading
 
 
 class MainWindow(TkinterDnD.Tk):
     nav_frame: Dropdownmenu | None = None
     container_frame: customtkinter.CTkFrame | customtkinter.CTkScrollableFrame | None = None
     filterqueue_window: FilterqueueWindow | None = None
-
+    progress: customtkinter.DoubleVar | None = None
     upload_window: UploadWindow | None = None
     info_window: InfoWindow | None = None
     layout_settings: dict = {}
-
     image_labels: list[customtkinter.CTkLabel | None] = [None, None]
-    image_start: list[str] = ["Start"]
+    status_label: customtkinter.CTkLabel | None = None
+    progressbar: customtkinter.CTkProgressBar | None = None
+    status: customtkinter.StringVar | None = None
 
     def __init__(self):
         super().__init__()
@@ -47,16 +49,26 @@ class MainWindow(TkinterDnD.Tk):
             for key in root.all_keybindings:
                 self.bind_all(root.all_keybindings[key], lambda event, k=key: self.event(k))
         print("Version: ", root.version)
+        self.progress = customtkinter.DoubleVar(value=0.0)
+        self.progress.trace_add("write", self.observe_progress)
+        root.current_project.set_progress(self.progress)
+        self.status = customtkinter.StringVar(value="Waiting for Input ...")
+
+    def observe_progress(self, *args):
+        if self.progress:
+            val = self.progress.get()
+            if val >= 1.0:
+                self.resize_images(None)
 
     def build_nav_frame(self):
         self.nav_frame = Dropdownmenu(master=self)
         self.nav_frame.addButton("main_window_dropdownmenu_home", root.current_lang.get("main_window_dropdownmenu_home"), self.build_home)
-        self.nav_frame.add("main_window_dropdownmenu_project", root.current_lang.get("main_window_dropdownmenu_project"), root.current_lang.get("main_window_dropdownmenu_project_save_image_result"), msg1)
-        self.nav_frame.add("main_window_dropdownmenu_project", root.current_lang.get("main_window_dropdownmenu_project"), root.current_lang.get("main_window_dropdownmenu_project_save_image_result_all"), msg1)
+        self.nav_frame.add("main_window_dropdownmenu_project", root.current_lang.get("main_window_dropdownmenu_project"), root.current_lang.get("main_window_dropdownmenu_project_save_image_result"), print)
+        self.nav_frame.add("main_window_dropdownmenu_project", root.current_lang.get("main_window_dropdownmenu_project"), root.current_lang.get("main_window_dropdownmenu_project_save_image_result_all"), print)
         self.nav_frame.add("main_window_dropdownmenu_project", root.current_lang.get("main_window_dropdownmenu_project"), root.current_lang.get("main_window_dropdownmenu_project_close"), self.reset_project)
         self.nav_frame.add("main_window_dropdownmenu_project", root.current_lang.get("main_window_dropdownmenu_project"), root.current_lang.get("main_window_dropdownmenu_project_open_filterqueue"), self.open_filterqueue_window)
         self.nav_frame.add("main_window_dropdownmenu_project", root.current_lang.get("main_window_dropdownmenu_project"), root.current_lang.get("main_window_dropdownmenu_project_open_upload_image"), self.open_upload_window)
-        self.nav_frame.addButton("main_window_dropdownmenu_testing", root.current_lang.get("main_window_dropdownmenu_testing"), msg1)
+        self.nav_frame.addButton("main_window_dropdownmenu_testing", root.current_lang.get("main_window_dropdownmenu_testing"), print)
         self.nav_frame.add("main_window_dropdownmenu_settings", root.current_lang.get("main_window_dropdownmenu_settings"), root.current_lang.get("main_window_settings_look"), lambda: self.build_settings("main_window_settings_look"))
         self.nav_frame.add("main_window_dropdownmenu_settings", root.current_lang.get("main_window_dropdownmenu_settings"), root.current_lang.get("main_window_settings_keybindings"), lambda: self.build_settings("main_window_settings_keybindings"))
         self.nav_frame.add("main_window_dropdownmenu_settings", root.current_lang.get("main_window_dropdownmenu_settings"), root.current_lang.get("main_window_settings_help"), lambda: self.build_settings("main_window_settings_help"))
@@ -154,7 +166,7 @@ class MainWindow(TkinterDnD.Tk):
         self.reset_container_frame()
 
         select_frame: customtkinter.CTkFrame = customtkinter.CTkFrame(master=self.container_frame)
-        select_frame.grid(row=0, column=0, padx=self.layout_settings["image_container"]["padding"][0:2], pady=self.layout_settings["image_container"]["padding"][2:4], sticky="ne")
+        select_frame.grid(row=0, column=0, padx=self.layout_settings["image_container"]["padding"][0:2], pady=self.layout_settings["image_container"]["padding"][2:4], sticky="nwe")
         select_frame.grid_columnconfigure(0, weight=1)
         select_frame.grid_columnconfigure(1, weight=1)
         select_frame.grid_columnconfigure(2, weight=1)
@@ -162,11 +174,11 @@ class MainWindow(TkinterDnD.Tk):
         self.container_frame.grid_rowconfigure(0, weight=0)
         self.container_frame.grid_rowconfigure(1, weight=1)
 
-        select_start: customtkinter.CTkOptionMenu = customtkinter.CTkOptionMenu(master=select_frame, values=["First Picture"])
-        select_start.grid(row=0, column=0, padx=self.layout_settings["image_container"]["select_frame"]["optionmenu_start"]["padding"][0:2], pady=self.layout_settings["image_container"]["select_frame"]["optionmenu_start"]["padding"][2:4])
+        self.status_label = customtkinter.CTkLabel(master=select_frame, textvariable=self.status)
+        self.status_label.grid(row=0, column=0, padx=self.layout_settings["image_container"]["select_frame"]["status_label"]["padding"][0:2], pady=self.layout_settings["image_container"]["select_frame"]["status_label"]["padding"][2:4])
 
-        select_end: customtkinter.CTkOptionMenu = customtkinter.CTkOptionMenu(master=select_frame, values=["Last Picture"])
-        select_end.grid(row=0, column=1, padx=self.layout_settings["image_container"]["select_frame"]["optionmenu_end"]["padding"][0:2], pady=self.layout_settings["image_container"]["select_frame"]["optionmenu_end"]["padding"][2:4])
+        self.progressbar = customtkinter.CTkProgressBar(master=select_frame, variable=self.progress)
+        self.progressbar.grid(row=0, column=1, sticky="we", padx=self.layout_settings["image_container"]["select_frame"]["progressbar"]["padding"][0:2], pady=self.layout_settings["image_container"]["select_frame"]["progressbar"]["padding"][2:4])
 
         switch_mode: customtkinter.CTkSwitch = customtkinter.CTkSwitch(master=select_frame, textvariable=root.current_lang.get("main_window_image_container_select_compare"))
         switch_mode.grid(row=0, column=2, padx=self.layout_settings["image_container"]["select_frame"]["switch_mode"]["padding"][0:2], pady=self.layout_settings["image_container"]["select_frame"]["switch_mode"]["padding"][2:4])
@@ -188,13 +200,14 @@ class MainWindow(TkinterDnD.Tk):
         image_frame.columnconfigure(0, weight=1)
         self.image_labels = [None, None]
         image_frame.rowconfigure(0, weight=1)
-        self.image_labels[0] = customtkinter.CTkLabel(master=image_frame, text="")
-        self.image_labels[0].grid(row=0, column=0, padx=self.layout_settings["image_container"]["image_frame"]["image_label_1"]["padding"][0:2], pady=self.layout_settings["image_container"]["image_frame"]["image_label_1"]["padding"][2:4], sticky="nswe")
+        self.image_labels[1] = customtkinter.CTkLabel(master=image_frame, text="")
         if mode:
-            self.image_labels[1] = customtkinter.CTkLabel(master=image_frame, text="")
             self.image_labels[1].grid(row=0, column=1, padx=self.layout_settings["image_container"]["image_frame"]["image_label_2"]["padding"][0:2], pady=self.layout_settings["image_container"]["image_frame"]["image_label_2"]["padding"][2:4], sticky="nswe")
+            self.image_labels[0] = customtkinter.CTkLabel(master=image_frame, text="")
+            self.image_labels[0].grid(row=0, column=0, padx=self.layout_settings["image_container"]["image_frame"]["image_label_1"]["padding"][0:2], pady=self.layout_settings["image_container"]["image_frame"]["image_label_1"]["padding"][2:4], sticky="nswe")
             image_frame.columnconfigure(1, weight=1)
         else:
+            self.image_labels[1].grid(row=0, column=0, padx=self.layout_settings["image_container"]["image_frame"]["image_label_2"]["padding"][0:2], pady=self.layout_settings["image_container"]["image_frame"]["image_label_2"]["padding"][2:4], sticky="nswe")
             image_frame.columnconfigure(1, weight=0)
         if root.current_project.image_ready():
             assert root.current_project.image is not None
@@ -333,15 +346,19 @@ class MainWindow(TkinterDnD.Tk):
         if self.upload_window is not None and self.upload_window.winfo_exists():
             self.upload_window.destroy()
             self.upload_window = None
-            if len(root.current_project.temp_images) <= 0 and root.current_project.image is not None:
+            if root.current_project.image is not None:
+                root.current_project.reset_action_queue()
                 if self.image_labels[0] is not None:
                     self.image_labels[0].bind("<Configure>", self.resize_images)
                 if self.image_labels[1] is not None:
                     self.image_labels[1].bind("<Configure>", self.resize_images)
-                self.processing_images()
+                self.start_action_queue_thread()
 
-    def processing_images(self):
-        self.resize_images(None)
+    def start_action_queue_thread(self):
+        def task():
+            assert self.status is not None
+            root.current_project.apply_action_queue(self.status)
+        threading.Thread(target=task, daemon=True).start()
 
     def open_upload_window(self):
         if root.current_project.ready():
@@ -353,10 +370,14 @@ class MainWindow(TkinterDnD.Tk):
 
     def resize_images(self, event):
         assert root.current_project.image is not None
-        if self.image_labels[0] is not None:
+        if self.image_labels[0]:
             self.image_labels[0].configure(image=resize_image_to_label(self.image_labels[0], root.current_project.image))
-        if self.image_labels[1] is not None:
-            self.image_labels[1].configure(image=resize_image_to_label(self.image_labels[1], root.current_project.image))
+        if self.image_labels[1]:
+            index = len(root.current_project.temp_images) - 1
+            if index >= 0:
+                self.image_labels[1].configure(image=resize_image_to_label(self.image_labels[1], root.current_project.temp_images[index]))
+            else:
+                self.image_labels[1].configure(image=resize_image_to_label(self.image_labels[1], root.current_project.image))
 
     def open_filterqueue_window(self):
         if root.current_project.ready():
@@ -382,7 +403,5 @@ class MainWindow(TkinterDnD.Tk):
                 webbrowser.open_new(get_setting("help_url"))
             case "license":
                 webbrowser.open_new(get_setting("license_url"))
-
-
-def msg1():
-    print("msg1")
+            case "reload_images":
+                self.start_action_queue_thread()

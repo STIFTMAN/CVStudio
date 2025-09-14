@@ -30,6 +30,11 @@ class Action_Type(TypedDict):
     data: Filter_Type | str
 
 
+class Action_Queue_Obj_Type(TypedDict):
+    data: Action_Type
+    hash: str
+
+
 empty_project: Project_File_Type = {
     "filterqueue": [],
     "image_view_mode": True

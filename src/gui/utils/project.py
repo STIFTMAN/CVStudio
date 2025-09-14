@@ -1,15 +1,24 @@
-from typing import Any
-from src.gui.state.project_file_type import Action_Type, Filter_Type, Project_File_Type, empty_project
+from typing import Any, Union
+
+import customtkinter
+import numpy
+from src.gui.state.project_file_type import Action_Queue_Obj_Type, Action_Type, Filter_Type, Project_File_Type, empty_project
+import src.processing.action_handeling as processing
 import src.gui.state.root as root
 import re
+import json
+import hashlib
 
 
 class Project:
     data: Project_File_Type | None = None
-    image = None
+    image: numpy.ndarray | None = None
     name: str = ""
 
+    progress: customtkinter.DoubleVar | None = None
+    action_queue: list[Action_Queue_Obj_Type] = []
     temp_images = []
+    override_index = -1
 
     def get_filternames(self) -> list[str]:
         temp: list[str] = []
@@ -30,6 +39,75 @@ class Project:
                 return key
         return None
 
+    def reset_action_queue(self):
+        self.action_queue = []
+        self.temp_images = []
+        self.override_index = -1
+
+    def apply_action_queue(self, status: customtkinter.StringVar):
+        self.override_index = -1
+        if not self.data:
+            return
+        if len(self.data["filterqueue"]) == 0:
+            self.reset_action_queue()
+            return
+        new_action_queue: list[Action_Queue_Obj_Type] = []
+        for key in self.data["filterqueue"]:
+            if key not in root.all_filters:
+                return
+            action = root.all_filters[key]
+            json_data = json.dumps(action["data"], sort_keys=True, separators=(',', ':'))
+            dict_obj: Action_Queue_Obj_Type = {
+                "data": action,
+                "hash": hashlib.sha256(json_data.encode('utf-8')).hexdigest()
+            }
+            new_action_queue.append(dict_obj)
+        if len(self.action_queue) < len(new_action_queue):
+            self.override_index = len(self.action_queue) - 1
+        elif len(self.action_queue) > len(new_action_queue):
+            self.action_queue = self.action_queue[0:len(new_action_queue) - 1]
+            self.temp_images = self.temp_images[0:len(new_action_queue) - 1]
+        for index, obj in enumerate(new_action_queue):
+            if len(self.action_queue) - 1 < index:
+                self.override_index = index
+                break
+            if obj["hash"] != self.action_queue[index]["hash"]:
+                self.override_index = index
+                break
+        if self.override_index == -1:
+            status.set("No Changes made!")
+            return
+        self.action_queue = new_action_queue
+        self.temp_images = self.temp_images[0:min(self.override_index, len(self.temp_images))]
+        if self.progress:
+            self.progress.set(0.0)
+        for i in range(self.override_index, len(self.action_queue)):
+            src_img: numpy.ndarray | None = None
+            if i == 0:
+                src_img = self.image
+            else:
+                src_img = self.temp_images[i - 1]
+            if src_img is None:
+                return
+            action_data = self.action_queue[i]["data"]
+            if action_data["type"] == "filter":
+                filter_data = action_data['data']
+                assert not isinstance(filter_data, str)
+                status.set(f"( {i+1} / {len(self.action_queue)} ) - {filter_data['name']}")
+            else:
+                status.set(f"( {i+1} / {len(self.action_queue)} ) - {action_data['data']}")
+            new_data = processing.apply_action(src_img, action_data)
+            self.temp_images.append(new_data[0])
+            if self.progress:
+                self.progress.set((i + 1) / len(self.action_queue))
+        if self.progress:
+            status.set("Done!")
+            if self.progress.get() != 1.0:
+                self.progress.set(1.0)
+
+    def set_progress(self, p: customtkinter.DoubleVar):
+        self.progress = p
+
     def add_filter(self, id: str):
         if self.data is not None:
             self.data["filterqueue"].append(id)
@@ -47,7 +125,7 @@ class Project:
     def image_ready(self) -> bool:
         return self.image is not None
 
-    def load_image(self, img):
+    def load_image(self, img: Union[numpy.ndarray, None]):
         self.image = img
         self.temp_images = []
 
