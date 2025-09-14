@@ -1,538 +1,5082 @@
 {
-    "mean_3x3": [
-        [
-            0.111,
-            0.111,
-            0.111
-        ],
-        [
-            0.111,
-            0.111,
-            0.111
-        ],
-        [
-            0.111,
-            0.111,
-            0.111
-        ]
-    ],
-    "mean_5x5": [
-        [
-            0.04,
-            0.04,
-            0.04,
-            0.04,
-            0.04
-        ],
-        [
-            0.04,
-            0.04,
-            0.04,
-            0.04,
-            0.04
-        ],
-        [
-            0.04,
-            0.04,
-            0.04,
-            0.04,
-            0.04
-        ],
-        [
-            0.04,
-            0.04,
-            0.04,
-            0.04,
-            0.04
-        ],
-        [
-            0.04,
-            0.04,
-            0.04,
-            0.04,
-            0.04
-        ]
-    ],
-    "gaussian_3x3": [
-        [
-            0.0625,
-            0.125,
-            0.0625
-        ],
-        [
-            0.125,
-            0.25,
-            0.125
-        ],
-        [
-            0.0625,
-            0.125,
-            0.0625
-        ]
-    ],
-    "gaussian_5x5": [
-        [
-            1,
-            4,
-            6,
-            4,
-            1
-        ],
-        [
-            4,
-            16,
-            24,
-            16,
-            4
-        ],
-        [
-            6,
-            24,
-            36,
-            24,
-            6
-        ],
-        [
-            4,
-            16,
-            24,
-            16,
-            4
-        ],
-        [
-            1,
-            4,
-            6,
-            4,
-            1
-        ]
-    ],
-    "laplacian_3x3": [
-        [
-            0,
-            -1,
-            0
-        ],
-        [
-            -1,
-            4,
-            -1
-        ],
-        [
-            0,
-            -1,
-            0
-        ]
-    ],
-    "laplacian_diagonal_3x3": [
-        [
-            -1,
-            -1,
-            -1
-        ],
-        [
-            -1,
-            8,
-            -1
-        ],
-        [
-            -1,
-            -1,
-            -1
-        ]
-    ],
-    "laplacian_full_3x3": [
-        [
-            -1,
-            -1,
-            -1
-        ],
-        [
-            -1,
-            8,
-            -1
-        ],
-        [
-            -1,
-            -1,
-            -1
-        ]
-    ],
-    "laplacian_5x5": [
-        [
-            0,
-            0,
-            -1,
-            0,
-            0
-        ],
-        [
-            0,
-            -1,
-            -2,
-            -1,
-            0
-        ],
-        [
-            -1,
-            -2,
-            16,
-            -2,
-            -1
-        ],
-        [
-            0,
-            -1,
-            -2,
-            -1,
-            0
-        ],
-        [
-            0,
-            0,
-            -1,
-            0,
-            0
-        ]
-    ],
-    "sobel_x_3x3": [
-        [
-            -1,
-            0,
-            1
-        ],
-        [
-            -2,
-            0,
-            2
-        ],
-        [
-            -1,
-            0,
-            1
-        ]
-    ],
-    "sobel_y_3x3": [
-        [
-            -1,
-            -2,
-            -1
-        ],
-        [
-            0,
-            0,
-            0
-        ],
-        [
-            1,
-            2,
-            1
-        ]
-    ],
-    "sobel_diag_45": [
-        [
-            0,
-            1,
-            2
-        ],
-        [
-            -1,
-            0,
-            1
-        ],
-        [
-            -2,
-            -1,
-            0
-        ]
-    ],
-    "sobel_diag_135": [
-        [
-            2,
-            1,
-            0
-        ],
-        [
-            1,
-            0,
-            -1
-        ],
-        [
-            0,
-            -1,
-            -2
-        ]
-    ],
-    "prewitt_x_3x3": [
-        [
-            -1,
-            0,
-            1
-        ],
-        [
-            -1,
-            0,
-            1
-        ],
-        [
-            -1,
-            0,
-            1
-        ]
-    ],
-    "prewitt_y_3x3": [
-        [
-            -1,
-            -1,
-            -1
-        ],
-        [
-            0,
-            0,
-            0
-        ],
-        [
-            1,
-            1,
-            1
-        ]
-    ],
-    "scharr_x_3x3": [
-        [
-            -3,
-            0,
-            3
-        ],
-        [
-            -10,
-            0,
-            10
-        ],
-        [
-            -3,
-            0,
-            3
-        ]
-    ],
-    "scharr_y_3x3": [
-        [
-            -3,
-            -10,
-            -3
-        ],
-        [
-            0,
-            0,
-            0
-        ],
-        [
-            3,
-            10,
-            3
-        ]
-    ],
-    "sharpen_3x3": [
-        [
-            0,
-            -1,
-            0
-        ],
-        [
-            -1,
-            5,
-            -1
-        ],
-        [
-            0,
-            -1,
-            0
-        ]
-    ],
-    "sharpen_strong_3x3": [
-        [
-            -1,
-            -1,
-            -1
-        ],
-        [
-            -1,
-            9,
-            -1
-        ],
-        [
-            -1,
-            -1,
-            -1
-        ]
-    ],
-    "high_boost_3x3": [
-        [
-            0,
-            -1,
-            0
-        ],
-        [
-            -1,
-            5.5,
-            -1
-        ],
-        [
-            0,
-            -1,
-            0
-        ]
-    ],
-    "emboss_3x3": [
-        [
-            -2,
-            -1,
-            0
-        ],
-        [
-            -1,
-            1,
-            1
-        ],
-        [
-            0,
-            1,
-            2
-        ]
-    ],
-    "outline_3x3": [
-        [
-            -1,
-            -1,
-            -1
-        ],
-        [
-            -1,
-            8,
-            -1
-        ],
-        [
-            -1,
-            -1,
-            -1
-        ]
-    ],
-    "edge_enhance_3x3": [
-        [
-            0,
-            0,
-            0
-        ],
-        [
-            -1,
-            1,
-            0
-        ],
-        [
-            0,
-            0,
-            0
-        ]
-    ],
-    "identity_3x3": [
-        [
-            0,
-            0,
-            0
-        ],
-        [
-            0,
-            1,
-            0
-        ],
-        [
-            0,
-            0,
-            0
-        ]
-    ],
-    "box_blur_3x3": [
-        [
-            1,
-            1,
-            1
-        ],
-        [
-            1,
-            1,
-            1
-        ],
-        [
-            1,
-            1,
-            1
-        ]
-    ],
-    "kirsch_north": [
-        [
-            5,
-            5,
-            5
-        ],
-        [
-            -3,
-            0,
-            -3
-        ],
-        [
-            -3,
-            -3,
-            -3
-        ]
-    ],
-    "kirsch_south": [
-        [
-            -3,
-            -3,
-            -3
-        ],
-        [
-            -3,
-            0,
-            -3
-        ],
-        [
-            5,
-            5,
-            5
-        ]
-    ],
-    "kirsch_east": [
-        [
-            -3,
-            -3,
-            5
-        ],
-        [
-            -3,
-            0,
-            5
-        ],
-        [
-            -3,
-            -3,
-            5
-        ]
-    ],
-    "kirsch_west": [
-        [
-            5,
-            -3,
-            -3
-        ],
-        [
-            5,
-            0,
-            -3
-        ],
-        [
-            5,
-            -3,
-            -3
-        ]
-    ]
+    "fbb36163-37df-4534-8642-ce768f954c21": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    3,
+                    3
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.1111111111111111,
+                "type": "smoothing",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Mean_3x3"
+        }
+    },
+    "38e947e6-dcad-4a3b-80b1-508c95e95259": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    5,
+                    5
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.04,
+                "type": "smoothing",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Mean_5x5"
+        }
+    },
+    "ac6e6695-7101-42a3-a38b-c867a48cf984": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    3,
+                    3
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0625,
+                "type": "smoothing",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 2.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 2.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 4.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 2.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 2.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Gauss_3x3_s_085"
+        }
+    },
+    "39bc7cf9-0ef6-4ec1-9f80-c3c295eca5af": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    5,
+                    5
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.00390625,
+                "type": "smoothing",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 4.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 6.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 4.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 4.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 16.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 24.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 16.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 4.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 6.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 24.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 36.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 24.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 6.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 4.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 16.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 24.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 16.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 4.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 4.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 6.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 4.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Gauss_5x5_s_085"
+        }
+    },
+    "f89ab393-b697-41d3-b95f-833de13b1200": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    3,
+                    3
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "edge_detection",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 0.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 4.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Laplace_3x3_4"
+        }
+    },
+    "5c442b4a-7ba0-401d-9b31-bd7f51209a87": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    3,
+                    3
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "edge_detection",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": -1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 8.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Laplace_3x3_8"
+        }
+    },
+    "3872b333-4f37-499d-a058-0d96cd43b71d": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    5,
+                    5
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "edge_detection",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 0.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -2.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -2.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 16.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -2.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -2.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Laplace_5x5"
+        }
+    },
+    "e8f9c125-7ab6-4038-b20d-d2ba13a3bd67": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    3,
+                    3
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "edge_detection",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": -1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": -2.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 2.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Sobel_x_3x3"
+        }
+    },
+    "6977c707-0466-4655-8d46-e7d5ada2a7af": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    3,
+                    3
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "edge_detection",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": -1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": -2.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 2.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Sobel_y_3x3"
+        }
+    },
+    "88af52a1-ff37-4c48-9836-1da8ffa4fffc": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    3,
+                    3
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "edge_detection",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Prewitt_deg0_3x3"
+        }
+    },
+    "19d46520-6f9a-4a87-8b3f-6446ceff0cf6": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    3,
+                    3
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "edge_detection",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 0.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Prewitt_deg45_3x3"
+        }
+    },
+    "ae238786-5b3d-4a2f-af80-689aed82d951": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    3,
+                    3
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "edge_detection",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": -1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Prewitt_deg90_3x3"
+        }
+    },
+    "3aeb8821-bc92-45a9-b2db-bb894316f352": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    3,
+                    3
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "edge_detection",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": -1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Prewitt_deg135_3x3"
+        }
+    },
+    "87d7a042-e903-404a-baf6-4d4ecbcbdc7c": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    3,
+                    3
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "edge_detection",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": -1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Prewitt_deg180_3x3"
+        }
+    },
+    "f6f510de-f99b-472b-b69c-e59006348229": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    3,
+                    3
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "edge_detection",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 0.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Prewitt_deg225_3x3"
+        }
+    },
+    "2824d7fa-744a-478c-b090-272daae67f8b": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    3,
+                    3
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "edge_detection",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Prewitt_deg270_3x3"
+        }
+    },
+    "aff0e24d-b9b7-496e-ac1b-d6251fe2d3e6": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    3,
+                    3
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "edge_detection",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Prewitt_deg315_3x3"
+        }
+    },
+    "f4067fc1-72d7-46d3-b01b-1f6a31a6b36d": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    3,
+                    3
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "edge_detection",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 3.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -5.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -5.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -5.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Kirsch_deg0_3x3"
+        }
+    },
+    "b514cad8-6ab8-4a29-8e3c-d3e0e917c7df": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    3,
+                    3
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "edge_detection",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 3.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": -5.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -5.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -5.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Kirsch_deg45_3x3"
+        }
+    },
+    "59d2b6bf-2fb2-4822-bd30-a85ed5323b22": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    3,
+                    3
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "edge_detection",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": -5.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": -5.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -5.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Kirsch_deg90_3x3"
+        }
+    },
+    "56e4b78b-2d7d-4cc2-b040-755d02332f9c": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    3,
+                    3
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "edge_detection",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": -5.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": -5.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": -5.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Kirsch_deg135_3x3"
+        }
+    },
+    "96806c5a-49cb-42e6-8edd-8773d882df5e": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    3,
+                    3
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "edge_detection",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": -5.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": -5.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": -5.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Kirsch_deg180_3x3"
+        }
+    },
+    "6d57d0f2-59d9-4457-8afa-e7d5bd931411": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    3,
+                    3
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "edge_detection",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 3.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": -5.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": -5.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -5.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Kirsch_deg225_3x3"
+        }
+    },
+    "6d55088d-4845-4c8a-aeff-88b86db81196": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    3,
+                    3
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "edge_detection",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 3.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": -5.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -5.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -5.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Kirsch_deg270_3x3"
+        }
+    },
+    "c637f04d-9c85-4578-a0cb-37f94bc9ee91": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    3,
+                    3
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "edge_detection",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 3.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -5.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -5.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -5.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Kirsch_deg315_3x3"
+        }
+    },
+    "c9186ef1-5396-4e42-af8e-45861b996228": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    3,
+                    3
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "edge_detection",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": -3.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": -10.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -3.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 10.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Scharr_x_3x3"
+        }
+    },
+    "4fe3fe1e-a88f-4634-a504-aa005d81fd5b": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    3,
+                    3
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "edge_detection",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": -3.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": -10.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 10.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": -3.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 3.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Scharr_y_3x3"
+        }
+    },
+    "7f34b1e3-08bd-415a-a8e6-08c0d2b79402": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    3,
+                    3
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "edge_detection",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 0.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 5.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 0.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Laplace_sharpen_low_3x3"
+        }
+    },
+    "72f31729-226d-4591-b397-ce4c5c4435c9": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    3,
+                    3
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "edge_detection",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": -1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 9.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": -1.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Laplace_sharpen_high_3x3"
+        }
+    },
+    "417628d9-d6da-428c-b33c-c3f6af9fd62e": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    3,
+                    3
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "median",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Median_3x3"
+        }
+    },
+    "522fa296-fa10-4faf-b2ea-1596e3f96e4b": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    5,
+                    5
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "median",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Median_5x5"
+        }
+    },
+    "625e0086-01fa-453e-a1c8-2c0afd547e3a": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    7,
+                    7
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "median",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Median_7x7"
+        }
+    },
+    "cc917b70-83c4-4840-9bf9-f293b8444891": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    7,
+                    7
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "median",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    }
+                ]
+            ],
+            "name": "Median_round_7x7"
+        }
+    },
+    "1361f65a-4b2e-4318-bda0-dc2b70422acf": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    3,
+                    3
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "minimum",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Min_3x3"
+        }
+    },
+    "5f18a8c9-d7ad-4e3b-a4fc-65d051d3196e": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    5,
+                    5
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "minimum",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Min_5x5"
+        }
+    },
+    "7a0fb2b9-7a8a-4625-8696-788ea1af85d0": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    7,
+                    7
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "minimum",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    }
+                ]
+            ],
+            "name": "Min_round_7x7"
+        }
+    },
+    "60426144-8513-4be6-bf84-fdb2f66ffc07": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    7,
+                    7
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "maximum",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    }
+                ]
+            ],
+            "name": "Max_round_7x7"
+        }
+    },
+    "dd0fa0b2-7103-43bb-acd9-bb03f62e3ce5": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    3,
+                    3
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "maximum",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Max_3x3"
+        }
+    },
+    "94b2e4d7-b8c8-4b2a-a050-96a644a32d2b": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    5,
+                    5
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "maximum",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Max_5x5"
+        }
+    },
+    "5e01e0da-567f-4fc1-a080-cad21bad0b40": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    7,
+                    7
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "maximum",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Max_7x7"
+        }
+    },
+    "0dc72830-720d-491b-9399-2d11b1ce8c13": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    3,
+                    3
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "25%_quantile",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Quantil_25_3x3"
+        }
+    },
+    "4be80df5-62a1-4301-83af-2ca15d0f5608": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    5,
+                    5
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "25%_quantile",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Quantil_25_5x5"
+        }
+    },
+    "ab0a5647-5b09-4b92-9f6f-7a72b117fd1c": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    7,
+                    7
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "25%_quantile",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Quantil_25_7x7"
+        }
+    },
+    "e8558f1a-af94-47b1-bf9d-59fa7d5d8b5d": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    7,
+                    7
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "25%_quantile",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    }
+                ]
+            ],
+            "name": "Quantil_25_round_7x7"
+        }
+    },
+    "7de22a39-8059-4a44-8730-755f3bd0ff1d": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    3,
+                    3
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "75%_quantile",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Quantil_75_3x3"
+        }
+    },
+    "c6ca3038-dd70-485d-ab76-c0dbc184ab12": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    5,
+                    5
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "75%_quantile",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Quantil_75_5x5"
+        }
+    },
+    "e29f2d84-436a-4331-9e8f-412f1e09272a": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    7,
+                    7
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "75%_quantile",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ]
+            ],
+            "name": "Quantil_75_7x7"
+        }
+    },
+    "3bcc9072-1f0c-47ea-bb09-3decf7734b0f": {
+        "type": "filter",
+        "data": {
+            "settings": {
+                "size": [
+                    7,
+                    7
+                ],
+                "spatial_sampling_rate": [
+                    1,
+                    1
+                ],
+                "factor": 0.0,
+                "type": "75%_quantile",
+                "mutable": false
+            },
+            "grid": [
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    }
+                ],
+                [
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": true
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    },
+                    {
+                        "value": 1.0,
+                        "disabled": false
+                    }
+                ]
+            ],
+            "name": "Quantil_75_round_7x7"
+        }
+    }
 }

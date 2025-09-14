@@ -59,7 +59,10 @@
             "default_color": "grey"
         },
         "filter_entry_frame": {
-            "padding": 5
+            "padding": 5,
+            "button": {
+                "width": 100
+            }
         },
         "filter_grid_cell": {
             "enabled_color": "#335831",

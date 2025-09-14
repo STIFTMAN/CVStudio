@@ -33,6 +33,8 @@ class FilterEntryFrame(customtkinter.CTkFrame):
         self.grid_columnconfigure(3, minsize=80)
         self.grid_columnconfigure(4, minsize=30)
         self.grid_columnconfigure(5, minsize=30)
+        self.grid_columnconfigure(6, minsize=self._layout_settings["button"]["width"])
+        self.grid_columnconfigure(7, minsize=self._layout_settings["button"]["width"])
 
         self.grid_rowconfigure(0, weight=1)
         self.id = id
@@ -55,13 +57,15 @@ class FilterEntryFrame(customtkinter.CTkFrame):
             self.name_label = customtkinter.CTkLabel(master=self, textvariable=root.current_lang.get("components_filter_entry_frame_name_none"), anchor="left", corner_radius=0)
         self.name_label.grid(row=0, column=1, sticky="nswe", pady=self._layout_settings["padding"], padx=[self._layout_settings["padding"], 0])
 
-        self.delete_button = customtkinter.CTkButton(master=self, textvariable=root.current_lang.get("components_filter_entry_frame_button_delete"), image=root.all_icons["delete"], compound="left", corner_radius=0, command=self.delete)
+        self.delete_button = customtkinter.CTkButton(master=self, width=self._layout_settings["button"]["width"], textvariable=root.current_lang.get("components_filter_entry_frame_button_delete"), image=root.all_icons["delete"], compound="left", corner_radius=0, command=self.delete)
         self.delete_button.grid(row=0, column=6, sticky="nswe", pady=self._layout_settings["padding"], padx=0)
 
         if self.data is not None:
-            if isinstance(self.data["data"], dict):
-                self.edit_button = customtkinter.CTkButton(master=self, textvariable=root.current_lang.get("components_filter_entry_frame_button_edit"), image=root.all_icons["edit"], command=self.open_filter_window, corner_radius=0)
+            if isinstance(self.data["data"], dict) and self.data["data"]["settings"]["mutable"]:
+                self.edit_button = customtkinter.CTkButton(master=self, width=self._layout_settings["button"]["width"], textvariable=root.current_lang.get("components_filter_entry_frame_button_edit"), image=root.all_icons["edit"], command=self.open_filter_window, corner_radius=0)
                 self.edit_button.grid(row=0, column=7, sticky="nswe", pady=self._layout_settings["padding"], padx=[0, self._layout_settings["padding"]])
+            else:
+                self.delete_button.grid(row=0, column=6, sticky="nswe", pady=self._layout_settings["padding"], padx=self._layout_settings["padding"])
 
     def get_update(self, data: Filter_Type):
         if self.id is not None and self.data is not None:

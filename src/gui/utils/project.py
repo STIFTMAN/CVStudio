@@ -50,6 +50,7 @@ class Project:
             return
         if len(self.data["filterqueue"]) == 0:
             self.reset_action_queue()
+            status.set(root.current_lang.get("project_apply_action_queue_status_empty_queue").get())
             return
         new_action_queue: list[Action_Queue_Obj_Type] = []
         for key in self.data["filterqueue"]:
@@ -75,7 +76,7 @@ class Project:
                 self.override_index = index
                 break
         if self.override_index == -1:
-            status.set("No Changes made!")
+            status.set(root.current_lang.get("project_apply_action_queue_status_no_changes").get())
             return
         self.action_queue = new_action_queue
         self.temp_images = self.temp_images[0:min(self.override_index, len(self.temp_images))]
@@ -101,7 +102,7 @@ class Project:
             if self.progress:
                 self.progress.set((i + 1) / len(self.action_queue))
         if self.progress:
-            status.set("Done!")
+            status.set(root.current_lang.get("project_apply_action_queue_status_done").get())
             if self.progress.get() != 1.0:
                 self.progress.set(1.0)
 

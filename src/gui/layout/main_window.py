@@ -52,7 +52,7 @@ class MainWindow(TkinterDnD.Tk):
         self.progress = customtkinter.DoubleVar(value=0.0)
         self.progress.trace_add("write", self.observe_progress)
         root.current_project.set_progress(self.progress)
-        self.status = customtkinter.StringVar(value="Waiting for Input ...")
+        self.status = customtkinter.StringVar(value=root.current_lang.get("project_apply_action_queue_status_init").get())
 
     def observe_progress(self, *args):
         if self.progress:
@@ -265,7 +265,6 @@ class MainWindow(TkinterDnD.Tk):
             settings_look_lang_optionmenu.set(settings_look_keys[key][3])
 
         settings_keybindings_keys: list[tuple[str, str]] = [
-            ("main_window_settings_keybindings_save_label", "save"),
             ("main_window_settings_keybindings_quick_test_label", "quick_test"),
             ("main_window_settings_keybindings_help_label", "help"),
             ("main_window_settings_keybindings_license_label", "license")
@@ -386,17 +385,12 @@ class MainWindow(TkinterDnD.Tk):
             if self.filterqueue_window is not None and self.filterqueue_window.winfo_exists():
                 self.filterqueue_window.focus()
             else:
-                self.filterqueue_window = FilterqueueWindow(master=self)
+                self.filterqueue_window = FilterqueueWindow(master=self, status=self.status)
 
 # WIRD SPÄTER GEMACHT
     def event(self, key):
         print("Event | " + key)
         match key:
-            case "save":
-                InfoWindow(master=self, text="Saved!")
-                # if not root.current_project.save():
-                # InfoWindow(master=self)
-                # pass
             case "quick_test":
                 pass
             case "help":

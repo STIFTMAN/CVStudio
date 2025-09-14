@@ -16,7 +16,6 @@
     "main_window_settings_look_lang_label": "Language",
     "main_window_settings_look_darkmode_label": "Darkmode",
     "main_window_settings_look_theme_label": "Color Theme",
-    "main_window_settings_keybindings_save_label": "Save Project",
     "main_window_settings_keybindings_quick_test_label": "Quick Test",
     "main_window_settings_keybindings_help_label": "Help in Web",
     "main_window_settings_keybindings_license_label": "License in Web",
@@ -56,5 +55,10 @@
     "75%_quantile": "75% Quantile",
     "filter": "Locale Filter",
     "operation": "Globale Operation",
-    "feature": "Feature"
+    "feature": "Feature",
+    "project_apply_action_queue_status_done": "Done !",
+    "project_apply_action_queue_status_no_changes": "No Changes made !",
+    "project_apply_action_queue_status_init": "Waiting for Input ...",
+    "project_apply_action_queue_status_empty_queue": "Nothing to do. Please add some filters ...",
+    "project_apply_action_queue_status_update": "New Update. Press "
 }

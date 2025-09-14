@@ -8,6 +8,7 @@ from src.gui.state.project_file_type import Filter_Type, empty_filter
 from src.gui.utils.config_loader import get_setting
 import customtkinter
 import uuid
+import re
 
 
 class FilterqueueWindow(customtkinter.CTkToplevel):
@@ -20,7 +21,9 @@ class FilterqueueWindow(customtkinter.CTkToplevel):
 
     _layout_settings: dict = {}
 
-    def __init__(self, master, *args, **kwargs) -> None:
+    status: customtkinter.StringVar | None = None
+
+    def __init__(self, master, status, *args, **kwargs) -> None:
         super().__init__(master=master, *args, **kwargs)
         self.title(get_setting("name"))
         self.after(250, lambda: self.iconbitmap("src/assets/favicon.ico"))
@@ -33,6 +36,8 @@ class FilterqueueWindow(customtkinter.CTkToplevel):
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
         self.build_func_bar()
+
+        self.status = status
 
         self.drag_and_drop_frame = DragAndDropLockedFrame(self)
         self.drag_and_drop_frame.set_border_width(get_setting("components")["filter_entry_frame"]["padding"])
@@ -63,6 +68,10 @@ class FilterqueueWindow(customtkinter.CTkToplevel):
         if frame.id is not None:
             self.save_filter(frame.id, data)
             ids = root.current_project.count_ids(frame.id)
+            assert self.status is not None
+            t = root.current_lang.get("project_apply_action_queue_status_update").get()
+            p = re.sub(r"[<>]", "", root.all_keybindings["reload_images"]).replace("Control", "Ctrl").replace("-", " + ")  # type: ignore
+            self.status.set(f"{t} [{p}]")  # type: ignore
             if len(ids) > 1 and self.drag_and_drop_frame is not None:
                 assert frame.id is not None
                 frames = self.drag_and_drop_frame.get_frames()
