@@ -1,0 +1,42 @@
+{
+    "94b2e4d7-b8c8-4b2a-a050-96a656782d2b": {
+        "type": "operation",
+        "data": "linear_contrast_stretch"
+    },
+    "c19a0ed5-765f-448d-8402-01b077a04a41": {
+        "type": "operation",
+        "data": "absolute"
+    },
+    "323640ff-36cc-4c83-8096-87b71fbb1538": {
+        "type": "operation",
+        "data": "clip"
+    },
+    "92c11204-478b-420b-b6fe-3a7e93954496": {
+        "type": "operation",
+        "data": "negative"
+    },
+    "2928df84-d6fc-489b-9368-b0a7158e12f5": {
+        "type": "operation",
+        "data": "clahe"
+    },
+    "70443694-c4f5-49a5-992f-faab20ab2d05": {
+        "type": "operation",
+        "data": "gamma_025"
+    },
+    "2cf3740d-3ec3-498c-ad66-b49ead255916": {
+        "type": "operation",
+        "data": "gamma_050"
+    },
+    "37517871-15f2-4703-9254-275cb718aa09": {
+        "type": "operation",
+        "data": "gamma_100"
+    },
+    "6493ab7a-be0b-45aa-86fe-dfd9d9ec4dbf": {
+        "type": "operation",
+        "data": "gamma_200"
+    },
+    "54da3324-4b85-402d-83d7-d1e992448941": {
+        "type": "operation",
+        "data": "gamma_400"
+    }
+}

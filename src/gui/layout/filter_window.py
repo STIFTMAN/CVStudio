@@ -46,7 +46,7 @@ class FilterWindow(customtkinter.CTkToplevel):
 
     def __init__(self, master, filter: Filter_Type, updater: Callable, *args, **kwargs) -> None:
         super().__init__(master=master, *args, **kwargs)
-        self.title(get_setting("name"))
+        self.title(f"{get_setting('name')} | {root.current_lang.get('filter_window_title').get()} | [{root.current_project.name}]")
         self.after(250, lambda: self.iconbitmap("src/assets/favicon.ico"))
         filter_window_size = get_setting("window_size")["filter"]
         screen_coords = (int((master.winfo_screenwidth() - filter_window_size[0]) / 2), int((master.winfo_screenheight() - filter_window_size[1]) / 2))

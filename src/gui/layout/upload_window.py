@@ -19,7 +19,7 @@ class UploadWindow(customtkinter.CTkToplevel):
 
     def __init__(self, master: tkinterdnd2.Tk, *args, **kwargs):
         super().__init__(master=master, *args, **kwargs)
-        self.title(get_setting("name"))
+        self.title(f"{get_setting('name')} - [{root.current_project.name}]")
         self.layout_settings = get_setting("styles")["upload_window"]
         self.after(250, lambda: self.iconbitmap("src/assets/favicon.ico"))
         upload_window_size = get_setting("window_size")["upload"]

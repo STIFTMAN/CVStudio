@@ -15,6 +15,13 @@ import webbrowser
 import re
 from tkinterdnd2 import TkinterDnD
 import threading
+import cv2
+import numpy
+import tkinter as tk
+from tkinter import filedialog
+from pathlib import Path
+from zipfile import ZipFile, ZIP_STORED
+from typing import Optional
 
 
 class MainWindow(TkinterDnD.Tk):
@@ -34,7 +41,7 @@ class MainWindow(TkinterDnD.Tk):
         super().__init__()
 
     def build(self):
-        self.title(get_setting("name"))
+        self.change_title()
         self.iconbitmap("src/assets/favicon.ico")
         window_size = get_setting("window_size")["main"]
         screen_coords = (int((self.winfo_screenwidth() - window_size[0]) / 2), int((self.winfo_screenheight() - window_size[1]) / 2))
@@ -54,6 +61,12 @@ class MainWindow(TkinterDnD.Tk):
         root.current_project.set_progress(self.progress)
         self.status = customtkinter.StringVar(value=root.current_lang.get("project_apply_action_queue_status_init").get())
 
+    def change_title(self):
+        if root.current_project.data is not None:
+            self.title(f"{get_setting('name')} | [{root.current_project.name}]")
+        else:
+            self.title(get_setting("name"))
+
     def observe_progress(self, *args):
         if self.progress:
             val = self.progress.get()
@@ -63,8 +76,8 @@ class MainWindow(TkinterDnD.Tk):
     def build_nav_frame(self):
         self.nav_frame = Dropdownmenu(master=self)
         self.nav_frame.addButton("main_window_dropdownmenu_home", root.current_lang.get("main_window_dropdownmenu_home"), self.build_home)
-        self.nav_frame.add("main_window_dropdownmenu_project", root.current_lang.get("main_window_dropdownmenu_project"), root.current_lang.get("main_window_dropdownmenu_project_save_image_result"), print)
-        self.nav_frame.add("main_window_dropdownmenu_project", root.current_lang.get("main_window_dropdownmenu_project"), root.current_lang.get("main_window_dropdownmenu_project_save_image_result_all"), print)
+        self.nav_frame.add("main_window_dropdownmenu_project", root.current_lang.get("main_window_dropdownmenu_project"), root.current_lang.get("main_window_dropdownmenu_project_save_image_result"), lambda: self.save_images_via_dialog(True))
+        self.nav_frame.add("main_window_dropdownmenu_project", root.current_lang.get("main_window_dropdownmenu_project"), root.current_lang.get("main_window_dropdownmenu_project_save_image_result_all"), self.save_images_via_dialog)
         self.nav_frame.add("main_window_dropdownmenu_project", root.current_lang.get("main_window_dropdownmenu_project"), root.current_lang.get("main_window_dropdownmenu_project_close"), self.reset_project)
         self.nav_frame.add("main_window_dropdownmenu_project", root.current_lang.get("main_window_dropdownmenu_project"), root.current_lang.get("main_window_dropdownmenu_project_open_filterqueue"), self.open_filterqueue_window)
         self.nav_frame.add("main_window_dropdownmenu_project", root.current_lang.get("main_window_dropdownmenu_project"), root.current_lang.get("main_window_dropdownmenu_project_open_upload_image"), self.open_upload_window)
@@ -79,6 +92,7 @@ class MainWindow(TkinterDnD.Tk):
     def reset_project(self):
         root.current_project.reset()
         self.reset_container_frame()
+        self.change_title()
         self.build_init_container_frame()
         if self.filterqueue_window is not None:
             self.filterqueue_window.destroy()
@@ -160,6 +174,7 @@ class MainWindow(TkinterDnD.Tk):
     def init_open_button_submit(self, optionmenu: customtkinter.CTkOptionMenu):
         data = optionmenu.get()
         root.current_project.load_data(data, root.all_projects[data])
+        self.change_title()
         self.build_image_container()
 
     def build_image_container(self):
@@ -392,6 +407,13 @@ class MainWindow(TkinterDnD.Tk):
         print("Event | " + key)
         match key:
             case "quick_test":
+                # diff betweeen first and last image
+                # mit skalierung drehung translation
+                # ursprungsbild | mit drehung
+                pass
+            case "quick_analyse":
+                threading.Thread(target=root.current_project.quick_analyse, daemon=True).start()
+            case "full_analyse":
                 pass
             case "help":
                 webbrowser.open_new(get_setting("help_url"))
@@ -399,3 +421,59 @@ class MainWindow(TkinterDnD.Tk):
                 webbrowser.open_new(get_setting("license_url"))
             case "reload_images":
                 self.start_action_queue_thread()
+            case "save_pictures":
+                threading.Thread(target=self.save_images_via_dialog, daemon=True).start()
+
+    def save_images_via_dialog(self, last: bool = False) -> Optional[str]:
+        images: numpy.ndarray = root.current_project.temp_images  # type: ignore
+        if len(images) == 0:
+            return
+        if not isinstance(images, list) or not images:
+            return None
+        if not all(isinstance(im, numpy.ndarray) for im in images):
+            raise TypeError("images must be a list of numpy.ndarray")
+
+        parent = tk._default_root  # type: ignore
+
+        prepared: list[numpy.ndarray] = []
+        for im in images:
+            img = im
+            # CHW -> HWC, falls nötig
+            if img.ndim == 3 and img.shape[0] in (3, 4) and img.shape[-1] not in (3, 4):
+                img = numpy.transpose(img, (1, 2, 0))
+            if img.ndim != 3 or img.shape[-1] not in (3, 4):
+                raise ValueError(f"Each image must be (H,W,3/4) or (3/4,H,W), got {img.shape}")
+            # dtype -> uint8
+            if img.dtype != numpy.uint8:
+                img = numpy.clip(img, 0, 255).astype(numpy.uint8, copy=False)
+            # KEINE cvtColor – wir speichern die Kanäle so, wie sie sind
+            prepared.append(img)
+
+        if len(prepared) == 1 or last:
+            out_path = filedialog.asksaveasfilename(
+                parent=parent, title="Save PNG",
+                defaultextension=".png", filetypes=[("PNG image", "*.png")]
+            )
+            if not out_path:
+                return None
+            ok, buf = cv2.imencode(".png", prepared[len(prepared) - 1], [cv2.IMWRITE_PNG_COMPRESSION, 0])
+            if not ok:
+                raise IOError("cv2.imencode('.png', ...) failed")
+            Path(out_path).parent.mkdir(parents=True, exist_ok=True)
+            buf.tofile(out_path)
+            return out_path
+        else:
+            zip_path = filedialog.asksaveasfilename(
+                parent=parent, title="Save ZIP with PNGs",
+                defaultextension=".zip", filetypes=[("ZIP archive", "*.zip")]
+            )
+            if not zip_path:
+                return None
+            Path(zip_path).parent.mkdir(parents=True, exist_ok=True)
+            with ZipFile(zip_path, mode="w", compression=ZIP_STORED) as zf:
+                for i, img in enumerate(prepared, start=1):
+                    ok, buf = cv2.imencode(".png", img, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+                    if not ok:
+                        raise IOError(f"cv2.imencode failed for image #{i}")
+                    zf.writestr(f"image_{i:04d}.png", buf.tobytes())
+            return zip_path

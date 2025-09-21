@@ -2,8 +2,11 @@ from typing import Any, Union
 
 import customtkinter
 import numpy
+from src.processing.stats_type import Stats
+from src.processing.stats import compute_image_stats_global
+from src.processing.image_compare_stats import analyze_stats_delta
 from src.gui.state.project_file_type import Action_Queue_Obj_Type, Action_Type, Filter_Type, Project_File_Type, empty_project
-import src.processing.action_handeling as processing
+import src.processing.action_handeling as action_processing
 import src.gui.state.root as root
 import re
 import json
@@ -17,8 +20,11 @@ class Project:
 
     progress: customtkinter.DoubleVar | None = None
     action_queue: list[Action_Queue_Obj_Type] = []
-    temp_images = []
+    temp_images: list[numpy.typing.NDArray[numpy.uint8 | numpy.float32]] = []
     override_index = -1
+    temp_stat: list[Stats] = []
+
+    analyse_list = []
 
     def get_filternames(self) -> list[str]:
         temp: list[str] = []
@@ -42,6 +48,7 @@ class Project:
     def reset_action_queue(self):
         self.action_queue = []
         self.temp_images = []
+        self.temp_stats = []
         self.override_index = -1
 
     def apply_action_queue(self, status: customtkinter.StringVar):
@@ -68,6 +75,7 @@ class Project:
         elif len(self.action_queue) > len(new_action_queue):
             self.action_queue = self.action_queue[0:len(new_action_queue) - 1]
             self.temp_images = self.temp_images[0:len(new_action_queue) - 1]
+            self.temp_stats = self.temp_stats[0:len(new_action_queue) - 1]
         for index, obj in enumerate(new_action_queue):
             if len(self.action_queue) - 1 < index:
                 self.override_index = index
@@ -80,6 +88,7 @@ class Project:
             return
         self.action_queue = new_action_queue
         self.temp_images = self.temp_images[0:min(self.override_index, len(self.temp_images))]
+        self.temp_stats = self.temp_stats[0:min(self.override_index, len(self.temp_stats))]
         if self.progress:
             self.progress.set(0.0)
         for i in range(self.override_index, len(self.action_queue)):
@@ -97,8 +106,9 @@ class Project:
                 status.set(f"( {i+1} / {len(self.action_queue)} ) - {filter_data['name']}")
             else:
                 status.set(f"( {i+1} / {len(self.action_queue)} ) - {action_data['data']}")
-            new_data = processing.apply_action(src_img, action_data)
+            new_data = action_processing.apply_action(src_img, action_data)
             self.temp_images.append(new_data[0])
+            self.temp_stats.append(new_data[1])
             if self.progress:
                 self.progress.set((i + 1) / len(self.action_queue))
         if self.progress:
@@ -134,10 +144,31 @@ class Project:
         self.data = data
         self.name = name
 
+    def quick_analyse(self):
+        self.analyse_list = []
+        if self.image is not None and len(self.temp_images) > 0:
+            before = compute_image_stats_global(self.image)
+            after = compute_image_stats_global(self.temp_images[len(self.temp_images) - 1])
+            result = analyze_stats_delta(before, after)
+            time_all: float = 0.0
+            for item in self.temp_stats:
+                time_all += item["time"]
+            stats: Stats = {
+                "time": time_all,
+                "action": {
+                    "type": "all",
+                    "data": "-"
+                },
+                "extended_stats": result
+            }
+            print(result["assessment"])
+            self.analyse_list.append(stats)
+
     def reset(self):
         self.data = None
         self.image = None
         self.name = ""
+        self.reset_action_queue()
 
     def save(self) -> bool:
         if self.data is not None:

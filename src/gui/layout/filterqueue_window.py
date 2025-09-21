@@ -25,7 +25,7 @@ class FilterqueueWindow(customtkinter.CTkToplevel):
 
     def __init__(self, master, status, *args, **kwargs) -> None:
         super().__init__(master=master, *args, **kwargs)
-        self.title(get_setting("name"))
+        self.title(f"{get_setting('name')} | {root.current_lang.get('filterqueue_window_title').get()} | [{root.current_project.name}]")
         self.after(250, lambda: self.iconbitmap("src/assets/favicon.ico"))
         filterqueue_window_size = get_setting("window_size")["filterqueue"]
         screen_coords = (int((master.winfo_screenwidth() - filterqueue_window_size[0]) / 2), int((master.winfo_screenheight() - filterqueue_window_size[1]) / 2))
@@ -94,6 +94,9 @@ class FilterqueueWindow(customtkinter.CTkToplevel):
         self.save_project()
         self.update_combobox()
         self.build_filter_list()
+        t = root.current_lang.get("project_apply_action_queue_status_update").get()
+        p = re.sub(r"[<>]", "", root.all_keybindings["reload_images"]).replace("Control", "Ctrl").replace("-", " + ")  # type: ignore
+        self.status.set(f"{t} [{p}]")  # type: ignore
 
     def delete_action(self, frame: FilterEntryFrame):
         if self.drag_and_drop_frame is not None:
@@ -108,6 +111,13 @@ class FilterqueueWindow(customtkinter.CTkToplevel):
             self.drag_and_drop_frame.delete_item_by_index(key)
             self.drag_and_drop_frame.show()
             root.current_project.delete_filter(id, key)
+            assert self.status is not None
+            if len(root.current_project.get_queue()) > 0:
+                t = root.current_lang.get("project_apply_action_queue_status_update").get()
+                p = re.sub(r"[<>]", "", root.all_keybindings["reload_images"]).replace("Control", "Ctrl").replace("-", " + ")  # type: ignore
+                self.status.set(f"{t} [{p}]")
+            else:
+                self.status.set(root.current_lang.get("project_apply_action_queue_status_empty_queue").get())
 
     def destroy(self):
         super().destroy()
@@ -129,9 +139,13 @@ class FilterqueueWindow(customtkinter.CTkToplevel):
         self.update_combobox()
 
     def get_comobox_value(self, data: tuple[str, str]):
+        assert self.status is not None
         root.current_project.add_filter(data[1])
         self.save_project()
         self.build_filter_list()
+        t = root.current_lang.get("project_apply_action_queue_status_update").get()
+        p = re.sub(r"[<>]", "", root.all_keybindings["reload_images"]).replace("Control", "Ctrl").replace("-", " + ")  # type: ignore
+        self.status.set(f"{t} [{p}]")
 
     def update_combobox(self):
         values: list[tuple[str, str]] = []

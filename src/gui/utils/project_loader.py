@@ -3,8 +3,8 @@ from pathlib import Path
 from src.gui.state.project_file_type import Project_File_Type
 import src.gui.state.root as root
 from src.gui.utils.project import Project
-from ..state.error import Error
-import src.processing.load_filters as filters
+from src.gui.state.error import Error
+import src.processing.load_action as filters
 
 
 def load():

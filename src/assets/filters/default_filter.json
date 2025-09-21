@@ -789,7 +789,7 @@
             "grid": [
                 [
                     {
-                        "value": 1.0,
+                        "value": -1.0,
                         "disabled": false
                     },
                     {
@@ -803,7 +803,7 @@
                 ],
                 [
                     {
-                        "value": 1.0,
+                        "value": -1.0,
                         "disabled": true
                     },
                     {
@@ -817,7 +817,7 @@
                 ],
                 [
                     {
-                        "value": 1.0,
+                        "value": -1.0,
                         "disabled": true
                     },
                     {

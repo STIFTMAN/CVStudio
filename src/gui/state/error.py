@@ -13,3 +13,4 @@ class Error(Enum):
     KEYBINDINGS_LOADING = "Keybindings could not be loaded!"
     INVALID_PROJECT_FILE = "Project file is invalid!"
     CREATE_PROJECT = "Could not create project file!"
+    UNSUPPORTED_IMAGE_SHAPE = "Unsupported image shape / layout"
