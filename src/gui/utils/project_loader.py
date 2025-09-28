@@ -37,5 +37,5 @@ def save_filter():
         if root.all_filters[key]["type"] == "filter" and isinstance(temp_data, dict):
             if temp_data["settings"]["mutable"]:
                 data[key] = root.all_filters[key]
-    with open("src/assets/filters/additional.json", "w", encoding="utf-8") as f:
+    with open("src/assets/action/additional.json", "w", encoding="utf-8") as f:
         f.write(json.dumps(data))

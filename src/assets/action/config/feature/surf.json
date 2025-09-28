@@ -1,0 +1,7 @@
+{
+    "hessianThreshold": 400.0,
+    "nOctaves": 4,
+    "nOctaveLayers": 3,
+    "extended": false,
+    "upright": false
+}

@@ -1,0 +1,10 @@
+{
+    "canny1": 50,
+    "canny2": 150,
+    "aperture_size": 3,
+    "rho": 1.0,
+    "theta_deg": 0.5,
+    "hough_threshold": 50,
+    "min_line_length": 3.0,
+    "max_line_gap": 20.0
+}

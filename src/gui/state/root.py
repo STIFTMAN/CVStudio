@@ -20,3 +20,5 @@ version: str = "unknown"
 all_projects: dict[str, Project_File_Type] = {}
 current_project: Project = Project()
 all_icons: dict[str, customtkinter.CTkImage] = {}
+status: customtkinter.StringVar | None = None
+status_details: customtkinter.StringVar | None = None

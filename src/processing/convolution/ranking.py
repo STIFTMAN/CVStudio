@@ -4,6 +4,7 @@ import numpy.typing as npt
 from typing import Sequence, Tuple, List, Literal, Optional
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from multiprocessing import shared_memory
+import src.gui.state.root as root
 
 RankMode = Literal["median", "minimum", "maximum", "25%_quantile", "75%_quantile"]
 
@@ -22,6 +23,7 @@ def _process_rank_output_tile(
     num_channels: int,
     mono_channels_equal: bool                      # NEU: Kanäle der Eingabe identisch?
 ) -> None:
+
     sy, sx = stride_hw
     r0, r1, c0, c1 = tile_coords_rc
     th, tw = r1 - r0, c1 - c0
@@ -42,11 +44,13 @@ def _process_rank_output_tile(
             out = np.ndarray(output_shape, dtype=np.float32, buffer=shm_out.buf)  # (Ho, Wo, C)
 
             if mono_channels_equal and num_channels >= 3:
-                # Einmal auf Kanal 0 rechnen ...
-                _rank_tile_grayscale(padded[..., 0], out[..., 0], r0, r1, c0, c1, sy, sx,
-                                     valid_kernel_offsets, mode, th, tw)
-                # ... Ergebnis bit-identisch in übrige Kanäle kopieren.
-                out[r0:r1, c0:c1, 1:num_channels] = out[r0:r1, c0:c1, [0]]
+                _rank_tile_grayscale(padded[..., 0], out[..., 0], r0, r1, c0, c1, sy, sx, valid_kernel_offsets, mode, th, tw)
+
+                up_to = min(3, num_channels)  # nur RGB
+                out[r0:r1, c0:c1, 1:up_to] = out[r0:r1, c0:c1, [0]]
+
+                for ch in range(up_to, num_channels):  # z.B. Alpha separat
+                    _rank_tile_grayscale(padded[..., ch], out[..., ch], r0, r1, c0, c1, sy, sx, valid_kernel_offsets, mode, th, tw)
 
             else:
                 # Echte Mehrkanal-Verarbeitung
@@ -74,20 +78,15 @@ def _rank_tile_grayscale(
         return
 
     if mode in {"minimum", "maximum"}:
-        if mode == "minimum":
-            agg = np.full((th, tw), np.inf, dtype=np.float32)
-            reducer = np.minimum
-        else:
-            agg = np.full((th, tw), -np.inf, dtype=np.float32)
-            reducer = np.maximum
-
+        reducer = np.minimum if mode == "minimum" else np.maximum
+        agg = np.full((th, tw), np.inf if mode == "minimum" else -np.inf, dtype=np.float32)
         tmp = np.empty((th, tw), dtype=np.float32)
-        for dy, dx, w in valid_kernel_offsets:
+        for dy, dx, _w in valid_kernel_offsets:
             rs = slice(dy + r0 * sy, dy + r1 * sy, sy)
             cs = slice(dx + c0 * sx, dx + c1 * sx, sx)
-            np.multiply(padded_2d[rs, cs], np.float32(w), out=tmp, casting="unsafe")
+            # ungewichtet:
+            tmp[...] = padded_2d[rs, cs]
             reducer(agg, tmp, out=agg)
-
         out_2d[r0:r1, c0:c1] = agg
         return
 
@@ -96,7 +95,7 @@ def _rank_tile_grayscale(
     for i, (dy, dx, w) in enumerate(valid_kernel_offsets):
         rs = slice(dy + r0 * sy, dy + r1 * sy, sy)
         cs = slice(dx + c0 * sx, dx + c1 * sx, sx)
-        np.multiply(padded_2d[rs, cs], np.float32(w), out=stack[i], casting="unsafe")
+        np.multiply(padded_2d[rs, cs], np.float32(w), out=stack[i])
 
     if mode == "median":
         if n_valid % 2:
@@ -126,16 +125,19 @@ def ranking(
     mode: RankMode = "median",
     stride: Tuple[int, int] = (1, 1),
     pad_mode: str = "reflect",
-    tile: int = 256,
+    tile: int = 64,
     keep_free_cores: int = 1,
     max_workers: int | None = None
 ) -> npt.NDArray[np.float32]:
+    assert root.status_details is not None
     """Ranking-Filter (min/max/median/quantil) mit MP; Ausgabe float32 ungeclippt."""
+    root.status_details.set(root.current_lang.get("status_details_checking_sample_rate").get())
     sy, sx = stride
     if sy < 1 or sx < 1:
         raise ValueError("stride must be >= 1.")
 
     # Kernel prüfen & gültige Offsets sammeln
+    root.status_details.set(root.current_lang.get("status_details_checking_kernal_dimensions").get())
     k = np.asarray(kernel, dtype=object)
     if k.ndim != 2:
         raise ValueError("kernel must be 2D.")
@@ -144,6 +146,7 @@ def ranking(
         raise ValueError("kernel dimensions must be odd (e.g., 3x3, 5x5).")
     pad_h, pad_w = kH // 2, kW // 2
 
+    root.status_details.set(root.current_lang.get("status_details_checking_kernal_values").get())
     valid_offsets: List[Tuple[int, int, float]] = []
     for dy in range(kH):
         for dx in range(kW):
@@ -158,6 +161,7 @@ def ranking(
 
     n_valid = len(valid_offsets)
     if n_valid == 0:
+        root.status_details.set(root.current_lang.get("status_details_ranking_no_selection").get())
         H, W = image.shape[:2]
         out_h = (H + sy - 1) // sy
         out_w = (W + sx - 1) // sx
@@ -165,6 +169,7 @@ def ranking(
                         dtype=np.float32)
 
     # Eingabe-Datentyp normalisieren
+    root.status_details.set(root.current_lang.get("status_details_checking_image_datatype").get())
     if np.issubdtype(image.dtype, np.integer):
         img_in = image.astype(np.uint8, copy=False)
         input_dtype_name = "uint8"
@@ -175,6 +180,7 @@ def ranking(
         raise TypeError(f"Unsupported image dtype {image.dtype}; use uint8 or float.")
 
     # --- Monochrom-Erkennung (3-Kanal identisch?) ---
+    root.status_details.set(root.current_lang.get("status_details_checking_gray_monochrom").get())
     mono_channels_equal = False
     if img_in.ndim == 3 and img_in.shape[2] >= 3:
         ch0, ch1, ch2 = img_in[..., 0], img_in[..., 1], img_in[..., 2]
@@ -183,12 +189,10 @@ def ranking(
         else:
             mono_channels_equal = np.allclose(ch0, ch1, atol=1e-6) and np.allclose(ch1, ch2, atol=1e-6)
 
-    # Padding
+    root.status_details.set(root.current_lang.get("status_details_set_padding").get())
+#  Padding
     if img_in.ndim == 2:
-        padded = (np.pad(img_in, ((pad_h, pad_h), (pad_w, pad_w)),
-                         mode="constant", constant_values=0)
-                  if pad_mode == "constant" else
-                  np.pad(img_in, ((pad_h, pad_h), (pad_w, pad_w)), mode=pad_mode))  # type: ignore
+        padded = (np.pad(img_in, ((pad_h, pad_h), (pad_w, pad_w)), mode="constant", constant_values=0) if pad_mode == "constant" else np.pad(img_in, ((pad_h, pad_h), (pad_w, pad_w)), mode=pad_mode))  # type: ignore
         num_channels = 1
         Hp, Wp = padded.shape
         H, W = img_in.shape
@@ -197,10 +201,7 @@ def ranking(
         out_shape, in_shape = (out_h, out_w), (Hp, Wp)
 
     elif img_in.ndim == 3:
-        padded = (np.pad(img_in, ((pad_h, pad_h), (pad_w, pad_w), (0, 0)),
-                         mode="constant", constant_values=0)
-                  if pad_mode == "constant" else
-                  np.pad(img_in, ((pad_h, pad_h), (pad_w, pad_w), (0, 0)), mode=pad_mode))  # type: ignore
+        padded = (np.pad(img_in, ((pad_h, pad_h), (pad_w, pad_w), (0, 0)), mode="constant", constant_values=0) if pad_mode == "constant" else np.pad(img_in, ((pad_h, pad_h), (pad_w, pad_w), (0, 0)), mode=pad_mode))  # type: ignore
         num_channels = img_in.shape[2]
         Hp, Wp, _ = padded.shape
         H, W, _ = img_in.shape
@@ -210,16 +211,21 @@ def ranking(
     else:
         raise ValueError("image must be 2D (H,W) or 3D (H,W,C).")
 
+    root.status_details.set(root.current_lang.get("status_details_set_shared_memory").get())
     # Shared memory
     shm_in = shared_memory.SharedMemory(create=True, size=padded.nbytes)
     buf_in = np.ndarray(in_shape, dtype=padded.dtype, buffer=shm_in.buf)
+
+    root.status_details.set(root.current_lang.get("status_details_load_image_shared_memory").get())
     np.copyto(buf_in, padded, casting="no")
 
+    root.status_details.set(root.current_lang.get("status_details_set_shared_memory").get())
     out_nbytes = int(np.prod(out_shape, dtype=np.int64)) * np.dtype(np.float32).itemsize
     shm_out = shared_memory.SharedMemory(create=True, size=out_nbytes)
     buf_out = np.ndarray(out_shape, dtype=np.float32, buffer=shm_out.buf)
 
     # Tiles
+    root.status_details.set(root.current_lang.get("status_details_set_tile_splitting").get())
     tiles: List[Tuple[int, int, int, int]] = []
     for r0 in range(0, out_h, tile):
         r1 = min(r0 + tile, out_h)
@@ -228,11 +234,13 @@ def ranking(
             tiles.append((r0, r1, c0, c1))
 
     # Worker-Anzahl
+    root.status_details.set(root.current_lang.get("status_details_checking_number_worker").get())
     if max_workers is None:
         cpu = os.cpu_count() or 2
         max_workers = max(1, cpu - max(0, keep_free_cores))
 
     # Ausführen
+    root.status_details.set(root.current_lang.get("status_details_start_execution").get())
     try:
         with ProcessPoolExecutor(max_workers=max_workers) as ex:
             futures = [
@@ -245,13 +253,16 @@ def ranking(
                 )
                 for tile_ij in tiles
             ]
-            for f in as_completed(futures):
+            for i, f in enumerate(as_completed(futures)):
+                root.status_details.set(f'[{i+1}/{len(futures)}] {root.current_lang.get("status_details_tile_progress").get()}')
                 f.result()
         result = buf_out.copy()
     finally:
+        root.status_details.set(root.current_lang.get("status_details_unload_shared_memory").get())
         shm_in.close()
         shm_in.unlink()
         shm_out.close()
         shm_out.unlink()
 
+    root.status_details.set(root.current_lang.get("status_details_done").get())
     return result  # float32, ungeclippt

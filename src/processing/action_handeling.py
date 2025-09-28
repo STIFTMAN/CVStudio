@@ -1,3 +1,9 @@
+from src.processing.feature.fast import fast
+from src.processing.feature.hough import hough
+from src.processing.feature.orb import orb
+from src.processing.feature.sift import sift
+from src.processing.feature.surf import surf
+from src.processing.feature.harris import harris
 from src.processing.operations.gamma import gamma
 from src.processing.stats_type import Stats
 from src.processing.convolution.ranking import ranking
@@ -28,16 +34,16 @@ def apply_action(image: numpy.ndarray, action: Action_Type) -> tuple[npt.NDArray
                 kernal = [[1 if y["disabled"] else None for y in x] for x in f["grid"]]
                 new_img = ranking(image, kernal, mode=f["settings"]["type"], stride=f["settings"]["spatial_sampling_rate"])  # type: ignore
                 stats["time"] = time.time() - start_time
-                return (new_img, stats)
+                return (new_img, stats)  # type: ignore
             elif f["settings"]["type"] == "smoothing":
                 kernal = [[y["value"] * f["settings"]["factor"] for y in x] for x in f["grid"]]
                 new_img = default(image, kernal, stride=f["settings"]["spatial_sampling_rate"])  # type: ignore
-                return (new_img, stats)
+                return (new_img, stats)  # type: ignore
             elif f["settings"]["type"] == "edge_detection":
                 kernal = [[y["value"] for y in x] for x in f["grid"]]
                 new_img = default(image, kernal, stride=f["settings"]["spatial_sampling_rate"], edge_filter=True)  # type: ignore
                 stats["time"] = time.time() - start_time
-                return (new_img, stats)
+                return (new_img, stats)  # type: ignore
             else:
                 return (image, stats)
         case "operation":
@@ -59,8 +65,8 @@ def apply_action(image: numpy.ndarray, action: Action_Type) -> tuple[npt.NDArray
                     new_img = gamma(image, 0.25)
                 case "gamma_050":
                     new_img = gamma(image, 0.5)
-                case "gamma_100":
-                    new_img = gamma(image, 1.0)
+                case "gamma_150":
+                    new_img = gamma(image, 1.5)
                 case "gamma_200":
                     new_img = gamma(image, 2.0)
                 case "gamma_400":
@@ -70,5 +76,52 @@ def apply_action(image: numpy.ndarray, action: Action_Type) -> tuple[npt.NDArray
                 return (new_img, stats)
             return (image, stats)
         case "feature":
+            f = action["data"]
+            assert isinstance(f, str)
+            match f:
+                case "harris":
+                    data = harris(image, draw=True)
+                    new_img = data[0]
+                    stats["extended_stats"] = {
+                        "keypoints": data[1][0],
+                        "best_sigma_map": data[1][1]
+                    }
+                case "surf":
+                    data = surf(image, draw=True)
+                    new_img = data[0]
+                    stats["extended_stats"] = {
+                        "keypoints": data[1][0],
+                        "descriptors": data[1][1]
+                    }
+                case "sift":
+                    data = sift(image, draw=True)
+                    new_img = data[0]
+                    stats["extended_stats"] = {
+                        "keypoints": data[1][0],
+                        "descriptors": data[1][1]
+                    }
+                case "orb":
+                    data = orb(image, draw=True)
+                    new_img = data[0]
+                    stats["extended_stats"] = {
+                        "keypoints": data[1][0],
+                        "descriptors": data[1][1]
+                    }
+                case "fast":
+                    data = fast(image, draw=True)
+                    new_img = data[0]
+                    stats["extended_stats"] = {
+                        "keypoints": data[1][0],
+                        "descriptors": data[1][1]
+                    }
+                case "hough":
+                    data = hough(image, draw=True)
+                    new_img = data[0]
+                    stats["extended_stats"] = {
+                        "keypoints": data[1][0],
+                        "descriptors": data[1][1]
+                    }
             stats["time"] = time.time() - start_time
+            if new_img is not None:
+                return (new_img, stats)
             return (image, stats)

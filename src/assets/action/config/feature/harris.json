@@ -1,0 +1,14 @@
+{
+    "sigmas": [
+        0.4,
+        0.6,
+        0.8,
+        1.2,
+        1.8,
+        2.5
+    ],
+    "det_thresh": 1e-6,
+    "nms_kernel": 3,
+    "nms_radius": 1,
+    "nms_sigma_factor": 0.5
+}

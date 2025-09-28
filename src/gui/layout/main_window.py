@@ -35,7 +35,6 @@ class MainWindow(TkinterDnD.Tk):
     image_labels: list[customtkinter.CTkLabel | None] = [None, None]
     status_label: customtkinter.CTkLabel | None = None
     progressbar: customtkinter.CTkProgressBar | None = None
-    status: customtkinter.StringVar | None = None
 
     def __init__(self):
         super().__init__()
@@ -59,7 +58,13 @@ class MainWindow(TkinterDnD.Tk):
         self.progress = customtkinter.DoubleVar(value=0.0)
         self.progress.trace_add("write", self.observe_progress)
         root.current_project.set_progress(self.progress)
-        self.status = customtkinter.StringVar(value=root.current_lang.get("project_apply_action_queue_status_init").get())
+        root.status = customtkinter.StringVar(value=root.current_lang.get("project_apply_action_queue_status_init").get())
+        root.status_details = customtkinter.StringVar(value="")
+        root.status_details.trace_add("write", self.observe_status_details)
+
+    def observe_status_details(self, *args):
+        assert root.status_details is not None
+        print(root.status_details.get())
 
     def change_title(self):
         if root.current_project.data is not None:
@@ -183,17 +188,30 @@ class MainWindow(TkinterDnD.Tk):
         select_frame: customtkinter.CTkFrame = customtkinter.CTkFrame(master=self.container_frame)
         select_frame.grid(row=0, column=0, padx=self.layout_settings["image_container"]["padding"][0:2], pady=self.layout_settings["image_container"]["padding"][2:4], sticky="nwe")
         select_frame.grid_columnconfigure(0, weight=1)
-        select_frame.grid_columnconfigure(1, weight=1)
-        select_frame.grid_columnconfigure(2, weight=1)
+        select_frame.grid_columnconfigure(1, minsize=300)
         assert self.container_frame is not None
         self.container_frame.grid_rowconfigure(0, weight=0)
         self.container_frame.grid_rowconfigure(1, weight=1)
 
-        self.status_label = customtkinter.CTkLabel(master=select_frame, textvariable=self.status)
+        status_frame: customtkinter.CTkFrame = customtkinter.CTkFrame(master=select_frame)
+        status_frame.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
+        status_frame.grid_columnconfigure(0, weight=1)
+        status_frame.grid_columnconfigure(1, weight=1)
+        status_frame.grid_rowconfigure(0, weight=1)
+
+        self.status_label = customtkinter.CTkLabel(master=status_frame, textvariable=root.status)
         self.status_label.grid(row=0, column=0, padx=self.layout_settings["image_container"]["select_frame"]["status_label"]["padding"][0:2], pady=self.layout_settings["image_container"]["select_frame"]["status_label"]["padding"][2:4])
 
-        self.progressbar = customtkinter.CTkProgressBar(master=select_frame, variable=self.progress)
-        self.progressbar.grid(row=0, column=1, sticky="we", padx=self.layout_settings["image_container"]["select_frame"]["progressbar"]["padding"][0:2], pady=self.layout_settings["image_container"]["select_frame"]["progressbar"]["padding"][2:4])
+        self.status_details_label = customtkinter.CTkLabel(master=status_frame, textvariable=root.status_details)
+        self.status_details_label.grid(row=0, column=1, padx=self.layout_settings["image_container"]["select_frame"]["status_label"]["padding"][0:2], pady=self.layout_settings["image_container"]["select_frame"]["status_label"]["padding"][2:4])
+
+        progressbar_frame: customtkinter.CTkFrame = customtkinter.CTkFrame(master=select_frame)
+        progressbar_frame.grid(row=0, column=1, sticky="nswe", padx=10, pady=10)
+        progressbar_frame.grid_columnconfigure(0, weight=1)
+        progressbar_frame.grid_rowconfigure(0, weight=1)
+
+        self.progressbar = customtkinter.CTkProgressBar(master=progressbar_frame, variable=self.progress)
+        self.progressbar.grid(row=0, column=0, sticky="we", padx=self.layout_settings["image_container"]["select_frame"]["progressbar"]["padding"][0:2], pady=self.layout_settings["image_container"]["select_frame"]["progressbar"]["padding"][2:4])
 
         switch_mode: customtkinter.CTkSwitch = customtkinter.CTkSwitch(master=select_frame, textvariable=root.current_lang.get("main_window_image_container_select_compare"))
         switch_mode.grid(row=0, column=2, padx=self.layout_settings["image_container"]["select_frame"]["switch_mode"]["padding"][0:2], pady=self.layout_settings["image_container"]["select_frame"]["switch_mode"]["padding"][2:4])
@@ -370,8 +388,9 @@ class MainWindow(TkinterDnD.Tk):
 
     def start_action_queue_thread(self):
         def task():
-            assert self.status is not None
-            root.current_project.apply_action_queue(self.status)
+            root.current_project.apply_action_queue()
+            assert root.status_details is not None
+            root.status_details.set("")
         threading.Thread(target=task, daemon=True).start()
 
     def open_upload_window(self):
@@ -400,7 +419,7 @@ class MainWindow(TkinterDnD.Tk):
             if self.filterqueue_window is not None and self.filterqueue_window.winfo_exists():
                 self.filterqueue_window.focus()
             else:
-                self.filterqueue_window = FilterqueueWindow(master=self, status=self.status)
+                self.filterqueue_window = FilterqueueWindow(master=self, status=root.status)
 
 # WIRD SPÄTER GEMACHT
     def event(self, key):

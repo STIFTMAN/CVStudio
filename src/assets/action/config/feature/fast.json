@@ -1,0 +1,5 @@
+{
+    "threshold": 20,
+    "nonmaxSuppression": true,
+    "type": 2
+}

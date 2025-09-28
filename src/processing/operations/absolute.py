@@ -21,7 +21,7 @@ def absolute(img: np.ndarray) -> np.ndarray:
 
     if np.issubdtype(a.dtype, np.unsignedinteger):
         # Schon nicht-negativ: Kopie, falls du mutieren willst
-        return a.copy()
+        return a
 
     if np.issubdtype(a.dtype, np.floating):
         return np.abs(a).astype(a.dtype, copy=False)
