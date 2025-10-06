@@ -1,9 +1,9 @@
-from typing import TypedDict, List
+from typing import TypedDict
 
 
 class Harris_Type(TypedDict):
-    sigmas: List[float]
-    det_thresh: float
-    nms_kernel: int
-    nms_radius: int
-    nms_sigma_factor: float
+    maxCorners: int
+    qualityLevel: float
+    minDistance: int
+    blockSize: int
+    k: float

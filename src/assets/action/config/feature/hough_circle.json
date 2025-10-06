@@ -1,0 +1,8 @@
+{
+    "dp": 1.2,
+    "minDist": 20,
+    "param1": 100,
+    "param2": 50,
+    "minRadius": 50,
+    "maxRadius": 90
+}

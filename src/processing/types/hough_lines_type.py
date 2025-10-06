@@ -1,7 +1,7 @@
 from typing import TypedDict
 
 
-class Hough_Type(TypedDict):
+class Hough_Lines_Type(TypedDict):
     canny1: int
     canny2: int
     aperture_size: int

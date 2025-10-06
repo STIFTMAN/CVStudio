@@ -191,7 +191,7 @@ def analyze_stats_delta(stats_before: Dict[str, Any], stats_after: Dict[str, Any
         summary_messages.append(root.current_lang.get("analysis_summary_clipping_change").get())
 
     assessment = {
-        "summary": " | ".join(summary_messages) if summary_messages else root.current_lang.get("analysis_assessment_no_changes").get(),
+        "summary": summary_messages if summary_messages else [root.current_lang.get("analysis_assessment_no_changes").get()],
         "notes": notes
     }
 
@@ -215,6 +215,10 @@ def analyze_stats_delta(stats_before: Dict[str, Any], stats_after: Dict[str, Any
             "frequency_delta": frequency_delta
         },
         "flags": flags,
+        "raw": {
+            "before": stats_before,
+            "after": stats_after
+        },
         "assessment": assessment
     }
     return result

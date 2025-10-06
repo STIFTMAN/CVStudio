@@ -22,3 +22,4 @@ current_project: Project = Project()
 all_icons: dict[str, customtkinter.CTkImage] = {}
 status: customtkinter.StringVar | None = None
 status_details: customtkinter.StringVar | None = None
+status_test: customtkinter.StringVar | None = None

@@ -9,7 +9,7 @@ import cv2
 from src.gui.state import root  # übernimmt deine Status-Strings
 
 # ----------------- Konstanten (auslagern) -----------------
-TILE_SIZE: int = 256
+TILE_SIZE: int = 1024
 KEEP_FREE_CORES: int = 1
 SUPPRESS_PADDING_BORDER: bool = True   # optional: äußeren Rand (kh/kw) auf 0 setzen
 

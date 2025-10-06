@@ -7,6 +7,7 @@ from src.gui.state.error import Error
 from src.gui.utils.project import Project
 from src.gui.utils.resize_image import resize_image_to_label
 from src.gui.layout.filterqueue_window import FilterqueueWindow
+from src.gui.layout.test_window import TestWindow
 from src.gui.utils.config_loader import get_setting, save_settings
 import src.gui.state.root as root
 from src.gui.components.dropdownmenu import Dropdownmenu
@@ -28,6 +29,7 @@ class MainWindow(TkinterDnD.Tk):
     nav_frame: Dropdownmenu | None = None
     container_frame: customtkinter.CTkFrame | customtkinter.CTkScrollableFrame | None = None
     filterqueue_window: FilterqueueWindow | None = None
+    test_window: TestWindow | None = None
     progress: customtkinter.DoubleVar | None = None
     upload_window: UploadWindow | None = None
     info_window: InfoWindow | None = None
@@ -35,6 +37,8 @@ class MainWindow(TkinterDnD.Tk):
     image_labels: list[customtkinter.CTkLabel | None] = [None, None]
     status_label: customtkinter.CTkLabel | None = None
     progressbar: customtkinter.CTkProgressBar | None = None
+
+    progress_test: customtkinter.DoubleVar | None = None
 
     def __init__(self):
         super().__init__()
@@ -58,13 +62,16 @@ class MainWindow(TkinterDnD.Tk):
         self.progress = customtkinter.DoubleVar(value=0.0)
         self.progress.trace_add("write", self.observe_progress)
         root.current_project.set_progress(self.progress)
+        self.progress_test = customtkinter.DoubleVar(value=0.0)
+        root.current_project.set_progress_test(self.progress_test)
         root.status = customtkinter.StringVar(value=root.current_lang.get("project_apply_action_queue_status_init").get())
         root.status_details = customtkinter.StringVar(value="")
+        root.status_test = customtkinter.StringVar(value="")
         root.status_details.trace_add("write", self.observe_status_details)
 
     def observe_status_details(self, *args):
         assert root.status_details is not None
-        print(root.status_details.get())
+        # print(root.status_details.get())
 
     def change_title(self):
         if root.current_project.data is not None:
@@ -86,7 +93,7 @@ class MainWindow(TkinterDnD.Tk):
         self.nav_frame.add("main_window_dropdownmenu_project", root.current_lang.get("main_window_dropdownmenu_project"), root.current_lang.get("main_window_dropdownmenu_project_close"), self.reset_project)
         self.nav_frame.add("main_window_dropdownmenu_project", root.current_lang.get("main_window_dropdownmenu_project"), root.current_lang.get("main_window_dropdownmenu_project_open_filterqueue"), self.open_filterqueue_window)
         self.nav_frame.add("main_window_dropdownmenu_project", root.current_lang.get("main_window_dropdownmenu_project"), root.current_lang.get("main_window_dropdownmenu_project_open_upload_image"), self.open_upload_window)
-        self.nav_frame.addButton("main_window_dropdownmenu_testing", root.current_lang.get("main_window_dropdownmenu_testing"), print)
+        self.nav_frame.addButton("main_window_dropdownmenu_testing", root.current_lang.get("main_window_dropdownmenu_testing"), self.open_test_window)
         self.nav_frame.add("main_window_dropdownmenu_settings", root.current_lang.get("main_window_dropdownmenu_settings"), root.current_lang.get("main_window_settings_look"), lambda: self.build_settings("main_window_settings_look"))
         self.nav_frame.add("main_window_dropdownmenu_settings", root.current_lang.get("main_window_dropdownmenu_settings"), root.current_lang.get("main_window_settings_keybindings"), lambda: self.build_settings("main_window_settings_keybindings"))
         self.nav_frame.add("main_window_dropdownmenu_settings", root.current_lang.get("main_window_dropdownmenu_settings"), root.current_lang.get("main_window_settings_help"), lambda: self.build_settings("main_window_settings_help"))
@@ -421,18 +428,25 @@ class MainWindow(TkinterDnD.Tk):
             else:
                 self.filterqueue_window = FilterqueueWindow(master=self, status=root.status)
 
+    def open_test_window(self):
+        if root.current_project.ready():
+            if not root.current_project.image_ready():
+                self.open_upload_window()
+            if self.test_window is not None and self.test_window.winfo_exists():
+                self.test_window.focus()
+            else:
+                self.test_window = TestWindow(master=self)
+
 # WIRD SPÄTER GEMACHT
     def event(self, key):
         print("Event | " + key)
         match key:
             case "quick_test":
-                # diff betweeen first and last image
-                # mit skalierung drehung translation
-                # ursprungsbild | mit drehung
-                pass
-            case "quick_analyse":
-                threading.Thread(target=root.current_project.quick_analyse, daemon=True).start()
-            case "full_analyse":
+                def quick_test_runner():
+                    root.current_project.quick_test()
+                    self.open_test_window()
+                threading.Thread(target=quick_test_runner, daemon=True).start()
+            case "full_test":
                 pass
             case "help":
                 webbrowser.open_new(get_setting("help_url"))

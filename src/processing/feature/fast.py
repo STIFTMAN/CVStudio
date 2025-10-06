@@ -3,14 +3,13 @@ import numpy as np
 import numpy.typing as npt
 import cv2
 from src.processing.utils.to_gray_uint8 import to_gray_uint8
-from src.processing.utils.draw_keypoints import draw_keypoints
 from src.processing.root_config import processing_config
+from src.processing.utils.draw_keypoints import Style
 
 
 def fast(
-    image: npt.NDArray[np.uint8 | np.float32],
-    draw: bool = True
-) -> tuple[npt.NDArray[np.uint8 | np.float32], Tuple[List[cv2.KeyPoint], np.ndarray]]:
+    image: npt.NDArray[np.uint8 | np.float32]
+) -> tuple[Style, Tuple[List[cv2.KeyPoint], np.ndarray]]:
     """
     Wendet FAST (Feature from Accelerated Segment Test) auf 'image' an.
     Gibt (image, (keypoints, descriptors)) zurück.
@@ -33,9 +32,4 @@ def fast(
     # FAST hat keine Deskriptoren → leeres Array zurückgeben
     descriptors = np.empty((0, 0), dtype=np.uint8)
 
-    if not draw or len(keypoints) == 0:
-        return (image, (keypoints, descriptors))
-
-    out = draw_keypoints(image, keypoints, style="cross")
-
-    return out, (keypoints, descriptors)
+    return "cross", (keypoints, descriptors)

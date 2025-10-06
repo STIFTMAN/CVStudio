@@ -13,7 +13,7 @@
     },
     "8cf41ab4-d36e-4c42-9c18-f611e0c9176e": {
         "type": "feature",
-        "data": "hough"
+        "data": "hough_lines"
     },
     "1eddb4c2-ac1d-4580-8c63-331df011d43c": {
         "type": "feature",
@@ -22,5 +22,13 @@
     "84244a93-609f-4003-89ae-f2317e612509": {
         "type": "feature",
         "data": "fast"
+    },
+    "851e72dd-f57d-4f43-b15e-7780af6cf211": {
+        "type": "feature",
+        "data": "hough_circle"
+    },
+    "245e11cf-eae8-401f-9753-9fc21971ebe0": {
+        "type": "feature",
+        "data": "hough_rectangle"
     }
 }

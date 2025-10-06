@@ -1,0 +1,158 @@
+{'Eckendetektoren (nur Detektor)': {'Harris': {
+        'base': {'num_kp': 32
+            }, 'rotation': {'num_kp': 27, 'repeatability': 0.78125
+            }, 'scaling': {'num_kp': 17, 'repeatability': 0.8125
+            }, 'translation': {'num_kp': 27, 'repeatability': 0.84375
+            }
+        }, 'FAST': {'base': {'num_kp': 31
+            }, 'rotation': {'num_kp': 72, 'repeatability': 0.7741935483870968
+            }, 'scaling': {'num_kp': 32, 'repeatability': 1.0
+            }, 'translation': {'num_kp': 27, 'repeatability': 0.8709677419354839
+            }
+        }
+    }, 'Keypoint + Deskriptor': {'SIFT': {'base': {'num_kp': 74
+            }, 'rotation': {'num_kp': 58, 'good_matches': 27, 'inliers': 15, 'inlier_ratio': 0.5555555555555556, 'H': array([
+                    [
+                        8.74031282e-01,
+                        5.08049996e-01,
+                        -4.68523651e+01
+                    ],
+                    [
+                        -5.03432208e-01,
+                        8.73705268e-01,
+                        7.98109785e+01
+                    ],
+                    [
+                        2.39004708e-05,
+                        3.37940383e-05,
+                        1.00000000e+00
+                    ]
+                ]), 'repeatability': 0.6891891891891891
+            }, 'scaling': {'num_kp': 57, 'good_matches': 30, 'inliers': 7, 'inlier_ratio': 0.23333333333333334, 'H': array([
+                    [
+                        1.82742225e+00,
+                        -5.61704298e+00,
+                        8.65546028e+01
+                    ],
+                    [
+                        1.53278322e+00,
+                        -4.62336370e+00,
+                        7.08837812e+01
+                    ],
+                    [
+                        2.05516656e-02,
+                        -6.21243406e-02,
+                        1.00000000e+00
+                    ]
+                ]), 'repeatability': 0.9324324324324325
+            }, 'translation': {'num_kp': 67, 'good_matches': 63, 'inliers': 61, 'inlier_ratio': 0.9682539682539683, 'H': array([
+                    [
+                        1.00016150e+00,
+                        5.95604682e-04,
+                        3.99829816e+01
+                    ],
+                    [
+                        -1.28233219e-04,
+                        1.00094565e+00,
+                        2.49951303e+01
+                    ],
+                    [
+                        -2.00427033e-07,
+                        4.01031180e-06,
+                        1.00000000e+00
+                    ]
+                ]), 'repeatability': 0.8513513513513513
+            }
+        }, 'SURF': {'base': {'num_kp': 57
+            }, 'rotation': {'num_kp': 352, 'good_matches': 6, 'inliers': 0, 'inlier_ratio': 0.0, 'H': None, 'repeatability': 0.5964912280701754
+            }, 'scaling': {'num_kp': 83, 'good_matches': 20, 'inliers': 17, 'inlier_ratio': 0.85, 'H': array([
+                    [
+                        6.02321111e-01,
+                        8.01348337e-02,
+                        3.23172126e+01
+                    ],
+                    [
+                        -1.48543912e-01,
+                        8.21097815e-01,
+                        3.31919152e+01
+                    ],
+                    [
+                        -1.12595316e-03,
+                        6.54821685e-04,
+                        1.00000000e+00
+                    ]
+                ]), 'repeatability': 0.8947368421052632
+            }, 'translation': {'num_kp': 67, 'good_matches': 45, 'inliers': 40, 'inlier_ratio': 0.8888888888888888, 'H': array([
+                    [
+                        9.91554313e-01,
+                        2.87127424e-03,
+                        4.01495289e+01
+                    ],
+                    [
+                        9.01410776e-04,
+                        9.96504169e-01,
+                        2.50281246e+01
+                    ],
+                    [
+                        -3.05613294e-05,
+                        8.59714332e-06,
+                        1.00000000e+00
+                    ]
+                ]), 'repeatability': 0.9122807017543859
+            }
+        }, 'ORB': {'base': {'num_kp': 98
+            }, 'rotation': {'num_kp': 533, 'good_matches': 32, 'inliers': 24, 'inlier_ratio': 0.75, 'H': array([
+                    [
+                        9.52347275e-01,
+                        5.02943521e-01,
+                        -5.13305463e+01
+                    ],
+                    [
+                        -4.53303027e-01,
+                        9.02180155e-01,
+                        7.27222444e+01
+                    ],
+                    [
+                        4.43290286e-04,
+                        -1.34421955e-04,
+                        1.00000000e+00
+                    ]
+                ]), 'repeatability': 1.0
+            }, 'scaling': {'num_kp': 148, 'good_matches': 29, 'inliers': 15, 'inlier_ratio': 0.5172413793103449, 'H': array([
+                    [
+                        7.51829798e-01,
+                        2.47296852e-02,
+                        3.05690593e+01
+                    ],
+                    [
+                        -3.30909637e-03,
+                        7.85127131e-01,
+                        3.03233749e+01
+                    ],
+                    [
+                        -7.20202841e-05,
+                        2.50338276e-04,
+                        1.00000000e+00
+                    ]
+                ]), 'repeatability': 1.0
+            }, 'translation': {'num_kp': 95, 'good_matches': 50, 'inliers': 28, 'inlier_ratio': 0.56, 'H': array([
+                    [
+                        9.97740128e-01,
+                        -1.79971796e-02,
+                        4.11271253e+01
+                    ],
+                    [
+                        5.27569266e-03,
+                        9.80564923e-01,
+                        2.54611662e+01
+                    ],
+                    [
+                        2.74768061e-05,
+                        -8.87953200e-05,
+                        1.00000000e+00
+                    ]
+                ]), 'repeatability': 0.8877551020408163
+            }
+        }
+    }, 'Geometrische Primitive': {}
+}

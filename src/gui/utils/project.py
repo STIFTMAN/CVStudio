@@ -2,15 +2,15 @@ from typing import Any, Union
 
 import customtkinter
 import numpy
-from src.processing.stats_type import Stats
-from src.processing.stats import compute_image_stats_global
-from src.processing.image_compare_stats import analyze_stats_delta
+from src.processing.basic_stats_type import Basic_Stats
+from src.processing.test.quick_test import quick_test
 from src.gui.state.project_file_type import Action_Queue_Obj_Type, Action_Type, Filter_Type, Project_File_Type, empty_project
 import src.processing.action_handeling as action_processing
 import src.gui.state.root as root
 import re
 import json
 import hashlib
+import numpy.typing as npt
 
 
 class Project:
@@ -19,12 +19,14 @@ class Project:
     name: str = ""
 
     progress: customtkinter.DoubleVar | None = None
+    progress_test: customtkinter.DoubleVar | None = None
     action_queue: list[Action_Queue_Obj_Type] = []
     temp_images: list[numpy.typing.NDArray[numpy.uint8 | numpy.float32]] = []
     override_index = -1
-    temp_stat: list[Stats] = []
-
+    temp_stats: list[Basic_Stats] = []
+    d_image: npt.NDArray[numpy.uint8] | None = None
     analyse_list = []
+    test_results = None
 
     def get_filternames(self) -> list[str]:
         temp: list[str] = []
@@ -50,6 +52,11 @@ class Project:
         self.temp_images = []
         self.temp_stats = []
         self.override_index = -1
+        self.d_image = None
+
+    def quick_test(self):
+        if self.image is not None and len(self.temp_images) > 0:
+            self.test_results = quick_test(self.image, self.temp_images, self.temp_stats)
 
     def apply_action_queue(self):
         assert root.status is not None
@@ -90,6 +97,7 @@ class Project:
         self.action_queue = new_action_queue
         self.temp_images = self.temp_images[0:min(self.override_index, len(self.temp_images))]
         self.temp_stats = self.temp_stats[0:min(self.override_index, len(self.temp_stats))]
+        self.d_image = None
         if self.progress:
             self.progress.set(0.0)
         for i in range(self.override_index, len(self.action_queue)):
@@ -107,9 +115,13 @@ class Project:
                 root.status.set(f"( {i+1} / {len(self.action_queue)} ) - {filter_data['name']}")
             else:
                 root.status.set(f"( {i+1} / {len(self.action_queue)} ) - {action_data['data']}")
-            new_data = action_processing.apply_action(src_img, action_data)
-            self.temp_images.append(new_data[0])
+            new_data = action_processing.apply_action(src_img, action_data, draw_image=self.d_image)
+            if new_data[2] is None or i + 1 < len(self.action_queue):
+                self.temp_images.append(new_data[0])
+            else:
+                self.temp_images.append(new_data[2])
             self.temp_stats.append(new_data[1])
+            self.d_image = new_data[2]
             if self.progress:
                 self.progress.set((i + 1) / len(self.action_queue))
         if self.progress:
@@ -119,6 +131,9 @@ class Project:
 
     def set_progress(self, p: customtkinter.DoubleVar):
         self.progress = p
+
+    def set_progress_test(self, p: customtkinter.DoubleVar):
+        self.progress_test = p
 
     def add_filter(self, id: str):
         if self.data is not None:
@@ -144,26 +159,6 @@ class Project:
     def load_data(self, name, data):
         self.data = data
         self.name = name
-
-    def quick_analyse(self):
-        self.analyse_list = []
-        if self.image is not None and len(self.temp_images) > 0:
-            before = compute_image_stats_global(self.image)
-            after = compute_image_stats_global(self.temp_images[len(self.temp_images) - 1])
-            result = analyze_stats_delta(before, after)
-            time_all: float = 0.0
-            for item in self.temp_stats:
-                time_all += item["time"]
-            stats: Stats = {
-                "time": time_all,
-                "action": {
-                    "type": "all",
-                    "data": "-"
-                },
-                "extended_stats": result
-            }
-            print(result["assessment"])
-            self.analyse_list.append(stats)
 
     def reset(self):
         self.data = None
