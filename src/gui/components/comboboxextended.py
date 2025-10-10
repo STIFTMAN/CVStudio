@@ -6,8 +6,8 @@ import src.gui.state.root as root
 
 
 class ComboBoxExtended(ctk.CTkFrame):
-    _all_values: list[tuple[str, str]] = []
-    _filtered: list[tuple[str, str]] = []
+    _all_values: list[list[str]] = []
+    _filtered: list[list[str]] = []
     _command: Callable | None = None
     _selection_index: int = -1
     _is_open: bool = False
@@ -15,11 +15,11 @@ class ComboBoxExtended(ctk.CTkFrame):
     _btn: ctk.CTkButton | None = None
     _popup: ctk.CTkToplevel | None = None
     _list_frame: ctk.CTkScrollableFrame | None = None
-    _item_widgets: list[ctk.CTkButton | ctk.CTkLabel] = []
+    _item_widgets: list[ctk.CTkFrame | ctk.CTkLabel] = []
     _selected_id: str = ""
     _layout_settings: dict = {}
 
-    def __init__(self, master, values: list[tuple[str, str]] = [], command=None, **kwargs):
+    def __init__(self, master, values: list[list[str]] = [], command=None, **kwargs):
         super().__init__(master, fg_color="transparent", **kwargs)
         self._layout_settings = get_setting("components")["comboboxextended"]
         self._all_values = values
@@ -49,7 +49,7 @@ class ComboBoxExtended(ctk.CTkFrame):
 
         self._refresh_list()
 
-    def add_value(self, value: tuple[str, str]):
+    def add_value(self, value: list[str]):
         self._all_values.append(value)
         self._all_values = list(set(self._all_values))
         self._all_values.sort()
@@ -57,14 +57,14 @@ class ComboBoxExtended(ctk.CTkFrame):
     def get(self) -> str:
         return self._entry.get() if self._entry else ""
 
-    def set(self, value: tuple[str, str]):
+    def set(self, value: list[str]):
         if self._entry:
             self._entry.delete(0, "end")
             self._entry.insert(0, value[0])
             self._selected_id = value[1]
             self._filter_and_show()
 
-    def set_values(self, values: list[tuple[str, str]] = []):
+    def set_values(self, values: list[list[str]] = []):
         self._all_values = values
         self._all_values.sort()
         self._filter_and_show()
@@ -91,7 +91,7 @@ class ComboBoxExtended(ctk.CTkFrame):
         self._popup.attributes("-topmost", True)
         self._popup.bind("<FocusOut>", self._maybe_close_on_focus_out, add="+")
         assert self._entry is not None
-        self._list_frame = ctk.CTkScrollableFrame(self._popup, width=self._entry.winfo_width(), corner_radius=0)
+        self._list_frame = ctk.CTkScrollableFrame(self._popup, width=self._entry.winfo_width(), corner_radius=0, fg_color="#262626")
         try:
             self._list_frame._scrollbar.grid_remove()
             self._list_frame.after_idle(lambda: self._list_frame._scrollbar.grid_remove())  # type: ignore
@@ -183,11 +183,26 @@ class ComboBoxExtended(ctk.CTkFrame):
 
         for i, val in enumerate(data):
             self._list_frame.grid_rowconfigure(i, weight=1)
-            b = ctk.CTkButton(self._list_frame, text=f"{val[0]} # {val[1][0:8]}...", anchor="w", height=self._layout_settings["popup"]["item_height"], command=lambda v=val: self._select_value(v), corner_radius=0, border_spacing=1, border_width=1)
-            b.grid(row=i, column=0, sticky="nswe")
-            self._item_widgets.append(b)
+            frame = ctk.CTkFrame(self._list_frame, height=self._layout_settings["popup"]["item_height"], fg_color="#333333")
+            frame.grid(row=i, column=0, sticky="we", padx=[10, 10], pady=[5, 5])
+            frame.bind("<Button-1>", lambda v=val: self._select_value(v))
 
-    def _select_value(self, value: tuple[str, str]):
+            name_id: ctk.CTkFrame = self.build_label_frame(frame, f"{val[0]} # {val[1][0:8]}...")
+            name_id.pack(side="left", padx=[5, 5], pady=[5, 5])
+            for i in range(2, len(val)):
+                label_frame: ctk.CTkFrame = self.build_label_frame(frame, val[i])
+                label_frame.pack(side="left", padx=[0, 5], pady=[5, 5])
+            self._item_widgets.append(frame)
+
+    def build_label_frame(self, master, value: str) -> ctk.CTkFrame:
+        frame: ctk.CTkFrame = ctk.CTkFrame(master=master, fg_color="transparent")
+
+        label: ctk.CTkLabel = ctk.CTkLabel(master=frame, text=value, fg_color="#404040", corner_radius=5)
+        label.pack(fill="both")
+
+        return frame
+
+    def _select_value(self, value: list[str]):
         self.set(value)
         self._close_popup()
         if callable(self._command):

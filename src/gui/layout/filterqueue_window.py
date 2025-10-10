@@ -44,12 +44,31 @@ class FilterqueueWindow(customtkinter.CTkToplevel):
         self.drag_and_drop_frame.grid(row=1, column=0, sticky="nswe")
         self.drag_and_drop_frame.show()
         self.drag_and_drop_frame.set_updater(self.save_new_order)
+        self.drag_and_drop_frame.set_on_change(self.on_change_d_and_d)
         self.build_filter_list()
 
     def save_new_order(self):
         root.current_project.data["filterqueue"] = [i.id for i in self.drag_and_drop_frame.get_frames()]  # type: ignore
         self.save_project()
         self.update_combobox()
+
+    def on_change_d_and_d(self, oldlist: list[tuple[str, FilterEntryFrame]]) -> tuple[bool, list[str]]:
+        non_features: list[str] = []
+        features: list[str] = []
+        for id_, frame in oldlist:
+            if frame.action_label is not None:
+                action_text = frame.action_label.cget("text")
+            else:
+                action_text = ""
+
+            if isinstance(action_text, str) and action_text.strip().lower() == "feature":
+                features.append(id_)
+            else:
+                non_features.append(id_)
+
+        new_order = non_features + features
+        old_ids = [id_ for id_, _ in oldlist]
+        return (old_ids != new_order), new_order
 
     def build_filter_list(self):
         if self.drag_and_drop_frame is not None:
@@ -148,13 +167,13 @@ class FilterqueueWindow(customtkinter.CTkToplevel):
         self.status.set(f"{t} [{p}]")
 
     def update_combobox(self):
-        values: list[tuple[str, str]] = []
+        values: list[list[str]] = []
         for key in root.all_filters:
-            f = root.all_filters[key]["data"]
-            if type(f) is str:
-                values.append((f, key))
+            item = root.all_filters[key]["data"]
+            if type(item) is str:
+                values.append([item, key, root.all_filters[key]["type"]])
             else:
-                values.append((f["name"], key))  # type: ignore
+                values.append([item["name"], key, root.all_filters[key]["type"], item["settings"]["type"], f"{item['settings']['size'][0]}x{item['settings']['size'][1]}"])  # type: ignore
         if self.comboboxextended is not None:
             self.comboboxextended.set_values(values)
 

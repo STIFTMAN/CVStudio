@@ -23,6 +23,7 @@ class DragAndDropLockedFrame(customtkinter.CTkScrollableFrame):
     _layout_settings: dict = {}
     _border_width: int = 0
     _updater: Callable | None = None
+    _on_change: Callable | None = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs, corner_radius=0)
@@ -58,9 +59,16 @@ class DragAndDropLockedFrame(customtkinter.CTkScrollableFrame):
                     child.bind("<Button-1>", self.drag)
                     child.bind("<ButtonRelease-1>", self.drop)
                     child.bind("<B1-Motion>", self.dropable)
+        if self._on_change:
+            b, newlist = self._on_change(self.get_frames_width_id())
+            if b:
+                self.sort_by_id(newlist)
 
     def get_frames(self) -> list[customtkinter.CTkFrame]:
         return [self._items[i] for i in self._items_order]
+
+    def get_frames_width_id(self) -> list[tuple[str, customtkinter.CTkFrame]]:
+        return [(i, self._items[i]) for i in self._items_order]
 
     def delete_item_by_index(self, index: int):
         if index >= 0 and index <= len(self._items_order):
@@ -104,7 +112,7 @@ class DragAndDropLockedFrame(customtkinter.CTkScrollableFrame):
                 self.grid_columnconfigure(c, weight=1)
 
             row = column = 0
-            for idx, f in enumerate(self.get_frames()):
+            for f in self.get_frames():
                 f.grid(row=row, column=column, sticky="nsew")
                 self.grid_rowconfigure(row, weight=1)
 
@@ -137,6 +145,12 @@ class DragAndDropLockedFrame(customtkinter.CTkScrollableFrame):
     def drop(self, event):
         if self._focus_old is not None and self._focus_dropable is not None:
             self.switch_frames(self._focus_old, self._focus_dropable)
+            if self._on_change:
+                b, newlist = self._on_change(self.get_frames_width_id())
+                if b:
+                    self.sort_by_id(newlist)
+                    self.hide()
+                    self.show()
             if self._updater:
                 self._updater()
         self._focus_old = None
@@ -186,3 +200,14 @@ class DragAndDropLockedFrame(customtkinter.CTkScrollableFrame):
         self._id_to_index[frame1_id], self._id_to_index[frame2_id] = i2, i1
         self.hide()
         self.show()
+
+    def set_on_change(self, f: Callable):
+        self._on_change = f
+
+    def sort_by_id(self, ids: list[str]):
+        self._items_order = ids
+
+        # Index-Mapping neu aufbauen
+        self._id_to_index.clear()
+        for idx, id_ in enumerate(self._items_order):
+            self._id_to_index[id_] = idx

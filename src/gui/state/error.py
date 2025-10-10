@@ -14,3 +14,7 @@ class Error(Enum):
     INVALID_PROJECT_FILE = "Project file is invalid!"
     CREATE_PROJECT = "Could not create project file!"
     UNSUPPORTED_IMAGE_SHAPE = "Unsupported image shape / layout"
+    CONVOLUTION_NEGATIVE_STRIDE = "Negative Stride"
+    CONVOLUTION_KERNAL_DIMENSION = "Only 2D kernal supported"
+    CONVOLUTION_KERNAL_DIMENSION_EVEN = "Only odd kernal dimensions"
+    CONVOLUTION_IMAGE_DATA_TYPE = "Only support dtype: uint8 or float32"

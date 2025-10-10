@@ -1916,8 +1916,8 @@
                     1,
                     1
                 ],
-                "factor": 0.0,
-                "type": "edge_detection",
+                "factor": 1.0,
+                "type": "smoothing",
                 "mutable": false
             },
             "grid": [
@@ -1979,8 +1979,8 @@
                     1,
                     1
                 ],
-                "factor": 0.0,
-                "type": "edge_detection",
+                "factor": 1.0,
+                "type": "smoothing",
                 "mutable": false
             },
             "grid": [

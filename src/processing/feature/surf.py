@@ -31,7 +31,5 @@ def surf(
 
     keypoints, descriptors = surf_detector.detectAndCompute(gray_uint8, None)
     if descriptors is None:
-        descriptors = np.zeros(
-            (0, 128 if config["extended"] else 64), dtype=np.float32
-        )
+        descriptors = np.zeros((0, 128 if config["extended"] else 64), dtype=np.float32)
     return "circle", (keypoints, descriptors)

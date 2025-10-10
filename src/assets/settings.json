@@ -36,7 +36,7 @@
     "components": {
         "comboboxextended": {
             "placeholder_text": "",
-            "width": 400,
+            "width": 500,
             "max_visible": 10,
             "open_button": {
                 "width": 34,

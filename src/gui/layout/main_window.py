@@ -458,10 +458,10 @@ class MainWindow(TkinterDnD.Tk):
                 threading.Thread(target=self.save_images_via_dialog, daemon=True).start()
 
     def save_images_via_dialog(self, last: bool = False) -> Optional[str]:
-        images: numpy.ndarray = root.current_project.temp_images  # type: ignore
-        if len(images) == 0:
-            return
-        if not isinstance(images, list) or not images:
+        images = getattr(root.current_project, "temp_images", None)  # type: ignore
+        if not images:
+            return None
+        if not isinstance(images, (list, tuple)):
             return None
         if not all(isinstance(im, numpy.ndarray) for im in images):
             raise TypeError("images must be a list of numpy.ndarray")
@@ -471,16 +471,34 @@ class MainWindow(TkinterDnD.Tk):
         prepared: list[numpy.ndarray] = []
         for im in images:
             img = im
-            # CHW -> HWC, falls nötig
-            if img.ndim == 3 and img.shape[0] in (3, 4) and img.shape[-1] not in (3, 4):
+
+            # CHW -> HWC, falls nötig (unterstützt 1/3/4 Kanäle)
+            if img.ndim == 3 and img.shape[0] in (1, 3, 4) and img.shape[-1] not in (1, 3, 4):
                 img = numpy.transpose(img, (1, 2, 0))
-            if img.ndim != 3 or img.shape[-1] not in (3, 4):
-                raise ValueError(f"Each image must be (H,W,3/4) or (3/4,H,W), got {img.shape}")
+
+            # Validierung: Graustufe (H,W) oder HWC mit 1/3/4 Kanälen
+            if img.ndim == 2:
+                pass  # ok: Graubild
+            elif img.ndim == 3 and img.shape[-1] in (1, 3, 4):
+                pass  # ok: 1/3/4 Kanäle in letzter Achse
+            else:
+                raise ValueError(
+                    f"Each image must be (H,W), (H,W,1/3/4) or (1/3/4,H,W); got shape {img.shape}"
+                )
+
             # dtype -> uint8
             if img.dtype != numpy.uint8:
+                # Wir clippen in [0,255] und casten. (Skalierung 0..1 -> 0..255 wird damit ebenfalls abgedeckt.)
                 img = numpy.clip(img, 0, 255).astype(numpy.uint8, copy=False)
+
             # KEINE cvtColor – wir speichern die Kanäle so, wie sie sind
             prepared.append(img)
+
+        def _img_for_encode(arr: numpy.ndarray) -> numpy.ndarray:
+            # Für (H,W,1) auf (H,W) reduzieren – OpenCV erwartet Graustufen als 2D.
+            if arr.ndim == 3 and arr.shape[-1] == 1:
+                return arr[..., 0]
+            return arr
 
         if len(prepared) == 1 or last:
             out_path = filedialog.asksaveasfilename(
@@ -489,7 +507,8 @@ class MainWindow(TkinterDnD.Tk):
             )
             if not out_path:
                 return None
-            ok, buf = cv2.imencode(".png", prepared[len(prepared) - 1], [cv2.IMWRITE_PNG_COMPRESSION, 0])
+            img_to_save = _img_for_encode(prepared[-1])
+            ok, buf = cv2.imencode(".png", img_to_save, [cv2.IMWRITE_PNG_COMPRESSION, 0])
             if not ok:
                 raise IOError("cv2.imencode('.png', ...) failed")
             Path(out_path).parent.mkdir(parents=True, exist_ok=True)
@@ -505,7 +524,8 @@ class MainWindow(TkinterDnD.Tk):
             Path(zip_path).parent.mkdir(parents=True, exist_ok=True)
             with ZipFile(zip_path, mode="w", compression=ZIP_STORED) as zf:
                 for i, img in enumerate(prepared, start=1):
-                    ok, buf = cv2.imencode(".png", img, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+                    img_to_save = _img_for_encode(img)
+                    ok, buf = cv2.imencode(".png", img_to_save, [cv2.IMWRITE_PNG_COMPRESSION, 0])
                     if not ok:
                         raise IOError(f"cv2.imencode failed for image #{i}")
                     zf.writestr(f"image_{i:04d}.png", buf.tobytes())
