@@ -40,7 +40,7 @@ class DragAndDropLockedFrame(customtkinter.CTkScrollableFrame):
         for child in self.winfo_children():
             child.destroy()
 
-    def toggle_grid(self, columns: int):
+    def toggle_grid(self):
         self._type_pack = _DragAndDropLockedFrame_Type.GRID
 
     def add(self, frame: customtkinter.CTkFrame):
@@ -206,8 +206,6 @@ class DragAndDropLockedFrame(customtkinter.CTkScrollableFrame):
 
     def sort_by_id(self, ids: list[str]):
         self._items_order = ids
-
-        # Index-Mapping neu aufbauen
         self._id_to_index.clear()
         for idx, id_ in enumerate(self._items_order):
             self._id_to_index[id_] = idx

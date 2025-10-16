@@ -37,7 +37,7 @@ class FilterGridCell(customtkinter.CTkFrame):
             width=50,
             justify="center"
         )
-        self.entry.bind("<FocusOut>", lambda e: self.value.set(self.entry.get_float()))  # pyright: ignore[reportOptionalMemberAccess]
+        self.entry.bind("<FocusOut>", lambda e: self.value.set(self.entry.get_float()))  # type: ignore
         self.entry.var.trace_add("write", self.update)
         self.switch = customtkinter.CTkSwitch(
             master=self, text="", variable=self.disabled, command=self._on_toggle, width=20

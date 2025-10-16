@@ -2,21 +2,24 @@ import json
 from pathlib import Path
 from src.gui.state.project_file_type import Project_File_Type
 import src.gui.state.root as root
-from src.gui.utils.project import Project
 from src.gui.state.error import Error
 import src.processing.load_action as filters
+from pydantic import TypeAdapter, ValidationError
+import src.gui.utils.logger as log
 
 
 def load():
     folder = Path("./src/assets/projects")
+    adapter = TypeAdapter(Project_File_Type)
     for file in folder.glob("*.json"):
         name = file.stem
         with open(file, "r", encoding="utf-8") as f:
             data = json.load(f)
-            if Project.validate(data):
-                root.all_projects[name] = data
-            else:
-                print(Error.INVALID_PROJECT_FILE.value, name)
+            try:
+                project: Project_File_Type = adapter.validate_python(data)
+                root.all_projects[name] = project
+            except ValidationError:
+                log.log.write(text=f"{Error.INVALID_PROJECT_FILE.value} ({file})", tag="ERROR", modulename=Path(__file__).stem)
     load_filters()
 
 

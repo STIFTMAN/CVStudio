@@ -2,13 +2,15 @@ import copy
 from src.gui.components.comboboxextended import ComboBoxExtended
 from src.gui.components.drag_and_drop import DragAndDropLockedFrame
 from src.gui.components.filter_entry_frame import FilterEntryFrame
-from src.gui.layout.info_window import InfoWindow, WindowType
 from src.gui.state import root
 from src.gui.state.project_file_type import Filter_Type, empty_filter
 from src.gui.utils.config_loader import get_setting
 import customtkinter
 import uuid
 import re
+import src.gui.utils.logger as log
+from src.gui.state.error import Error
+from pathlib import Path
 
 
 class FilterqueueWindow(customtkinter.CTkToplevel):
@@ -179,7 +181,7 @@ class FilterqueueWindow(customtkinter.CTkToplevel):
 
     def save_project(self):
         if not root.current_project.save():
-            InfoWindow(master=self, text="Error!", type=WindowType.ERROR)
+            log.log.write(text=Error.SAVE_PROJECT.value, tag="ERROR", modulename=Path(__file__).stem)
 
     def save_filter(self, id: str, f: Filter_Type):
         root.current_project.save_filter(id, f)

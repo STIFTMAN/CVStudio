@@ -14,6 +14,7 @@ class UploadWindow(customtkinter.CTkToplevel):
     upload_filedialog_button: customtkinter.CTkButton | None = None
 
     text: customtkinter.CTkLabel | None = None
+    _supported_formats: tuple[str, str, str, str, str] = ('.png', '.jpg', '.jpeg', '.bmp', '.gif')
 
     layout_settings: dict = {}
 
@@ -41,14 +42,14 @@ class UploadWindow(customtkinter.CTkToplevel):
 
     def filediloag_submit(self):
         filepath = filedialog.askopenfilename(title=root.current_lang.get("upload_window_filedialog_window_title").get(), filetypes=[(root.current_lang.get("upload_window_filedialog_select_type_pretext").get(), "*.jpg;*.jpeg;*.png;*.bmp;*.gif")])
-        if os.path.isfile(filepath) and filepath.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif')):
+        if os.path.isfile(filepath) and filepath.lower().endswith(self._supported_formats):
             root.current_project.load_image(cv2.imread(filepath))
             self.master.event_generate("<<UploadClosed>>")
             self.destroy()
 
     def on_drop(self, event):
         filepath = event.data.strip("{}")
-        if os.path.isfile(filepath) and filepath.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif')):
+        if os.path.isfile(filepath) and filepath.lower().endswith(self._supported_formats):
             root.current_project.load_image(cv2.imread(filepath))
             self.master.event_generate("<<UploadClosed>>")
             self.destroy()

@@ -1,9 +1,9 @@
 import json
 from pathlib import Path
 import src.gui.state.root as root
-from ..state.error import Error
-from ..utils.config_loader import get_setting
-import logging
+from src.gui.state.error import Error
+from src.gui.utils.config_loader import get_setting
+import src.gui.utils.logger as log
 
 
 def load():
@@ -18,15 +18,18 @@ def load():
         if lang_code == default_lang_key_code:
             continue
         if len(root.lang[lang_code]) != default_lang_size:
-            raise Exception(Error.LANG_INVALID_SIZE.value)
+            log.log.write(text=Error.LANG_INVALID_SIZE.value, tag="CRITICAL ERROR", modulename=Path(__file__).stem)
+            return
         for key in root.lang[default_lang_key_code]:
             if key not in root.lang[lang_code]:
-                raise Exception(Error.LANG_TRANSLATION_MISSING.value, lang_code, key)
+                log.log.write(text=f"{Error.LANG_TRANSLATION_MISSING.value} (langcode=[{lang_code}], key={key})", tag="CRITICAL ERROR", modulename=Path(__file__).stem)
+                return
     current_lang_code: str = get_setting("lang")
     if current_lang_code in root.lang:
         root.current_lang.change(root.lang[current_lang_code])
     else:
-        raise Exception(Error.LANG_KEY_NOT_EXIST.value, current_lang_code)
+        log.log.write(text=f"{Error.LANG_KEY_NOT_EXIST.value} (current_lang_code=[{current_lang_code}])", tag="CRITICAL ERROR", modulename=Path(__file__).stem)
+        return
     root.all_lang = get_translation_from_all_lang("language_package_name")
 
 
@@ -43,7 +46,6 @@ def get_translation_from_all_lang(key: str) -> dict[str, str]:
 
 def change_lang(lang_code: str):
     if lang_code not in get_all_lang_code():
-        logging.basicConfig(level=logging.WARNING)
-        logging.warning(Error.LANG_NOT_EXIST.value)
+        log.log.write(text=Error.LANG_NOT_EXIST.value, tag="WARNING", modulename=Path(__file__).stem)
         return
     root.current_lang.change(root.lang[lang_code])

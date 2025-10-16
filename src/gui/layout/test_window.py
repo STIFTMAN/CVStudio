@@ -63,15 +63,11 @@ class TestWindow(customtkinter.CTkToplevel):
         button_quicktest: customtkinter.CTkButton = customtkinter.CTkButton(
             master=self.action_frame, text="QuickTest", command=self.run_quicktest
         )
-        button_fulltest: customtkinter.CTkButton = customtkinter.CTkButton(
-            master=self.action_frame, text="FullTest", command=self.run_fulltest
-        )
 
         # In einer Row von links nach rechts
         status_label.pack(side="left", fill="x", expand=True, padx=5, pady=8)
         self.progressbar.pack(side="left", fill="x", expand=True, padx=5, pady=8)
         button_quicktest.pack(side="left", padx=5, pady=8)
-        button_fulltest.pack(side="left", padx=5, pady=8)
 
     # ----------------------------- Aktionen -----------------------------
 

@@ -1,6 +1,5 @@
 {
     "quick_test": "<Control-t>",
-    "quick_analyse": "<Control-a>",
     "help": "<Control-h>",
     "license": "<Control-l>",
     "reload_images": "<Control-r>",

@@ -1,5 +1,3 @@
-from typing import Any, Union
-
 import customtkinter
 import numpy
 from src.processing.basic_stats_type import Basic_Stats
@@ -152,7 +150,7 @@ class Project:
     def image_ready(self) -> bool:
         return self.image is not None
 
-    def load_image(self, img: Union[numpy.ndarray, None]):
+    def load_image(self, img: numpy.ndarray | None):
         self.image = img
         self.temp_images = []
 
@@ -178,10 +176,6 @@ class Project:
         if id in root.all_filters:
             return root.all_filters[id]
         return None
-
-    @staticmethod
-    def validate(data: Any) -> bool:
-        return True
 
     @staticmethod
     def save_filter(id: str, filter: Filter_Type):

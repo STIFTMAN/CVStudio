@@ -1,7 +1,5 @@
 from typing import Callable
 import customtkinter
-
-from src.gui.layout.info_window import InfoWindow, WindowType
 from src.gui.layout.upload_window import UploadWindow
 from src.gui.state.error import Error
 from src.gui.utils.project import Project
@@ -23,6 +21,7 @@ from tkinter import filedialog
 from pathlib import Path
 from zipfile import ZipFile, ZIP_STORED
 from typing import Optional
+import src.gui.utils.logger as log
 
 
 class MainWindow(TkinterDnD.Tk):
@@ -32,13 +31,13 @@ class MainWindow(TkinterDnD.Tk):
     test_window: TestWindow | None = None
     progress: customtkinter.DoubleVar | None = None
     upload_window: UploadWindow | None = None
-    info_window: InfoWindow | None = None
     layout_settings: dict = {}
     image_labels: list[customtkinter.CTkLabel | None] = [None, None]
     status_label: customtkinter.CTkLabel | None = None
     progressbar: customtkinter.CTkProgressBar | None = None
 
     progress_test: customtkinter.DoubleVar | None = None
+    reload_button: customtkinter.CTkButton | None = None
 
     def __init__(self):
         super().__init__()
@@ -58,7 +57,6 @@ class MainWindow(TkinterDnD.Tk):
         if root.all_keybindings is not None:
             for key in root.all_keybindings:
                 self.bind_all(root.all_keybindings[key], lambda event, k=key: self.event(k))
-        print("Version: ", root.version)
         self.progress = customtkinter.DoubleVar(value=0.0)
         self.progress.trace_add("write", self.observe_progress)
         root.current_project.set_progress(self.progress)
@@ -67,11 +65,6 @@ class MainWindow(TkinterDnD.Tk):
         root.status = customtkinter.StringVar(value=root.current_lang.get("project_apply_action_queue_status_init").get())
         root.status_details = customtkinter.StringVar(value="")
         root.status_test = customtkinter.StringVar(value="")
-        root.status_details.trace_add("write", self.observe_status_details)
-
-    def observe_status_details(self, *args):
-        assert root.status_details is not None
-        # print(root.status_details.get())
 
     def change_title(self):
         if root.current_project.data is not None:
@@ -96,7 +89,6 @@ class MainWindow(TkinterDnD.Tk):
         self.nav_frame.addButton("main_window_dropdownmenu_testing", root.current_lang.get("main_window_dropdownmenu_testing"), self.open_test_window)
         self.nav_frame.add("main_window_dropdownmenu_settings", root.current_lang.get("main_window_dropdownmenu_settings"), root.current_lang.get("main_window_settings_look"), lambda: self.build_settings("main_window_settings_look"))
         self.nav_frame.add("main_window_dropdownmenu_settings", root.current_lang.get("main_window_dropdownmenu_settings"), root.current_lang.get("main_window_settings_keybindings"), lambda: self.build_settings("main_window_settings_keybindings"))
-        self.nav_frame.add("main_window_dropdownmenu_settings", root.current_lang.get("main_window_dropdownmenu_settings"), root.current_lang.get("main_window_settings_help"), lambda: self.build_settings("main_window_settings_help"))
         self.nav_frame.add("main_window_dropdownmenu_settings", root.current_lang.get("main_window_dropdownmenu_settings"), root.current_lang.get("main_window_settings_about"), lambda: self.build_settings("main_window_settings_about"))
         self.nav_frame.grid(row=0, column=0, sticky="we")
         self.nav_frame.outside_tracking(self)
@@ -178,10 +170,7 @@ class MainWindow(TkinterDnD.Tk):
         if Project.create(entry.get()):
             self.build_image_container()
         else:
-            self.open_errow_window(Error.CREATE_PROJECT.value)
-
-    def open_errow_window(self, text: str):
-        InfoWindow(master=self, text=text, type=WindowType.ERROR)
+            log.log.write(text=Error.CREATE_PROJECT.value, tag="ERROR", modulename=Path(__file__).stem)
 
     def init_open_button_submit(self, optionmenu: customtkinter.CTkOptionMenu):
         data = optionmenu.get()
@@ -223,6 +212,9 @@ class MainWindow(TkinterDnD.Tk):
         switch_mode: customtkinter.CTkSwitch = customtkinter.CTkSwitch(master=select_frame, textvariable=root.current_lang.get("main_window_image_container_select_compare"))
         switch_mode.grid(row=0, column=2, padx=self.layout_settings["image_container"]["select_frame"]["switch_mode"]["padding"][0:2], pady=self.layout_settings["image_container"]["select_frame"]["switch_mode"]["padding"][2:4])
 
+        self.reload_button = customtkinter.CTkButton(master=select_frame, textvariable=root.current_lang.get("main_window_image_container_select_reload"))
+        self.reload_button.grid(row=0, column=3, padx=self.layout_settings["image_container"]["select_frame"]["reload_button"]["padding"][0:2], pady=self.layout_settings["image_container"]["select_frame"]["reload_button"]["padding"][2:4])
+
         assert root.current_project.data is not None
         switch_mode.select(root.current_project.data["image_view_mode"])
 
@@ -230,7 +222,9 @@ class MainWindow(TkinterDnD.Tk):
         image_frame.grid(row=1, column=0, padx=self.layout_settings["image_container"]["image_frame"]["padding"][0:2], pady=self.layout_settings["image_container"]["image_frame"]["padding"][2:4], sticky="nswe")
 
         switch_mode.configure(command=lambda: self.build_image_container_image_frame(image_frame, bool(switch_mode.get())))
+
         self.build_image_container_image_frame(image_frame, root.current_project.data["image_view_mode"])
+        self.reload_button.configure(command=self.start_action_queue_thread)
 
         self.open_filterqueue_window()
 
@@ -263,8 +257,6 @@ class MainWindow(TkinterDnD.Tk):
                 widget.destroy()
             [self.container_frame.grid_columnconfigure(i, weight=0) for i in range(20)]
             [self.container_frame.grid_rowconfigure(i, weight=0) for i in range(20)]
-            self.container_frame.grid_columnconfigure(0, weight=1)
-            self.container_frame.grid_rowconfigure(0, weight=1)
 
     def build_settings(self, tabindex: str):
         assert root.all_keybindings is not None
@@ -277,13 +269,10 @@ class MainWindow(TkinterDnD.Tk):
 
         tabview.add_tab("main_window_settings_look", root.current_lang.get("main_window_settings_look"))
         tabview.add_tab("main_window_settings_keybindings", root.current_lang.get("main_window_settings_keybindings"))
-        tabview.add_tab("main_window_settings_help", root.current_lang.get("main_window_settings_help"))
         tabview.add_tab("main_window_settings_about", root.current_lang.get("main_window_settings_about"))
         tabview.set(tabindex)
         tabview.tab("main_window_settings_look").grid_columnconfigure(0, weight=1)
         tabview.tab("main_window_settings_keybindings").grid_columnconfigure(0, weight=1)
-        tabview.tab("main_window_settings_help").grid_columnconfigure(0, weight=1)
-        tabview.tab("main_window_settings_help").grid_rowconfigure(0, weight=1)
         tabview.tab("main_window_settings_about").grid_columnconfigure(0, weight=1)
 
         settings_look_keys: list[tuple[customtkinter.StringVar, Callable, list, str]] = [
@@ -307,7 +296,9 @@ class MainWindow(TkinterDnD.Tk):
         settings_keybindings_keys: list[tuple[str, str]] = [
             ("main_window_settings_keybindings_quick_test_label", "quick_test"),
             ("main_window_settings_keybindings_help_label", "help"),
-            ("main_window_settings_keybindings_license_label", "license")
+            ("main_window_settings_keybindings_license_label", "license"),
+            ("main_window_settings_keybindings_reload_images_label", "reload_images"),
+            ("main_window_settings_keybindings_save_pictures_label", "save_pictures")
         ]
         for key in range(len(settings_keybindings_keys)):
 
@@ -320,20 +311,6 @@ class MainWindow(TkinterDnD.Tk):
 
             settings_keybindings_temp_binding_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=settings_keybindings_temp_frame, width=self.layout_settings["settings"]["keybindings"]["binding_label"]["width"], fg_color=("grey", "black"), text_color=("white", "white"), corner_radius=5, text=re.sub(r"[<>]", "", root.all_keybindings[settings_keybindings_keys[key][1]]).replace("Control", "Ctrl").replace("-", " + "))
             settings_keybindings_temp_binding_label.grid(row=0, column=3, padx=self.layout_settings["settings"]["keybindings"]["binding_label"]["padding"], pady=self.layout_settings["settings"]["keybindings"]["binding_label"]["padding"])
-
-        settings_help_frame: customtkinter.CTkScrollableFrame = customtkinter.CTkScrollableFrame(master=tabview.tab("main_window_settings_help"))
-        settings_help_frame.grid(row=0, column=0, sticky="nswe", padx=self.layout_settings["settings"]["help"]["frame"]["padding"], pady=self.layout_settings["settings"]["help"]["frame"]["padding"])
-        settings_help_frame.grid_columnconfigure(0, weight=1)
-
-
-# WIRD SPÄTER GEMACHT
-        settings_help_keys: list[customtkinter.StringVar] = [
-            root.current_lang.get("main_window_settings_help_label_1")
-        ]
-
-        for key in range(len(settings_help_keys)):
-            settings_help_temp_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=settings_help_frame, padx=self.layout_settings["settings"]["help"]["label"]["padding_inline"][0], pady=self.layout_settings["settings"]["help"]["label"]["padding_inline"][1], anchor="w", wraplength=800, justify="left", textvariable=settings_help_keys[key])
-            settings_help_temp_label.grid(row=key, column=0, padx=self.layout_settings["settings"]["help"]["label"]["padding"][0], pady=self.layout_settings["settings"]["help"]["label"]["padding"][1], sticky="w")
 
         settings_about_keys: list[customtkinter.StringVar | str] = [
             get_setting("name"),
@@ -437,17 +414,13 @@ class MainWindow(TkinterDnD.Tk):
             else:
                 self.test_window = TestWindow(master=self)
 
-# WIRD SPÄTER GEMACHT
     def event(self, key):
-        print("Event | " + key)
         match key:
             case "quick_test":
                 def quick_test_runner():
                     root.current_project.quick_test()
                     self.open_test_window()
                 threading.Thread(target=quick_test_runner, daemon=True).start()
-            case "full_test":
-                pass
             case "help":
                 webbrowser.open_new(get_setting("help_url"))
             case "license":
@@ -464,38 +437,29 @@ class MainWindow(TkinterDnD.Tk):
         if not isinstance(images, (list, tuple)):
             return None
         if not all(isinstance(im, numpy.ndarray) for im in images):
-            raise TypeError("images must be a list of numpy.ndarray")
+            log.log.write(text=Error.EXPECTED_NDARRAY.value, tag="ERROR", modulename=Path(__file__).stem)
+            return
 
         parent = tk._default_root  # type: ignore
 
         prepared: list[numpy.ndarray] = []
         for im in images:
             img = im
-
-            # CHW -> HWC, falls nötig (unterstützt 1/3/4 Kanäle)
             if img.ndim == 3 and img.shape[0] in (1, 3, 4) and img.shape[-1] not in (1, 3, 4):
                 img = numpy.transpose(img, (1, 2, 0))
-
-            # Validierung: Graustufe (H,W) oder HWC mit 1/3/4 Kanälen
             if img.ndim == 2:
-                pass  # ok: Graubild
+                pass
             elif img.ndim == 3 and img.shape[-1] in (1, 3, 4):
-                pass  # ok: 1/3/4 Kanäle in letzter Achse
+                pass
             else:
-                raise ValueError(
-                    f"Each image must be (H,W), (H,W,1/3/4) or (1/3/4,H,W); got shape {img.shape}"
-                )
+                log.log.write(text=Error.RESIZE_IMAGE_NDIM.value, tag="ERROR", modulename=Path(__file__).stem)
+                return
 
-            # dtype -> uint8
             if img.dtype != numpy.uint8:
-                # Wir clippen in [0,255] und casten. (Skalierung 0..1 -> 0..255 wird damit ebenfalls abgedeckt.)
                 img = numpy.clip(img, 0, 255).astype(numpy.uint8, copy=False)
-
-            # KEINE cvtColor – wir speichern die Kanäle so, wie sie sind
             prepared.append(img)
 
         def _img_for_encode(arr: numpy.ndarray) -> numpy.ndarray:
-            # Für (H,W,1) auf (H,W) reduzieren – OpenCV erwartet Graustufen als 2D.
             if arr.ndim == 3 and arr.shape[-1] == 1:
                 return arr[..., 0]
             return arr
@@ -510,7 +474,8 @@ class MainWindow(TkinterDnD.Tk):
             img_to_save = _img_for_encode(prepared[-1])
             ok, buf = cv2.imencode(".png", img_to_save, [cv2.IMWRITE_PNG_COMPRESSION, 0])
             if not ok:
-                raise IOError("cv2.imencode('.png', ...) failed")
+                log.log.write(text=f"{Error.SAVE_IMAGE.value}: cv2.imencode", tag="ERROR", modulename=Path(__file__).stem)
+                return
             Path(out_path).parent.mkdir(parents=True, exist_ok=True)
             buf.tofile(out_path)
             return out_path
@@ -527,6 +492,7 @@ class MainWindow(TkinterDnD.Tk):
                     img_to_save = _img_for_encode(img)
                     ok, buf = cv2.imencode(".png", img_to_save, [cv2.IMWRITE_PNG_COMPRESSION, 0])
                     if not ok:
-                        raise IOError(f"cv2.imencode failed for image #{i}")
+                        log.log.write(text=f"{Error.SAVE_IMAGE.value}: #{i:04d}: cv2.imencode", tag="ERROR", modulename=Path(__file__).stem)
+                        return
                     zf.writestr(f"image_{i:04d}.png", buf.tobytes())
             return zip_path

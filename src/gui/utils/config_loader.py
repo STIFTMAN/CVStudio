@@ -6,14 +6,17 @@ import customtkinter
 import src.gui.state.root as root
 from ..state.error import Error
 from .version import get_git_version
+import src.gui.utils.logger as log
 
 
 def load():
     with open("./src/assets/settings.json", "r", encoding="utf-8") as f:
         root.settings = json.load(f)
     if root.settings is None:
-        raise Exception(Error.SETTINGS_LOADING.value)
+        log.log.write(text=Error.SETTINGS_LOADING.value, tag="CRITICAL ERROR", modulename=Path(__file__).stem)
+        return
     root.version = "v" + get_setting("version") + "-" + get_git_version()
+    log.log.write(text=root.version, tag="INFO", modulename=Path(__file__).stem)
     folder = Path("./src/assets/img")
     for file in folder.glob("*.png"):
         name = file.stem
@@ -23,10 +26,11 @@ def load():
 
 def get_setting(key: str) -> Any:
     if root.settings is None:
-        raise Exception(Error.SETTINGS_LOADING.value)
+        log.log.write(text=Error.SETTINGS_LOADING.value, tag="CRITICAL ERROR", modulename=Path(__file__).stem)
+        return
     if key in root.settings:
         return root.settings[key]
-    raise Exception(Error.SETTINGS_KEY_NOT_EXIST.value)
+    log.log.write(text=Error.SETTINGS_KEY_NOT_EXIST.value, tag="CRITICAL ERROR", modulename=Path(__file__).stem)
 
 
 def save_settings() -> None:

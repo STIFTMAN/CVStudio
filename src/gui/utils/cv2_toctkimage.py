@@ -2,17 +2,23 @@ import numpy as np
 from PIL import Image as PILImage
 import customtkinter as ctk
 import cv2
+import src.gui.utils.logger as log
+from src.gui.state.error import Error, Info
+from pathlib import Path
+
+
+def _black_like_uint8(a: np.ndarray) -> np.ndarray:
+    log.log.write(text=Info.RETURN_EMPTY_IMAGE.value, tag="INFO", modulename=Path(__file__).stem)
+    return np.zeros(a.shape, dtype=np.uint8)
 
 
 def cv2_to_ctkimage(cv2_image: np.ndarray) -> ctk.CTkImage:
     if cv2_image is None:
-        raise ValueError("cv2_image is None")
+        log.log.write(text=Error.RESIZE_IMAGE_NONE.value, tag="ERROR", modulename=Path(__file__).stem)
+        cv2_image = _black_like_uint8(cv2_image)
 
     img = cv2_image
-    # Für Anzeige: uint8 erwarten
     if img.dtype != np.uint8:
-        # Hier NICHT automatisch normalisieren, sonst veränderst du die Aussage!
-        # Lieber vorher gezielt strecken und als uint8 übergeben.
         img = np.clip(img, 0, 255).astype(np.uint8)
 
     h, w = img.shape[:2]
@@ -27,9 +33,10 @@ def cv2_to_ctkimage(cv2_image: np.ndarray) -> ctk.CTkImage:
             rgba = cv2.cvtColor(img, cv2.COLOR_BGRA2RGBA)
             pil = PILImage.fromarray(rgba, mode="RGBA")
         else:
-            raise ValueError(f"Unerwartete Kanalanzahl: {img.shape[2]}")
+            log.log.write(text=Error.RESIZE_IMAGE_CHANNEL.value, tag="ERROR", modulename=Path(__file__).stem)
+            pil = PILImage.fromarray(_black_like_uint8(img), mode="RGB")
     else:
-        raise ValueError("Erwarte 2D (grau) oder 3D (H,W,C) Bilddaten.")
+        log.log.write(text=Error.RESIZE_IMAGE_NDIM.value, tag="ERROR", modulename=Path(__file__).stem)
+        pil = PILImage.fromarray(_black_like_uint8(img), mode="RGB")
 
-    # size exakt auf Original setzen -> kein Resampling
     return ctk.CTkImage(light_image=pil, dark_image=pil, size=(w, h))

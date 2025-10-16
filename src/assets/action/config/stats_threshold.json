@@ -1,0 +1,10 @@
+{
+    "mean_abs_delta_threshold": 0.02,
+    "std_relative_change_threshold": 0.15,
+    "entropy_bits_delta_threshold": 0.10,
+    "js_divergence_threshold": 0.05,
+    "highfreq_ratio_delta_threshold": 0.05,
+    "colorfulness_delta_threshold": 5.0,
+    "channel_corr_abs_delta_threshold": 0.10,
+    "clipping_fraction_delta_threshold": 0.01
+}

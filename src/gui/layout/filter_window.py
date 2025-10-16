@@ -124,7 +124,7 @@ class FilterWindow(customtkinter.CTkToplevel):
                     self.grid[x][y].set_updater(self.update_cells)  # type: ignore
                     if self.filter["settings"]["type"] not in ("smoothing", "edge_detection"):
                         self.grid[x][y].toogle_enable_disabled(True)  # type: ignore
-                    self.grid[x][y].grid(row=y + 1, column=x + 1, padx=self._layout_settings["grid_container"]["cell"]["padding"][0:2], pady=self._layout_settings["grid_container"]["cell"]["padding"][2:4])  # pyright: ignore[reportOptionalMemberAccess]
+                    self.grid[x][y].grid(row=y + 1, column=x + 1, padx=self._layout_settings["grid_container"]["cell"]["padding"][0:2], pady=self._layout_settings["grid_container"]["cell"]["padding"][2:4])  # type: ignore
             if self.filter["settings"]["mutable"] is False:
                 for x in range(self.grid_size[0]):
                     for y in range(self.grid_size[1]):

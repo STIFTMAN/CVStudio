@@ -1,8 +1,11 @@
+from pathlib import Path
 import re
 from typing import Callable
 import customtkinter as ctk
 from src.gui.utils.config_loader import get_setting
 import src.gui.state.root as root
+import src.gui.utils.logger as log
+from src.gui.state.error import Error
 
 
 class ComboBoxExtended(ctk.CTkFrame):
@@ -45,7 +48,7 @@ class ComboBoxExtended(ctk.CTkFrame):
         try:
             self.winfo_toplevel().bind("<Configure>", lambda e: self._reposition_popup(), add=True)
         except Exception:
-            pass
+            log.log.write(text=Error.COMBOBOXEXTENDED_BIND_RESIZE.value, tag="ERROR", modulename=Path(__file__).stem)
 
         self._refresh_list()
 
@@ -96,7 +99,7 @@ class ComboBoxExtended(ctk.CTkFrame):
             self._list_frame._scrollbar.grid_remove()
             self._list_frame.after_idle(lambda: self._list_frame._scrollbar.grid_remove())  # type: ignore
         except Exception:
-            pass
+            log.log.write(text=Error.COMBOBOXEXTENDED_REMOVE_SCROLLBAR.value, tag="ERROR", modulename=Path(__file__).stem)
         self._list_frame.grid_columnconfigure(0, weight=1)
         self._list_frame.grid(column=0, row=0, sticky="nswe")
 
@@ -138,7 +141,7 @@ class ComboBoxExtended(ctk.CTkFrame):
             h = max(item_h * visible, item_h)
             self._popup.geometry(f"{w}x{int(h)}+{int(x)}+{int(y)}")
         except Exception:
-            pass
+            log.log.write(text=Error.COMBOBOXEXTENDED_RESIZE.value, tag="WARNING", modulename=Path(__file__).stem)
 
     def _sanitize(self, text: str) -> str:
         return re.sub(r"[^A-Za-z0-9\-_]", "", text)
@@ -170,7 +173,7 @@ class ComboBoxExtended(ctk.CTkFrame):
                 self._list_frame.grid_rowconfigure(i, weight=0)
                 w.destroy()
             except Exception:
-                pass
+                log.log.write(text=Error.COMBOBOXEXTENDED_CLEAR_LIST.value, tag="WARNING", modulename=Path(__file__).stem)
         self._item_widgets = []
 
         data = self._filtered
@@ -185,13 +188,15 @@ class ComboBoxExtended(ctk.CTkFrame):
             self._list_frame.grid_rowconfigure(i, weight=1)
             frame = ctk.CTkFrame(self._list_frame, height=self._layout_settings["popup"]["item_height"], fg_color="#333333")
             frame.grid(row=i, column=0, sticky="we", padx=[10, 10], pady=[5, 5])
-            frame.bind("<Button-1>", lambda v=val: self._select_value(v))
+            frame.bind("<Button-1>", lambda e, v=val: self._select_value(v))
 
             name_id: ctk.CTkFrame = self.build_label_frame(frame, f"{val[0]} # {val[1][0:8]}...")
             name_id.pack(side="left", padx=[5, 5], pady=[5, 5])
+            name_id.bind("<Button-1>", lambda e, v=val: self._select_value(v))
             for i in range(2, len(val)):
                 label_frame: ctk.CTkFrame = self.build_label_frame(frame, val[i])
                 label_frame.pack(side="left", padx=[0, 5], pady=[5, 5])
+                label_frame.bind("<Button-1>", lambda e, v=val: self._select_value(v))
             self._item_widgets.append(frame)
 
     def build_label_frame(self, master, value: str) -> ctk.CTkFrame:
