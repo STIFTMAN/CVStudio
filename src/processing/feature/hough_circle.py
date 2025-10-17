@@ -12,15 +12,14 @@ def hough_circle(
     image: npt.NDArray[np.uint8 | np.float32]
 ) -> tuple[Style, Tuple[List[cv2.KeyPoint], np.ndarray]]:
 
-    cfg = processing_config["hough_circle"]
+    cfg = processing_config["feature"]["hough_circle"]
     assert cfg is not None
     gray = to_gray_uint8(image)
 
-    # 1) Hough direkt auf gray
     dp = float(cfg.get("dp", 1.5))
     minDist = float(cfg.get("minDist", 40))
     param1 = float(cfg.get("param1", 120))
-    param2 = float(cfg.get("param2", 60))   # höher = strenger
+    param2 = float(cfg.get("param2", 60))
     minRadius = int(cfg.get("minRadius", 20))
     maxRadius = int(cfg.get("maxRadius", 300))
 
@@ -34,11 +33,9 @@ def hough_circle(
         detections = np.empty((0, 3), dtype=np.float32)
         return "circle", (keypoints, detections)
 
-    # 2) flach ziehen
     cir = circles[0] if circles.ndim == 3 else circles
-    cir = cir.astype(np.float32, copy=False)  # (N,3) [x,y,r]
+    cir = cir.astype(np.float32, copy=False)
 
-    # 3) einfache Deduplizierung (greedy)
     cir = sorted(cir, key=lambda t: t[2], reverse=True)  # type: ignore
     kept = []
     for x, y, r in cir:  # type: ignore
@@ -52,11 +49,10 @@ def hough_circle(
         if not is_dup:
             kept.append((float(x), float(y), float(r)))
 
-    # 4) Kanten-Support prüfen (min. 30% Umfang auf Canny-Kanten)
     edges = cv2.Canny(gray, max(30, int(param1 // 3)), int(param1))
     filtered = []
     for x, y, r in kept:
-        num = 36  # 10°-Sampling
+        num = 36
         ang = np.linspace(0, 2 * np.pi, num, endpoint=False)
         xs = (x + r * np.cos(ang)).astype(np.int32)
         ys = (y + r * np.sin(ang)).astype(np.int32)
@@ -68,11 +64,10 @@ def hough_circle(
         if (hit / xs.size) >= 0.30:
             filtered.append((x, y, r))
 
-    # 5) KeyPoints + detections
     dets = []
     for x, y, r in filtered:
-        size = max(2.0 * r, 1e-3)                  # Durchmesser in size
-        kp = cv2.KeyPoint(float(x), float(y), float(size), -1)  # angle=-1
+        size = max(2.0 * r, 1e-3)
+        kp = cv2.KeyPoint(float(x), float(y), float(size), -1)
         keypoints.append(kp)
         dets.append([x, y, r])
 

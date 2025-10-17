@@ -1,21 +1,12 @@
 import numpy as np
 from typing import Dict, Any, Optional, List
 import src.gui.state.root as root
-
-# Global thresholds for flagging unusual changes (adjust centrally as needed)
-ALERT_THRESHOLDS: Dict[str, float] = {
-    "mean_abs_delta_threshold": 0.02,                # absolute Δ of gray mean in [0..1]
-    "std_relative_change_threshold": 0.15,           # relative Δ of gray std (±15%)
-    "entropy_bits_delta_threshold": 0.10,            # Δ entropy in bits
-    "js_divergence_threshold": 0.05,                 # Jensen–Shannon divergence (histogram shift)
-    "highfreq_ratio_delta_threshold": 0.05,          # Δ high-frequency energy ratio
-    "colorfulness_delta_threshold": 5.0,             # Δ Hasler–Süsstrunk colorfulness
-    "channel_corr_abs_delta_threshold": 0.10,        # max |Δ| in channel correlation matrix
-    "clipping_fraction_delta_threshold": 0.01        # Δ clipping fraction (1%)
-}
+import src.processing.root_config as config
 
 
 def analyze_stats_delta(stats_before: Dict[str, Any], stats_after: Dict[str, Any]) -> Dict[str, Any]:
+
+    ALERT_THRESHOLDS = config.processing_config["stats_threshold"]
 
     def get_nested(d: Dict[str, Any], keys: List[str], default=None):
         node = d
@@ -79,13 +70,11 @@ def analyze_stats_delta(stats_before: Dict[str, Any], stats_after: Dict[str, Any
         "max_delta": list_elementwise_delta(per_channel_before.get("max", []) or [], per_channel_after.get("max", []) or []),
     }
 
-    # ---------- Colorfulness delta ----------
     colorfulness_before = get_nested(stats_before, ["color", "colorfulness"])
     colorfulness_after = get_nested(stats_after, ["color", "colorfulness"])
     assert (colorfulness_before is None or isinstance(colorfulness_before, float)) and (colorfulness_after is None or isinstance(colorfulness_after, float))
     colorfulness_delta = safe_numeric_delta(colorfulness_before, colorfulness_after)
 
-    # ---------- Channel correlation changes ----------
     corr_matrix_before = get_nested(stats_before, ["channel_correlation"])
     corr_matrix_after = get_nested(stats_after, ["channel_correlation"])
 
@@ -106,7 +95,7 @@ def analyze_stats_delta(stats_before: Dict[str, Any], stats_after: Dict[str, Any
                 np.abs(corr_delta_np) > ALERT_THRESHOLDS["channel_corr_abs_delta_threshold"]
             )
             for i, j in idx_pairs:
-                if int(i) < int(j):  # report each pair once
+                if int(i) < int(j):
                     channel_correlation_alerts.append({
                         "channel_pair": [int(i), int(j)],
                         "delta_corr": float(corr_delta_np[i, j])
@@ -173,7 +162,6 @@ def analyze_stats_delta(stats_before: Dict[str, Any], stats_after: Dict[str, Any
                 flags.append("likely_sharpening_or_noise")
                 notes.append(f"{root.current_lang.get('analysis_notes_more_high_frequency').get()} {hf_delta:+.3f} {root.current_lang.get('analysis_notes_likely_sharpening_or_noise').get()}")
 
-    # Short textual summary (German strings intentionally unchanged)
     summary_messages = []
     if "likely_smoothing" in flags:
         summary_messages.append(root.current_lang.get("analysis_summary_likely_smoothing").get())
@@ -195,7 +183,6 @@ def analyze_stats_delta(stats_before: Dict[str, Any], stats_after: Dict[str, Any
         "notes": notes
     }
 
-    # ---------- Assemble result (schema unchanged) ----------
     result: Dict[str, Any] = {
         "thresholds_used": dict(ALERT_THRESHOLDS),
         "meta": {

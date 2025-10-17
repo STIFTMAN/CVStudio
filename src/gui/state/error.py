@@ -18,6 +18,7 @@ class Error(Enum):
     CONVOLUTION_NEGATIVE_STRIDE = "Negative Stride"
     CONVOLUTION_KERNAL_DIMENSION = "Only 2D kernal supported"
     CONVOLUTION_KERNAL_DIMENSION_EVEN = "Only odd kernal dimensions"
+    CONVOLUTION_KERNAL_DATA_TYPE = "Kernel weight must be float or None"
     CONVOLUTION_IMAGE_DATA_TYPE = "Only support dtype: uint8 or float32"
     VERSION_GIT_VERSION = "Could not get buildid. Maybe not Git installed. Or you use compiled version."
     COMBOBOXEXTENDED_BIND_RESIZE = "Could not bind on resize"
@@ -35,6 +36,10 @@ class Error(Enum):
     SAVE_IMAGE = "Could not save image"
     EXPECTED_NDARRAY = "Expected ndarrady"
     SAVE_PROJECT = "Could not save project"
+    DRAW_KEYPOINT = "Wrong draw style"
+    UNKNOWN_FEATURE = "Unknown Feature"
+    IMAGE_NOT_NUMBER = "Image doesnt contain numbers"
+    XFEATURES2D = "Operation is not available in your OpenCV build. OpenCV must be built with OPENCV_ENABLE_NONFREE and xfeatures2d."
 
 
 class Info(Enum):

@@ -3,7 +3,6 @@ from numpy.typing import NDArray
 import cv2
 
 
-# ----------------- Helper function -----------------
 def to_gray_uint8(image: NDArray[np.uint8 | np.float32]) -> np.ndarray:
     if image.ndim == 3:
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)

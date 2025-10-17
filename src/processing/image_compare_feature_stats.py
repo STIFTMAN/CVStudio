@@ -1,27 +1,7 @@
-from __future__ import annotations
 from typing import Dict, Any, Optional, List
 import numpy as np
 import src.gui.state.root as root
-
-# --------------------------------------------
-# Zentrale Schwellwerte (wie zuvor)
-# --------------------------------------------
-FEATURE_ALERT_THRESHOLDS: Dict[str, float] = {
-    # Detektoren (Harris/FAST)
-    "kp_rel_drop_threshold": 0.35,
-    "repeatability_abs_drop_threshold": 0.10,
-
-    # Keypoint+Descriptor (SIFT/SURF/ORB)
-    "match_precision_abs_drop_threshold": 0.10,
-    "match_recall_abs_drop_threshold": 0.10,
-    "match_inlier_ratio_abs_drop_threshold": 0.10,
-    "kd_repeatability_abs_drop_threshold": 0.10,
-    "kd_kp_rel_drop_threshold": 0.35,
-
-    # Geometrische Primitive (Hough)
-    "primitive_similarity_abs_drop_threshold": 0.10,
-    "primitive_count_rel_drop_threshold": 0.35,
-}
+import src.processing.root_config as config
 
 
 def _safe_get(d: Dict[str, Any], path: List[str], default=None):
@@ -61,7 +41,7 @@ def analyze_feature_tests_delta_from_results(
     before_res: Dict[str, Any],
     after_res: Dict[str, Any],
 ) -> Dict[str, Any]:
-    th = FEATURE_ALERT_THRESHOLDS
+    th = config.processing_config["feature_stats_threshold"]
 
     flags: List[str] = []
     notes: List[str] = []
@@ -71,10 +51,6 @@ def analyze_feature_tests_delta_from_results(
         "keypoint_descriptor": {},
         "geometric_primitives": {}
     }
-
-    # =====================================================
-    # 1) DETECTORS ONLY (Harris, FAST)
-    # =====================================================
     det_before = before_res.get("detectors_only") or {}
     det_after = after_res.get("detectors_only") or {}
 
@@ -98,7 +74,7 @@ def analyze_feature_tests_delta_from_results(
             t_entry[feat] = {
                 "num_kp_before": kp_b,
                 "num_kp_after": kp_a,
-                "num_kp_rel_drop": kp_rel_drop,  # positiv = Rückgang
+                "num_kp_rel_drop": kp_rel_drop,
                 "repeatability_before": rep_b,
                 "repeatability_after": rep_a,
                 "repeatability_delta": rep_delta
@@ -111,7 +87,6 @@ def analyze_feature_tests_delta_from_results(
 
             if rep_delta is not None and rep_delta < -th["repeatability_abs_drop_threshold"]:
                 flags.append("detectors_repeatability_drop")
-                # Prozent statt Absolutwert:
                 notes.append(f"{root.current_lang.get('analysis_notes_repeatability_drop').get()} "
                              f"{feat}@{transform_label}: {rep_delta*100:+.1f}%")
 
@@ -119,10 +94,6 @@ def analyze_feature_tests_delta_from_results(
 
     if det_diff:
         diff["detectors_only"] = det_diff
-
-    # =====================================================
-    # 2) KEYPOINT + DESCRIPTOR (SIFT/SURF/ORB)
-    # =====================================================
     kd_before = before_res.get("keypoint_descriptor") or {}
     kd_after = after_res.get("keypoint_descriptor") or {}
 
@@ -169,12 +140,10 @@ def analyze_feature_tests_delta_from_results(
                     if (va - vb) < -th[thr_key]:
                         if mk == "repeatability":
                             flags.append("kd_repeatability_drop")
-                            # Prozent statt Absolutwert:
                             notes.append(f"{root.current_lang.get('analysis_notes_repeatability_drop').get()} "
                                          f"{feat}@{transform_label}: {delta * 100:+.1f}%")  # type: ignore
                         else:
                             flags.append(f"kd_{mk}_drop")
-                            # Prozent statt Absolutwert:
                             notes.append(f"{root.current_lang.get('analysis_notes_matching_quality_drop').get()} "
                                          f"{feat}@{transform_label} ({mk} {delta * 100:+.1f}%)")  # type: ignore
 
@@ -195,9 +164,6 @@ def analyze_feature_tests_delta_from_results(
     if kd_diff:
         diff["keypoint_descriptor"] = kd_diff
 
-    # =====================================================
-    # 3) GEOMETRISCHE PRIMITIVE (Line/Circle/Rect)
-    # =====================================================
     geo_before = before_res.get("geometric_primitives") or {}
     geo_after = after_res.get("geometric_primitives") or {}
 
@@ -236,7 +202,6 @@ def analyze_feature_tests_delta_from_results(
 
             if sim_delta is not None and sim_delta < -th["primitive_similarity_abs_drop_threshold"]:
                 flags.append(f"{kind}_similarity_drop")
-                # Prozent statt Absolutwert:
                 notes.append(f"{root.current_lang.get('analysis_notes_primitive_similarity_drop').get()} "
                              f"{kind}@{transform_label}: {sim_delta*100:+.1f}%")
 
@@ -245,9 +210,6 @@ def analyze_feature_tests_delta_from_results(
     if geo_diff:
         diff["geometric_primitives"] = geo_diff
 
-    # =====================================================
-    # Zusammenfassung (nur Texte; keine Zahlen nötig)
-    # =====================================================
     summary_bits: List[str] = []
     if any(f.endswith("keypoints_drop") for f in flags):
         summary_bits.append(root.current_lang.get("analysis_summary_keypoints_drop").get())

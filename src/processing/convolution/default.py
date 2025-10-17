@@ -6,22 +6,23 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 from multiprocessing import shared_memory
 import cv2
 from src.gui.state.error import Error
-from src.gui.state import root  # übernimmt deine Status-Strings
+from src.gui.state import root
+import src.gui.utils.logger as log
+from pathlib import Path
 
-# ----------------- Konstanten (auslagern) -----------------
+
 TILE_SIZE: int = 1024
 KEEP_FREE_CORES: int = 1
-SUPPRESS_PADDING_BORDER: bool = False   # optional: äußeren Rand (kh/kw) auf 0 setzen
+SUPPRESS_PADDING_BORDER: bool = False
 
 
-# ----------------- Worker (nicht-separabel) -----------------
 def _worker_convolve_tile(
     shm_in_name: str,
     in_shape: Tuple[int, ...],
     shm_out_name: str,
     out_shape: Tuple[int, ...],
     tile_ij: Tuple[int, int, int, int],
-    kernel_positions: List[Tuple[int, int, float]],  # (dy, dx, w) mit dy/dx in [0..kH-1/kW-1]
+    kernel_positions: List[Tuple[int, int, float]],
     stride: Tuple[int, int],
     channels: int
 ) -> None:
@@ -33,12 +34,12 @@ def _worker_convolve_tile(
     shm_out = shared_memory.SharedMemory(name=shm_out_name)
     try:
         if channels == 1:
-            padded = np.ndarray(in_shape, dtype=np.float32, buffer=shm_in.buf)   # (Hp, Wp)
-            out = np.ndarray(out_shape, dtype=np.float32, buffer=shm_out.buf)    # (Ho, Wo)
+            padded = np.ndarray(in_shape, dtype=np.float32, buffer=shm_in.buf)
+            out = np.ndarray(out_shape, dtype=np.float32, buffer=shm_out.buf)
             _convolve_block_gray(padded, out, i0, i1, j0, j1, sy, sx, kernel_positions, tile_h, tile_w)
         else:
-            padded = np.ndarray(in_shape, dtype=np.float32, buffer=shm_in.buf)   # (Hp, Wp, C)
-            out = np.ndarray(out_shape, dtype=np.float32, buffer=shm_out.buf)    # (Ho, Wo, C)
+            padded = np.ndarray(in_shape, dtype=np.float32, buffer=shm_in.buf)
+            out = np.ndarray(out_shape, dtype=np.float32, buffer=shm_out.buf)
             for c in range(channels):
                 _convolve_block_gray(padded[..., c], out[..., c], i0, i1, j0, j1, sy, sx, kernel_positions, tile_h, tile_w)
     finally:
@@ -71,15 +72,14 @@ def _convolve_block_gray(
     out[i0:i1, j0:j1] = acc
 
 
-# ----------------- Worker (separabel) -----------------
 def _worker_convolve_tile_separable(
     shm_in_name: str,
     in_shape: Tuple[int, ...],
     shm_out_name: str,
     out_shape: Tuple[int, ...],
     tile_ij: Tuple[int, int, int, int],
-    ky: np.ndarray,   # 1D (kH,)
-    kx: np.ndarray,   # 1D (kW,)
+    ky: np.ndarray,
+    kx: np.ndarray,
     stride: Tuple[int, int],
     channels: int
 ) -> None:
@@ -90,12 +90,12 @@ def _worker_convolve_tile_separable(
     shm_out = shared_memory.SharedMemory(name=shm_out_name)
     try:
         if channels == 1:
-            padded = np.ndarray(in_shape, dtype=np.float32, buffer=shm_in.buf)   # (Hp, Wp)
-            out = np.ndarray(out_shape, dtype=np.float32, buffer=shm_out.buf)    # (Ho, Wo)
+            padded = np.ndarray(in_shape, dtype=np.float32, buffer=shm_in.buf)
+            out = np.ndarray(out_shape, dtype=np.float32, buffer=shm_out.buf)
             _convolve_block_gray_separable(padded, out, i0, i1, j0, j1, sy, sx, ky, kx)
         else:
-            padded = np.ndarray(in_shape, dtype=np.float32, buffer=shm_in.buf)   # (Hp, Wp, C)
-            out = np.ndarray(out_shape, dtype=np.float32, buffer=shm_out.buf)    # (Ho, Wo, C)
+            padded = np.ndarray(in_shape, dtype=np.float32, buffer=shm_in.buf)
+            out = np.ndarray(out_shape, dtype=np.float32, buffer=shm_out.buf)
             for c in range(channels):
                 _convolve_block_gray_separable(padded[..., c], out[..., c], i0, i1, j0, j1, sy, sx, ky, kx)
     finally:
@@ -107,40 +107,25 @@ def _convolve_block_gray_separable(
     padded: np.ndarray, out: np.ndarray,
     i0: int, i1: int, j0: int, j1: int,
     sy: int, sx: int,
-    ky: np.ndarray,  # (kH,)
-    kx: np.ndarray   # (kW,)
+    ky: np.ndarray,
+    kx: np.ndarray
 ) -> None:
-    """
-    Rechnet eine Tile-Ausgabe (i0:i1, j0:j1) über separablen Kernel.
-    Vorgehen:
-      1) Horizontale 1D-Korrelation -> Zwischenbild H (nur benötigte Zeilen/Spalten)
-      2) Vertikale 1D-Korrelation auf H -> acc (Stride in y umgesetzt)
-      3) acc in out[i0:i1, j0:j1]
-    Korrelation (kein Flip), top-left-Anker – kompatibel zum Nicht-Separabel-Pfad.
-    """
     kH = int(ky.shape[0])
     kW = int(kx.shape[0])
     tile_h = i1 - i0
     tile_w = j1 - j0
 
-    # Zeilenbereich im gepaddeten Bild, den wir für dieses Tile benötigen:
     r_start = i0 * sy
     r_end = (i1 - 1) * sy + (kH - 1)
-    R = r_end - r_start + 1  # Anzahl Zeilen
+    R = r_end - r_start + 1
 
-    # Spalten-Basis (X-Stride); für horizontale Faltung benötigen wir pro Out-Spalte kW Spalten
-    c0_vec = (np.arange(j0, j1, dtype=np.int64) * sx)  # (tile_w,)
-    # Zwischenbild H: (R, tile_w)
+    c0_vec = (np.arange(j0, j1, dtype=np.int64) * sx)
     H = np.zeros((R, tile_w), dtype=np.float32)
 
-    rows = np.arange(r_start, r_end + 1, dtype=np.int64)  # (R,)
-    # horizontale Korrelation vektorisiert
+    rows = np.arange(r_start, r_end + 1, dtype=np.int64)
     for dx in range(kW):
-        cols = c0_vec + dx  # (tile_w,)
-        # padded[rows[:, None], cols[None, :]] -> (R, tile_w)
+        cols = c0_vec + dx
         np.add(H, padded[rows[:, None], cols[None, :]] * kx[dx], out=H)
-
-    # vertikale Korrelation + Y-Stride
     acc = np.zeros((tile_h, tile_w), dtype=np.float32)
     for dy in range(kH):
         rs = slice(dy, dy + tile_h * sy, sy)
@@ -149,9 +134,7 @@ def _convolve_block_gray_separable(
     out[i0:i1, j0:j1] = acc
 
 
-# ----------------- Utilities -----------------
 def _is_multichannel_gray(image_f32: np.ndarray) -> bool:
-    """Erkennt 'mehrkanaliges Graubild' (Kanäle nahezu identisch)."""
     if image_f32.ndim != 3 or image_f32.shape[2] < 2:
         return False
     diff_var = np.var(image_f32[..., 0] - image_f32[..., 1])
@@ -159,13 +142,11 @@ def _is_multichannel_gray(image_f32: np.ndarray) -> bool:
 
 
 def _to_gray_f32(image_f32: np.ndarray) -> np.ndarray:
-    """(H,W[,C]) -> (H,W) float32. Nutzt Erkennung für mehrkanaliges Grau."""
     if image_f32.ndim == 2:
         return image_f32.astype(np.float32, copy=False)
     h, w, c = image_f32.shape
     if c == 1 or _is_multichannel_gray(image_f32):
         return image_f32[..., 0].astype(np.float32, copy=False)
-    # OpenCV nutzt BGR; für Grau reicht cvtColor:
     return cv2.cvtColor(image_f32, cv2.COLOR_BGR2GRAY).astype(np.float32, copy=False)
 
 
@@ -173,14 +154,9 @@ def _try_factor_separable(
     k2d: np.ndarray,
     tol_rel: float = 1e-6
 ) -> tuple[bool, np.ndarray, np.ndarray]:
-    """
-    Prüft, ob k2d numerisch separierbar ist (Rang~1).
-    Gibt (is_sep, ky, kx) zurück mit k2d ≈ ky[:, None] * kx[None, :].
-    """
     k = np.asarray(k2d, dtype=np.float32, copy=False)
     kH, kW = k.shape
 
-    # Referenzzeile finden
     ref = None
     for i in range(kH):
         row = k[i, :]
@@ -188,14 +164,13 @@ def _try_factor_separable(
             ref = row
             break
     if ref is None:
-        # Nullkernel
         return True, np.zeros((kH,), np.float32), np.zeros((kW,), np.float32)
 
     denom = float(np.dot(ref, ref))
     if denom == 0.0:
         return False, np.empty(0, np.float32), np.empty(0, np.float32)
 
-    alpha = (k @ ref) / denom  # (kH,)
+    alpha = (k @ ref) / denom
     k_hat = alpha[:, None] * ref[None, :]
     err = np.linalg.norm(k - k_hat, ord="fro")
     base = np.linalg.norm(k, ord="fro") + 1e-12
@@ -203,7 +178,6 @@ def _try_factor_separable(
     if rel_err <= tol_rel:
         return True, alpha.astype(np.float32, copy=False), ref.astype(np.float32, copy=False)
 
-    # Robustheit via SVD
     U, s, VT = np.linalg.svd(k, full_matrices=False)
     if s.size == 0:
         return False, np.empty(0, np.float32), np.empty(0, np.float32)
@@ -230,20 +204,20 @@ def default(
     root.status_details.set(root.current_lang.get("status_details_checking_sample_rate").get())
     sy, sx = stride
     if sy < 1 or sx < 1:
-        raise ValueError(Error.CONVOLUTION_NEGATIVE_STRIDE.value)
+        log.log.write(text=Error.CONVOLUTION_NEGATIVE_STRIDE.value, tag="CRITICAL ERROR", modulename=Path(__file__).stem)
 
     root.status_details.set(root.current_lang.get("status_details_checking_kernal_dimensions").get())
     k = np.asarray(kernel, dtype=np.float32)
     if k.ndim != 2:
-        raise ValueError(Error.CONVOLUTION_KERNAL_DIMENSION.value)
+        log.log.write(text=Error.CONVOLUTION_KERNAL_DIMENSION.value, tag="CRITICAL ERROR", modulename=Path(__file__).stem)
     kH, kW = k.shape
     if (kH % 2 == 0) or (kW % 2 == 0):
-        raise ValueError(Error.CONVOLUTION_KERNAL_DIMENSION_EVEN.value)
+        log.log.write(text=Error.CONVOLUTION_KERNAL_DIMENSION_EVEN.value, tag="CRITICAL ERROR", modulename=Path(__file__).stem)
     kh, kw = kH // 2, kW // 2
 
     root.status_details.set(root.current_lang.get("status_details_checking_image_datatype").get())
     if not (np.issubdtype(image.dtype, np.integer) or np.issubdtype(image.dtype, np.floating)):
-        raise TypeError(Error.CONVOLUTION_IMAGE_DATA_TYPE.value)
+        log.log.write(text=Error.CONVOLUTION_IMAGE_DATA_TYPE.value, tag="CRITICAL ERROR", modulename=Path(__file__).stem)
     image_f32 = image.astype(np.float32, copy=False)
 
     root.status_details.set(root.current_lang.get("status_details_checking_gray_monochrom").get())
@@ -315,11 +289,7 @@ def default(
                     f.result()
                 root.status_details.set(root.current_lang.get("status_details_tile_done").get())
         else:
-            kernel_positions: List[Tuple[int, int, float]] = [
-                (dy, dx, float(k[dy, dx]))
-                for dy in range(kH) for dx in range(kW)
-                if k[dy, dx] != 0.0
-            ]
+            kernel_positions: List[Tuple[int, int, float]] = [(dy, dx, float(k[dy, dx])) for dy in range(kH) for dx in range(kW) if k[dy, dx] != 0.0]
             with ProcessPoolExecutor(max_workers=max_workers) as ex:
                 futures = [
                     ex.submit(

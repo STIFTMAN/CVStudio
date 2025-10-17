@@ -1,4 +1,3 @@
-
 import customtkinter
 from src.gui.state.project_file_type import Project_File_Type, Action_Type
 from src.gui.utils.project import Project

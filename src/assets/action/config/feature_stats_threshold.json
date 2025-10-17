@@ -1,0 +1,11 @@
+{
+    "kp_rel_drop_threshold": 0.35,
+    "repeatability_abs_drop_threshold": 0.10,
+    "match_precision_abs_drop_threshold": 0.10,
+    "match_recall_abs_drop_threshold": 0.10,
+    "match_inlier_ratio_abs_drop_threshold": 0.10,
+    "kd_repeatability_abs_drop_threshold": 0.10,
+    "kd_kp_rel_drop_threshold": 0.35,
+    "primitive_similarity_abs_drop_threshold": 0.10,
+    "primitive_count_rel_drop_threshold": 0.35
+}

@@ -10,19 +10,13 @@ from src.processing.utils.draw_keypoints import Style
 def orb(
     image: npt.NDArray[np.uint8 | np.float32]
 ) -> tuple[Style, Tuple[List[cv2.KeyPoint], np.ndarray]]:
-    """
-    Wendet ORB auf 'image' an und gibt (image, (keypoints, descriptors)) zurück.
-    - image: Eingabebild als uint8 oder float32, Grau- oder Farbbild (BGR).
-    - keypoints: Liste der gefundenen cv2.KeyPoint-Objekte.
-    - descriptors: np.ndarray mit dtype=uint8 (binäre Deskriptoren), Form (N, 32) standardmäßig.
-    """
-    config = processing_config["orb"]
+
+    config = processing_config["feature"]["orb"]
     assert config is not None
     gray = to_gray_uint8(image)
 
-    # ORB-Instanz (Standard-Parameter; bei Bedarf anpassen)
     orb = cv2.ORB_create(  # type: ignore
-        nfeatures=config["nfeatures"],       # mehr Features als Default
+        nfeatures=config["nfeatures"],
         scaleFactor=config["scaleFactor"],
         nlevels=config["nlevels"],
         edgeThreshold=config["edgeThreshold"],
@@ -36,7 +30,6 @@ def orb(
     keypoints, descriptors = orb.detectAndCompute(gray, None)
 
     if descriptors is None:
-        # leeres (0, 32) uint8-Array, damit der Rückgabetyp stabil bleibt
         descriptors = np.empty((0, 32), dtype=np.uint8)
 
     return "point", (keypoints, descriptors)

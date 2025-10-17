@@ -1,4 +1,4 @@
-from typing import TypedDict
+from typing_extensions import TypedDict
 
 from src.processing.types.hough_rectangle_type import Hough_Rectangle_Type
 from src.processing.types.hough_circle_type import Hough_Circle_Type
@@ -30,6 +30,29 @@ class Config_Processing_Stats_Threshold_Type(TypedDict):
     clipping_fraction_delta_threshold: float
 
 
+class Config_Processing_Feature_Stats_Threshold_Type(TypedDict):
+    kp_rel_drop_threshold: float
+    repeatability_abs_drop_threshold: float
+    match_precision_abs_drop_threshold: float
+    match_recall_abs_drop_threshold: float
+    match_inlier_ratio_abs_drop_threshold: float
+    kd_repeatability_abs_drop_threshold: float
+    kd_kp_rel_drop_threshold: float
+    primitive_similarity_abs_drop_threshold: float
+    primitive_count_rel_drop_threshold: float
+
+
+class Config_Processing_Tests_Type(TypedDict):
+    angles_deg: list[float]
+    scales_f: list[float]
+    translations: list[tuple[int, int]]
+    ratio: float
+    ransac_thresh: float
+    repeat_tol_px: float
+
+
 class Config_Processing_Type(TypedDict):
     feature: Config_Processing_Feature_Type
     stats_threshold: Config_Processing_Stats_Threshold_Type
+    feature_stats_threshold: Config_Processing_Feature_Stats_Threshold_Type
+    tests: Config_Processing_Tests_Type

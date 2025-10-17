@@ -1,4 +1,3 @@
-from __future__ import annotations
 from typing import List
 import math
 import cv2
@@ -8,11 +7,10 @@ import numpy as np
 def keypoint_to_xy(kps: List[cv2.KeyPoint]) -> np.ndarray:
     if not kps:
         return np.empty((0, 2), dtype=np.float32)
-    return np.float32([kp.pt for kp in kps])   # type: ignore # (N,2)
+    return np.float32([kp.pt for kp in kps])   # type: ignore
 
 
 def keypoint_line_to_L4(kps: List[cv2.KeyPoint]) -> np.ndarray:
-    """Lines aus KeyPoints: size=length, angle=deg → Endpunkte (x1,y1,x2,y2)."""
     if not kps:
         return np.empty((0, 4), dtype=np.float32)
     out = []
@@ -27,7 +25,6 @@ def keypoint_line_to_L4(kps: List[cv2.KeyPoint]) -> np.ndarray:
 
 
 def keypoint_circle_to_C3(kps: List[cv2.KeyPoint]) -> np.ndarray:
-    """Circles aus KeyPoints: size = 2*r → (cx,cy,r)."""
     if not kps:
         return np.empty((0, 3), dtype=np.float32)
     out = []
@@ -39,7 +36,6 @@ def keypoint_circle_to_C3(kps: List[cv2.KeyPoint]) -> np.ndarray:
 
 
 def keypoint_rect_to_R5(kps: List[cv2.KeyPoint]) -> np.ndarray:
-    """Rects aus KeyPoints (Option A): size=length, response=width, angle=deg → (cx,cy,L,W,A)."""
     if not kps:
         return np.empty((0, 5), dtype=np.float32)
     out = []

@@ -7,7 +7,7 @@ from src.processing.utils.draw_keypoints import Style
 
 
 def harris(image: np.ndarray) -> tuple[Style, Tuple[List[cv2.KeyPoint], np.ndarray]]:
-    config = processing_config["harris"]
+    config = processing_config["feature"]["harris"]
     assert config is not None
     gray = to_gray_uint8(image)
     pts = cv2.goodFeaturesToTrack(gray, maxCorners=config["maxCorners"], qualityLevel=config["qualityLevel"], minDistance=config["minDistance"],

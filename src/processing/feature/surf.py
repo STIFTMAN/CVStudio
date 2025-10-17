@@ -5,29 +5,27 @@ import cv2
 from src.processing.utils.to_gray_uint8 import to_gray_uint8
 from src.processing.root_config import processing_config
 from src.processing.utils.draw_keypoints import Style
+import src.gui.utils.logger as log
+from src.gui.state.error import Error
+from pathlib import Path
 
 
-# ----------------- SURF: detection + descriptor -----------------
 def surf(
-    image: NDArray[np.uint8 | np.float32],
-    draw: bool = True
+    image: NDArray[np.uint8 | np.float32]
 ) -> tuple[Style, Tuple[List[cv2.KeyPoint], np.ndarray]]:
-    config = processing_config["surf"]
+    config = processing_config["feature"]["surf"]
     assert config is not None
     gray_uint8 = to_gray_uint8(image)
     try:
-        surf_detector = cv2.xfeatures2d.SURF_create(  # type: ignore[attr-defined]
+        surf_detector = cv2.xfeatures2d.SURF_create(  # type: ignore
             hessianThreshold=config["hessianThreshold"],
             nOctaves=config["nOctaves"],
             nOctaveLayers=config["nOctaveLayers"],
             extended=config["extended"],
             upright=config["upright"],
         )
-    except AttributeError as err:
-        raise RuntimeError(
-            "SURF is not available in your OpenCV build. "
-            "OpenCV must be built with OPENCV_ENABLE_NONFREE and xfeatures2d."
-        ) from err
+    except Exception:
+        log.log.write(text=Error.XFEATURES2D.value, tag="CRITICAL ERROR", modulename=Path(__file__).stem)
 
     keypoints, descriptors = surf_detector.detectAndCompute(gray_uint8, None)
     if descriptors is None:

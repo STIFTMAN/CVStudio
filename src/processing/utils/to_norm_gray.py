@@ -13,7 +13,7 @@ def to_norm_gray(img: NDArray[np.uint8 | np.float32]) -> np.ndarray:
         gray = gray.astype(np.float32) / 255.0
     elif gray.dtype == np.float32:
         m = gray.max()
-        if m > 1.5:  # simple Heuristik
+        if m > 1.5:
             gray = np.clip(gray, 0, 255) / 255.0
     else:
         gray = gray.astype(np.float32)

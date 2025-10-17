@@ -89,6 +89,7 @@ class MainWindow(TkinterDnD.Tk):
         self.nav_frame.addButton("main_window_dropdownmenu_testing", root.current_lang.get("main_window_dropdownmenu_testing"), self.open_test_window)
         self.nav_frame.add("main_window_dropdownmenu_settings", root.current_lang.get("main_window_dropdownmenu_settings"), root.current_lang.get("main_window_settings_look"), lambda: self.build_settings("main_window_settings_look"))
         self.nav_frame.add("main_window_dropdownmenu_settings", root.current_lang.get("main_window_dropdownmenu_settings"), root.current_lang.get("main_window_settings_keybindings"), lambda: self.build_settings("main_window_settings_keybindings"))
+        self.nav_frame.add("main_window_dropdownmenu_settings", root.current_lang.get("main_window_dropdownmenu_settings"), root.current_lang.get("main_window_settings_log"), lambda: self.build_settings("main_window_settings_log"))
         self.nav_frame.add("main_window_dropdownmenu_settings", root.current_lang.get("main_window_dropdownmenu_settings"), root.current_lang.get("main_window_settings_about"), lambda: self.build_settings("main_window_settings_about"))
         self.nav_frame.grid(row=0, column=0, sticky="we")
         self.nav_frame.outside_tracking(self)
@@ -269,6 +270,7 @@ class MainWindow(TkinterDnD.Tk):
 
         tabview.add_tab("main_window_settings_look", root.current_lang.get("main_window_settings_look"))
         tabview.add_tab("main_window_settings_keybindings", root.current_lang.get("main_window_settings_keybindings"))
+        tabview.add_tab("main_window_settings_log", root.current_lang.get("main_window_settings_log"))
         tabview.add_tab("main_window_settings_about", root.current_lang.get("main_window_settings_about"))
         tabview.set(tabindex)
         tabview.tab("main_window_settings_look").grid_columnconfigure(0, weight=1)
@@ -327,6 +329,16 @@ class MainWindow(TkinterDnD.Tk):
             else:
                 settings_about_temp_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=tabview.tab("main_window_settings_about"), wraplength=self.layout_settings["settings"]["about"]["label"]["wraplength"], justify="left", padx=self.layout_settings["settings"]["about"]["label"]["padding_inline"][0], pady=self.layout_settings["settings"]["about"]["label"]["padding_inline"][1], anchor="w", text=settings_about_keys[key])  # type: ignore
             settings_about_temp_label.grid(row=key, column=0, padx=self.layout_settings["settings"]["about"]["label"]["padding"][0], pady=self.layout_settings["settings"]["about"]["label"]["padding"][1], sticky="w")
+
+        def load_log() -> str:
+            text = ""
+            p = Path("./log.txt")
+            if p.is_file():
+                text = p.read_text(encoding="utf-8")
+            return text
+
+        settings_log_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=tabview.tab("main_window_settings_log"), wraplength=self.layout_settings["settings"]["log"]["label"]["wraplength"], justify="left", padx=self.layout_settings["settings"]["log"]["label"]["padding_inline"][0], pady=self.layout_settings["settings"]["log"]["label"]["padding_inline"][1], anchor="w", text=load_log())
+        settings_log_label.grid(row=key, column=0, padx=self.layout_settings["settings"]["log"]["label"]["padding"][0], pady=self.layout_settings["settings"]["log"]["label"]["padding"][1], sticky="w")
 
     def settings_look_lang_output(self, choice):
         from src.gui.utils.lang_loader import change_lang, get_translation_from_all_lang

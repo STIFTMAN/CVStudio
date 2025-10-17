@@ -1,4 +1,3 @@
-from __future__ import annotations
 from typing import Dict, Any, List, Callable, Tuple, Iterable
 import numpy as np
 
@@ -20,27 +19,15 @@ from src.processing.feature.hough_rectangle import hough_rectangle
 
 from src.processing.utils.to_gray_uint8 import to_gray_uint8
 from src.processing.utils.warps import rotate, scale, translate
-
-
-# =========================
-# global config (edit here)
-# =========================
-GLOBAL_TEST_CONFIG: Dict[str, Any] = {
-    # multiple transforms to evaluate (each compared against the base image)
-    "angles_deg": [10.0, 30.0, 45.0, 60.0, 90.0, 135.0, 180.0, 225.0, 270.0, 315.0],            # list[float]
-    "scales_f": [0.1, 0.25, 0.5, 0.75, 1.33, 2.0, 4.0, 10.0],              # list[float]
-    "translations": [(1, 0), (0, 1), (1, 1), (5, 5), (20, 20), (50, 50), (100, 100), (200, 200)],  # list[tuple[tx, ty]]
-
-    # matching / metrics constants
-    "ratio": 0.75,
-    "ransac_thresh": 3.0,
-    "repeat_tol_px": 3.0,
-}
+import src.gui.utils.logger as log
+from src.gui.state.error import Error
+from pathlib import Path
+import src.processing.root_config as config
 
 _VALID_FEATURES = {
-    "harris", "fast",                 # detectors_only
-    "sift", "surf", "orb",            # keypoint_descriptor
-    "hough_lines", "hough_circle", "hough_rectangle",  # geometric_primitives
+    "harris", "fast",
+    "sift", "surf", "orb",
+    "hough_lines", "hough_circle", "hough_rectangle",
 }
 
 
@@ -61,30 +48,19 @@ def run_selected_feature_tests(
     image: np.ndarray,
     feature_mode: List[str],
 ) -> Dict[str, Any]:
-    """
-    Run tests only for the requested features.
-    feature_mode ⊆ ["harris","surf","sift","orb","fast","hough_lines","hough_circle","hough_rectangle"].
-    Uses only GLOBAL_TEST_CONFIG (no overrides).
-    """
-    # validate features
     req = [f.lower() for f in feature_mode]
     unknown = [f for f in req if f not in _VALID_FEATURES]
     if unknown:
-        raise ValueError(f"Unknown feature(s): {unknown}. Allowed: {sorted(_VALID_FEATURES)}")
-
-    cfg = GLOBAL_TEST_CONFIG  # use globals only
+        log.log.write(text=f"{Error.UNKNOWN_FEATURE.value}: {unknown} (Valid: {sorted(_VALID_FEATURES)})", tag="CRITICAL ERROR", modulename=Path(__file__).stem)
+    cfg = config.processing_config["tests"]
     base = to_gray_uint8(image)
 
     results: Dict[str, Any] = {}
 
-    # which groups to evaluate
     do_det = any(f in req for f in ("harris", "fast"))
     do_kd = any(f in req for f in ("sift", "surf", "orb"))
     do_geo = any(f in req for f in ("hough_lines", "hough_circle", "hough_rectangle"))
 
-    # ---------------------------------
-    # DETECTORS ONLY (repeatability)
-    # ---------------------------------
     if do_det:
         def _eval_detectors(img_w: np.ndarray, M: np.ndarray, _label: str) -> Dict[str, Any]:
             block: Dict[str, Any] = {}
@@ -113,9 +89,6 @@ def run_selected_feature_tests(
                                                   lambda img, t: translate(img, t[0], t[1]), _eval_detectors))
         results["detectors_only"] = det_results
 
-    # ---------------------------------
-    # KEYPOINT + DESCRIPTOR
-    # ---------------------------------
     if do_kd:
         def _eval_kd(img_w: np.ndarray, M: np.ndarray, _label: str) -> Dict[str, Any]:
             block: Dict[str, Any] = {}
@@ -152,13 +125,9 @@ def run_selected_feature_tests(
                                                  lambda img, t: translate(img, t[0], t[1]), _eval_kd))
         results["keypoint_descriptor"] = kd_results
 
-    # ---------------------------------
-    # GEOMETRIC PRIMITIVES
-    # ---------------------------------
     if do_geo:
         geo: Dict[str, Any] = {}
 
-        # detect once on base
         base_lines = base_circles = base_rects = None
         if "hough_lines" in req:
             k_base, _ = hough_lines(base)[1]

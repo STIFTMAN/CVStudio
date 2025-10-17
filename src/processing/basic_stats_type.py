@@ -1,4 +1,5 @@
-from typing import Any, TypedDict
+from typing import Any
+from typing_extensions import TypedDict
 from src.gui.state.project_file_type import Action_Type
 
 

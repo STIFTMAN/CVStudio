@@ -276,6 +276,19 @@
                         ],
                         "wraplength": 800
                     }
+                },
+                "log": {
+                    "label": {
+                        "padding": [
+                            10,
+                            5
+                        ],
+                        "padding_inline": [
+                            0,
+                            0
+                        ],
+                        "wraplength": 800
+                    }
                 }
             }
         },

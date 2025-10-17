@@ -1,5 +1,8 @@
 import numpy as np
 import cv2 as cv
+import src.gui.utils.logger as log
+from src.gui.state.error import Error
+from pathlib import Path
 
 
 def clahe(
@@ -7,17 +10,11 @@ def clahe(
     clip_limit: float = 4.0,
     tile_grid_size: tuple[int, int] = (16, 16)
 ) -> np.ndarray:
-    """
-    CLAHE mit OpenCV.
-    - image: (H,W) oder (H,W,3); uint8/float; beliebiger Wertebereich.
-    - Rückgabe: float32, gleiche Shape.
-    """
     x = np.asarray(image)
     isnan = np.isnan(x)
     xf = x.astype(np.float32, copy=True)
 
     def _to_u8(img: np.ndarray) -> tuple[np.ndarray, float, float]:
-        # Auf [0,255] normalisieren, robust auf beliebige Bereiche
         finite = np.isfinite(img)
         if not finite.any():
             return np.zeros_like(img, dtype=np.uint8), 0.0, 1.0
@@ -36,13 +33,13 @@ def clahe(
 
     clahe = cv.createCLAHE(clipLimit=clip_limit, tileGridSize=tile_grid_size)
 
-    if xf.ndim == 2:  # Grau
+    if xf.ndim == 2:
         u8, vmin, vmax = _to_u8(xf)
         eq = clahe.apply(u8)
         out = _from_u8(eq, vmin, vmax)
 
-    elif xf.ndim == 3 and xf.shape[2] == 3:  # Farbe
-        u8, vmin, vmax = _to_u8(xf)  # global normieren (alle Kanäle gemeinsam)
+    elif xf.ndim == 3 and xf.shape[2] == 3:
+        u8, vmin, vmax = _to_u8(xf)
         lab = cv.cvtColor(u8, cv.COLOR_RGB2LAB)
         L, A, B = cv.split(lab)
         L_eq = clahe.apply(L)
@@ -51,9 +48,8 @@ def clahe(
         out = _from_u8(rgb_eq, vmin, vmax)
 
     else:
-        raise ValueError("Unterstützt (H,W) oder (H,W,3). Für andere Formen bitte anpassen.")
+        log.log.write(text=Error.RESIZE_IMAGE_NDIM.value, tag="CRITICAL ERROR", modulename=Path(__file__).stem)
 
-    # NaNs wieder einsetzen
     out = out.astype(np.float32, copy=False)
     out[isnan] = np.nan
     return out
