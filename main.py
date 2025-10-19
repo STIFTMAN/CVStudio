@@ -10,6 +10,7 @@ import src.gui.state.app
 
 
 def main():
+    log.log.reset()
     log.log.write(text=Info.PRELOADING_CONFIG.value, tag="INFO", modulename=Path(__file__).stem)
     src.gui.utils.config_loader.load()
     log.log.write(text=Info.PRELOADING_LANG.value, tag="INFO", modulename=Path(__file__).stem)

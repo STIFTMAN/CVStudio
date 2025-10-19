@@ -25,6 +25,8 @@ class Project:
     d_image: npt.NDArray[numpy.uint8] | None = None
     analyse_list = []
     test_results = None
+    running: bool = False
+    canceling: bool = False
 
     def get_filternames(self) -> list[str]:
         temp: list[str] = []
@@ -51,6 +53,8 @@ class Project:
         self.temp_stats = []
         self.override_index = -1
         self.d_image = None
+        self.running = False
+        self.canceling = False
 
     def quick_test(self):
         if self.image is not None and len(self.temp_images) > 0:
@@ -64,6 +68,12 @@ class Project:
         if len(self.data["filterqueue"]) == 0:
             self.reset_action_queue()
             root.status.set(root.current_lang.get("project_apply_action_queue_status_empty_queue").get())
+            return
+        if self.running is False:
+            self.running = True
+            self.canceling = False
+        else:
+            self.canceling = True
             return
         new_action_queue: list[Action_Queue_Obj_Type] = []
         for key in self.data["filterqueue"]:
@@ -91,6 +101,8 @@ class Project:
                 break
         if self.override_index == -1:
             root.status.set(root.current_lang.get("project_apply_action_queue_status_no_changes").get())
+            self.running = False
+            self.canceling = False
             return
         self.action_queue = new_action_queue
         self.temp_images = self.temp_images[0:min(self.override_index, len(self.temp_images))]
@@ -122,10 +134,15 @@ class Project:
             self.d_image = new_data[2]
             if self.progress:
                 self.progress.set((i + 1) / len(self.action_queue))
+            if self.canceling:
+                self.reset_action_queue()
+                self.apply_action_queue()
+                break
         if self.progress:
             root.status.set(root.current_lang.get("project_apply_action_queue_status_done").get())
             if self.progress.get() != 1.0:
                 self.progress.set(1.0)
+        self.running = False
 
     def set_progress(self, p: customtkinter.DoubleVar):
         self.progress = p

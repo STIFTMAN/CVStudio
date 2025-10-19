@@ -250,7 +250,7 @@ class MainWindow(TkinterDnD.Tk):
                 self.image_labels[0].bind("<Configure>", self.resize_images)
             if self.image_labels[1] is not None:
                 self.image_labels[1].bind("<Configure>", self.resize_images)
-            self.resize_images(None)
+            self.after(100, lambda: self.resize_images(None))
 
     def reset_container_frame(self):
         if self.container_frame is not None:
@@ -258,6 +258,8 @@ class MainWindow(TkinterDnD.Tk):
                 widget.destroy()
             [self.container_frame.grid_columnconfigure(i, weight=0) for i in range(20)]
             [self.container_frame.grid_rowconfigure(i, weight=0) for i in range(20)]
+            self.container_frame.grid_columnconfigure(0, weight=1)
+            self.container_frame.grid_rowconfigure(0, weight=1)
 
     def build_settings(self, tabindex: str):
         assert root.all_keybindings is not None
@@ -276,6 +278,9 @@ class MainWindow(TkinterDnD.Tk):
         tabview.tab("main_window_settings_look").grid_columnconfigure(0, weight=1)
         tabview.tab("main_window_settings_keybindings").grid_columnconfigure(0, weight=1)
         tabview.tab("main_window_settings_about").grid_columnconfigure(0, weight=1)
+        tabview.tab("main_window_settings_about").grid_rowconfigure(0, weight=1)
+        tabview.tab("main_window_settings_log").grid_columnconfigure(0, weight=1)
+        tabview.tab("main_window_settings_log").grid_rowconfigure(0, weight=1)
 
         settings_look_keys: list[tuple[customtkinter.StringVar, Callable, list, str]] = [
             (root.current_lang.get("main_window_settings_look_lang_label"), self.settings_look_lang_output, [root.all_lang[key] for key in root.all_lang], root.all_lang[get_setting("lang")]),
@@ -314,21 +319,22 @@ class MainWindow(TkinterDnD.Tk):
             settings_keybindings_temp_binding_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=settings_keybindings_temp_frame, width=self.layout_settings["settings"]["keybindings"]["binding_label"]["width"], fg_color=("grey", "black"), text_color=("white", "white"), corner_radius=5, text=re.sub(r"[<>]", "", root.all_keybindings[settings_keybindings_keys[key][1]]).replace("Control", "Ctrl").replace("-", " + "))
             settings_keybindings_temp_binding_label.grid(row=0, column=3, padx=self.layout_settings["settings"]["keybindings"]["binding_label"]["padding"], pady=self.layout_settings["settings"]["keybindings"]["binding_label"]["padding"])
 
-        settings_about_keys: list[customtkinter.StringVar | str] = [
+        settings_about_keys: list[str] = [
             get_setting("name"),
             root.version,
-            root.current_lang.get("main_window_settings_about_label_description"),
-            root.current_lang.get("main_window_settings_about_label_developer"),
-            root.current_lang.get("main_window_settings_about_label_license"),
+            root.current_lang.get("main_window_settings_about_label_description").get(),
+            root.current_lang.get("main_window_settings_about_label_developer").get(),
+            root.current_lang.get("main_window_settings_about_label_license").get(),
             get_setting("license_url")
         ]
 
-        for key in range(len(settings_about_keys)):
-            if isinstance(settings_about_keys[key], customtkinter.StringVar):
-                settings_about_temp_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=tabview.tab("main_window_settings_about"), padx=self.layout_settings["settings"]["about"]["label"]["padding_inline"][0], pady=self.layout_settings["settings"]["about"]["label"]["padding_inline"][1], anchor="w", wraplength=self.layout_settings["settings"]["about"]["label"]["wraplength"], justify="left", textvariable=settings_about_keys[key])
-            else:
-                settings_about_temp_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=tabview.tab("main_window_settings_about"), wraplength=self.layout_settings["settings"]["about"]["label"]["wraplength"], justify="left", padx=self.layout_settings["settings"]["about"]["label"]["padding_inline"][0], pady=self.layout_settings["settings"]["about"]["label"]["padding_inline"][1], anchor="w", text=settings_about_keys[key])  # type: ignore
-            settings_about_temp_label.grid(row=key, column=0, padx=self.layout_settings["settings"]["about"]["label"]["padding"][0], pady=self.layout_settings["settings"]["about"]["label"]["padding"][1], sticky="w")
+        settings_about_frame: customtkinter.CTkScrollableFrame = customtkinter.CTkScrollableFrame(master=tabview.tab("main_window_settings_about"))
+        settings_about_frame.grid(row=0, column=0, sticky="nswe")
+        settings_about_frame.grid_columnconfigure(0, weight=1)
+        settings_about_frame.grid_rowconfigure(0, weight=1)
+
+        settings_about_temp_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=settings_about_frame, wraplength=self.layout_settings["settings"]["about"]["label"]["wraplength"], justify="left", padx=self.layout_settings["settings"]["about"]["label"]["padding_inline"][0], pady=self.layout_settings["settings"]["about"]["label"]["padding_inline"][1], anchor="w", text="\n".join(settings_about_keys))
+        settings_about_temp_label.grid(row=0, column=0, padx=self.layout_settings["settings"]["about"]["label"]["padding"][0], pady=self.layout_settings["settings"]["about"]["label"]["padding"][1], sticky="w")
 
         def load_log() -> str:
             text = ""
@@ -337,8 +343,13 @@ class MainWindow(TkinterDnD.Tk):
                 text = p.read_text(encoding="utf-8")
             return text
 
-        settings_log_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=tabview.tab("main_window_settings_log"), wraplength=self.layout_settings["settings"]["log"]["label"]["wraplength"], justify="left", padx=self.layout_settings["settings"]["log"]["label"]["padding_inline"][0], pady=self.layout_settings["settings"]["log"]["label"]["padding_inline"][1], anchor="w", text=load_log())
-        settings_log_label.grid(row=key, column=0, padx=self.layout_settings["settings"]["log"]["label"]["padding"][0], pady=self.layout_settings["settings"]["log"]["label"]["padding"][1], sticky="w")
+        settings_log_frame: customtkinter.CTkScrollableFrame = customtkinter.CTkScrollableFrame(master=tabview.tab("main_window_settings_log"))
+        settings_log_frame.grid(row=0, column=0, sticky="nswe")
+        settings_log_frame.grid_columnconfigure(0, weight=1)
+        settings_log_frame.grid_rowconfigure(0, weight=1)
+
+        settings_log_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=settings_log_frame, wraplength=self.layout_settings["settings"]["log"]["label"]["wraplength"], justify="left", padx=self.layout_settings["settings"]["log"]["label"]["padding_inline"][0], pady=self.layout_settings["settings"]["log"]["label"]["padding_inline"][1], anchor="w", text=load_log())
+        settings_log_label.grid(row=0, column=0, padx=self.layout_settings["settings"]["log"]["label"]["padding"][0], pady=self.layout_settings["settings"]["log"]["label"]["padding"][1], sticky="nswe")
 
     def settings_look_lang_output(self, choice):
         from src.gui.utils.lang_loader import change_lang, get_translation_from_all_lang
@@ -376,10 +387,7 @@ class MainWindow(TkinterDnD.Tk):
             self.upload_window = None
             if root.current_project.image is not None:
                 root.current_project.reset_action_queue()
-                if self.image_labels[0] is not None:
-                    self.image_labels[0].bind("<Configure>", self.resize_images)
-                if self.image_labels[1] is not None:
-                    self.image_labels[1].bind("<Configure>", self.resize_images)
+                self.container_frame.bind("<Configure>", self.resize_images)  # type: ignore
                 self.start_action_queue_thread()
 
     def start_action_queue_thread(self):
@@ -398,15 +406,26 @@ class MainWindow(TkinterDnD.Tk):
                 self.bind("<<UploadClosed>>", self.close_upload_window)  # type: ignore
 
     def resize_images(self, event):
-        assert root.current_project.image is not None
-        if self.image_labels[0]:
-            self.image_labels[0].configure(image=resize_image_to_label(self.image_labels[0], root.current_project.image))
-        if self.image_labels[1]:
-            index = len(root.current_project.temp_images) - 1
-            if index >= 0:
-                self.image_labels[1].configure(image=resize_image_to_label(self.image_labels[1], root.current_project.temp_images[index]))
+        if root.current_project.image is not None:
+            if self.image_labels[0] is not None:
+                try:
+                    if not bool(self.image_labels[0].winfo_viewable()):
+                        self.build_home()
+                        return
+                except Exception:
+                    self.build_home()
+                    return
             else:
-                self.image_labels[1].configure(image=resize_image_to_label(self.image_labels[1], root.current_project.image))
+                self.build_home()
+                return
+            if self.image_labels[0]:
+                self.image_labels[0].configure(image=resize_image_to_label(self.image_labels[0], root.current_project.image))
+            if self.image_labels[1]:
+                index = len(root.current_project.temp_images) - 1
+                if index >= 0:
+                    self.image_labels[1].configure(image=resize_image_to_label(self.image_labels[1], root.current_project.temp_images[index]))
+                else:
+                    self.image_labels[1].configure(image=resize_image_to_label(self.image_labels[1], root.current_project.image))
 
     def open_filterqueue_window(self):
         if root.current_project.ready():

@@ -15,8 +15,9 @@ class Logger():
     _print_tag: bool = True
     _open_log_on_critical_error: bool = True
     _notifier: customtkinter.BooleanVar | None = None
+    _print_console: bool = True
 
-    def __init__(self, mode: _MODE = "init_reset"):
+    def __init__(self, mode: _MODE = "continue"):
         if mode == "init_reset":
             self.reset()
 
@@ -28,6 +29,8 @@ class Logger():
             self._notifier.set(False)
 
     def reset(self):
+        if self._print_console:
+            print("---RESET---")
         open(f"{self._path}/{self._log_name}", "w", encoding="utf-8").close()
 
     def write(self, text: str = "", tag: TEXT_TYPE | None = None, modulename: str = "", end="\n"):
@@ -40,10 +43,14 @@ class Logger():
             line += f'[{modulename}]'
         line += f' {text}{end}'
         with open(f"{self._path}/{self._log_name}", "a+", encoding="utf-8") as f:
+            if self._print_console:
+                print(line)
             f.write(line)
         if tag == "CRITICAL ERROR":
             if self._open_log_on_critical_error:
                 open_app(f"{self._path}/{self._log_name}")
+                if self._print_console:
+                    print("---TERMINATE APPLICATION---")
             sys.exit(1)
         if self._notifier is not None:
             self._notifier.set(True)
