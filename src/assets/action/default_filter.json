@@ -59,7 +59,7 @@
                     }
                 ]
             ],
-            "name": "Mean_3x3"
+            "name": "Mean"
         }
     },
     "38e947e6-dcad-4a3b-80b1-508c95e95259": {
@@ -190,7 +190,7 @@
                     }
                 ]
             ],
-            "name": "Mean_5x5"
+            "name": "Mean"
         }
     },
     "ac6e6695-7101-42a3-a38b-c867a48cf984": {
@@ -253,7 +253,7 @@
                     }
                 ]
             ],
-            "name": "Gauss_3x3_s_085"
+            "name": "Gauss_s085"
         }
     },
     "39bc7cf9-0ef6-4ec1-9f80-c3c295eca5af": {
@@ -384,7 +384,7 @@
                     }
                 ]
             ],
-            "name": "Gauss_5x5_s_085"
+            "name": "Gauss_s085"
         }
     },
     "f89ab393-b697-41d3-b95f-833de13b1200": {
@@ -447,7 +447,7 @@
                     }
                 ]
             ],
-            "name": "Laplace_3x3_4"
+            "name": "Laplace_4"
         }
     },
     "5c442b4a-7ba0-401d-9b31-bd7f51209a87": {
@@ -510,7 +510,7 @@
                     }
                 ]
             ],
-            "name": "Laplace_3x3_8"
+            "name": "Laplace_8"
         }
     },
     "3872b333-4f37-499d-a058-0d96cd43b71d": {
@@ -641,7 +641,7 @@
                     }
                 ]
             ],
-            "name": "Laplace_5x5"
+            "name": "Laplace"
         }
     },
     "e8f9c125-7ab6-4038-b20d-d2ba13a3bd67": {
@@ -704,7 +704,7 @@
                     }
                 ]
             ],
-            "name": "Sobel_x_3x3"
+            "name": "Sobel_x"
         }
     },
     "6977c707-0466-4655-8d46-e7d5ada2a7af": {
@@ -767,7 +767,7 @@
                     }
                 ]
             ],
-            "name": "Sobel_y_3x3"
+            "name": "Sobel_y"
         }
     },
     "88af52a1-ff37-4c48-9836-1da8ffa4fffc": {
@@ -830,7 +830,7 @@
                     }
                 ]
             ],
-            "name": "Prewitt_deg0_3x3"
+            "name": "Prewitt_deg0"
         }
     },
     "19d46520-6f9a-4a87-8b3f-6446ceff0cf6": {
@@ -893,7 +893,7 @@
                     }
                 ]
             ],
-            "name": "Prewitt_deg45_3x3"
+            "name": "Prewitt_deg45"
         }
     },
     "ae238786-5b3d-4a2f-af80-689aed82d951": {
@@ -956,7 +956,7 @@
                     }
                 ]
             ],
-            "name": "Prewitt_deg90_3x3"
+            "name": "Prewitt_deg90"
         }
     },
     "3aeb8821-bc92-45a9-b2db-bb894316f352": {
@@ -1019,7 +1019,7 @@
                     }
                 ]
             ],
-            "name": "Prewitt_deg135_3x3"
+            "name": "Prewitt_deg135"
         }
     },
     "87d7a042-e903-404a-baf6-4d4ecbcbdc7c": {
@@ -1082,7 +1082,7 @@
                     }
                 ]
             ],
-            "name": "Prewitt_deg180_3x3"
+            "name": "Prewitt_deg180"
         }
     },
     "f6f510de-f99b-472b-b69c-e59006348229": {
@@ -1145,7 +1145,7 @@
                     }
                 ]
             ],
-            "name": "Prewitt_deg225_3x3"
+            "name": "Prewitt_deg225"
         }
     },
     "2824d7fa-744a-478c-b090-272daae67f8b": {
@@ -1208,7 +1208,7 @@
                     }
                 ]
             ],
-            "name": "Prewitt_deg270_3x3"
+            "name": "Prewitt_deg270"
         }
     },
     "aff0e24d-b9b7-496e-ac1b-d6251fe2d3e6": {
@@ -1271,7 +1271,7 @@
                     }
                 ]
             ],
-            "name": "Prewitt_deg315_3x3"
+            "name": "Prewitt_deg315"
         }
     },
     "f4067fc1-72d7-46d3-b01b-1f6a31a6b36d": {
@@ -1334,7 +1334,7 @@
                     }
                 ]
             ],
-            "name": "Kirsch_deg0_3x3"
+            "name": "Kirsch_deg0"
         }
     },
     "b514cad8-6ab8-4a29-8e3c-d3e0e917c7df": {
@@ -1397,7 +1397,7 @@
                     }
                 ]
             ],
-            "name": "Kirsch_deg45_3x3"
+            "name": "Kirsch_deg45"
         }
     },
     "59d2b6bf-2fb2-4822-bd30-a85ed5323b22": {
@@ -1460,7 +1460,7 @@
                     }
                 ]
             ],
-            "name": "Kirsch_deg90_3x3"
+            "name": "Kirsch_deg90"
         }
     },
     "56e4b78b-2d7d-4cc2-b040-755d02332f9c": {
@@ -1523,7 +1523,7 @@
                     }
                 ]
             ],
-            "name": "Kirsch_deg135_3x3"
+            "name": "Kirsch_deg135"
         }
     },
     "96806c5a-49cb-42e6-8edd-8773d882df5e": {
@@ -1586,7 +1586,7 @@
                     }
                 ]
             ],
-            "name": "Kirsch_deg180_3x3"
+            "name": "Kirsch_deg180"
         }
     },
     "6d57d0f2-59d9-4457-8afa-e7d5bd931411": {
@@ -1649,7 +1649,7 @@
                     }
                 ]
             ],
-            "name": "Kirsch_deg225_3x3"
+            "name": "Kirsch_deg225"
         }
     },
     "6d55088d-4845-4c8a-aeff-88b86db81196": {
@@ -1712,7 +1712,7 @@
                     }
                 ]
             ],
-            "name": "Kirsch_deg270_3x3"
+            "name": "Kirsch_deg270"
         }
     },
     "c637f04d-9c85-4578-a0cb-37f94bc9ee91": {
@@ -1775,7 +1775,7 @@
                     }
                 ]
             ],
-            "name": "Kirsch_deg315_3x3"
+            "name": "Kirsch_deg315"
         }
     },
     "c9186ef1-5396-4e42-af8e-45861b996228": {
@@ -1838,7 +1838,7 @@
                     }
                 ]
             ],
-            "name": "Scharr_x_3x3"
+            "name": "Scharr_x"
         }
     },
     "4fe3fe1e-a88f-4634-a504-aa005d81fd5b": {
@@ -1901,7 +1901,7 @@
                     }
                 ]
             ],
-            "name": "Scharr_y_3x3"
+            "name": "Scharr_y"
         }
     },
     "7f34b1e3-08bd-415a-a8e6-08c0d2b79402": {
@@ -1964,7 +1964,7 @@
                     }
                 ]
             ],
-            "name": "Laplace_sharpen_low_3x3"
+            "name": "Laplace_sharpen_low"
         }
     },
     "72f31729-226d-4591-b397-ce4c5c4435c9": {
@@ -2027,7 +2027,7 @@
                     }
                 ]
             ],
-            "name": "Laplace_sharpen_high_3x3"
+            "name": "Laplace_sharpen_high"
         }
     },
     "417628d9-d6da-428c-b33c-c3f6af9fd62e": {
@@ -2090,7 +2090,7 @@
                     }
                 ]
             ],
-            "name": "Median_3x3"
+            "name": "Median"
         }
     },
     "522fa296-fa10-4faf-b2ea-1596e3f96e4b": {
@@ -2221,7 +2221,7 @@
                     }
                 ]
             ],
-            "name": "Median_5x5"
+            "name": "Median"
         }
     },
     "625e0086-01fa-453e-a1c8-2c0afd547e3a": {
@@ -2452,7 +2452,7 @@
                     }
                 ]
             ],
-            "name": "Median_7x7"
+            "name": "Median"
         }
     },
     "cc917b70-83c4-4840-9bf9-f293b8444891": {
@@ -2683,7 +2683,7 @@
                     }
                 ]
             ],
-            "name": "Median_round_7x7"
+            "name": "Median_round"
         }
     },
     "1361f65a-4b2e-4318-bda0-dc2b70422acf": {
@@ -2746,7 +2746,7 @@
                     }
                 ]
             ],
-            "name": "Min_3x3"
+            "name": "Min"
         }
     },
     "5f18a8c9-d7ad-4e3b-a4fc-65d051d3196e": {
@@ -2877,7 +2877,7 @@
                     }
                 ]
             ],
-            "name": "Min_5x5"
+            "name": "Min"
         }
     },
     "7a0fb2b9-7a8a-4625-8696-788ea1af85d0": {
@@ -3108,7 +3108,7 @@
                     }
                 ]
             ],
-            "name": "Min_round_7x7"
+            "name": "Min_round"
         }
     },
     "60426144-8513-4be6-bf84-fdb2f66ffc07": {
@@ -3339,7 +3339,7 @@
                     }
                 ]
             ],
-            "name": "Max_round_7x7"
+            "name": "Max_round"
         }
     },
     "dd0fa0b2-7103-43bb-acd9-bb03f62e3ce5": {
@@ -3402,7 +3402,7 @@
                     }
                 ]
             ],
-            "name": "Max_3x3"
+            "name": "Max"
         }
     },
     "94b2e4d7-b8c8-4b2a-a050-96a644a32d2b": {
@@ -3533,7 +3533,7 @@
                     }
                 ]
             ],
-            "name": "Max_5x5"
+            "name": "Max"
         }
     },
     "5e01e0da-567f-4fc1-a080-cad21bad0b40": {
@@ -3764,7 +3764,7 @@
                     }
                 ]
             ],
-            "name": "Max_7x7"
+            "name": "Max"
         }
     },
     "0dc72830-720d-491b-9399-2d11b1ce8c13": {
@@ -3827,7 +3827,7 @@
                     }
                 ]
             ],
-            "name": "Quantil_25_3x3"
+            "name": "Quantil_25"
         }
     },
     "4be80df5-62a1-4301-83af-2ca15d0f5608": {
@@ -3958,7 +3958,7 @@
                     }
                 ]
             ],
-            "name": "Quantil_25_5x5"
+            "name": "Quantil_25"
         }
     },
     "ab0a5647-5b09-4b92-9f6f-7a72b117fd1c": {
@@ -4189,7 +4189,7 @@
                     }
                 ]
             ],
-            "name": "Quantil_25_7x7"
+            "name": "Quantil_25"
         }
     },
     "e8558f1a-af94-47b1-bf9d-59fa7d5d8b5d": {
@@ -4420,7 +4420,7 @@
                     }
                 ]
             ],
-            "name": "Quantil_25_round_7x7"
+            "name": "Quantil_25_round"
         }
     },
     "7de22a39-8059-4a44-8730-755f3bd0ff1d": {
@@ -4483,7 +4483,7 @@
                     }
                 ]
             ],
-            "name": "Quantil_75_3x3"
+            "name": "Quantil_75"
         }
     },
     "c6ca3038-dd70-485d-ab76-c0dbc184ab12": {
@@ -4614,7 +4614,7 @@
                     }
                 ]
             ],
-            "name": "Quantil_75_5x5"
+            "name": "Quantil_75"
         }
     },
     "e29f2d84-436a-4331-9e8f-412f1e09272a": {
@@ -4845,7 +4845,7 @@
                     }
                 ]
             ],
-            "name": "Quantil_75_7x7"
+            "name": "Quantil_75"
         }
     },
     "3bcc9072-1f0c-47ea-bb09-3decf7734b0f": {
@@ -5076,7 +5076,7 @@
                     }
                 ]
             ],
-            "name": "Quantil_75_round_7x7"
+            "name": "Quantil_75_round"
         }
     }
 }

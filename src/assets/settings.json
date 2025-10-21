@@ -4,7 +4,7 @@
     "default_lang": "en",
     "darkmode": "dark",
     "color_theme": "dark-blue",
-    "version": "0.1.0",
+    "version": "0.9.0",
     "window_size": {
         "main": [
             1000,
@@ -31,7 +31,7 @@
             500
         ]
     },
-    "help_url": "https://github.com/STIFTMAN/Bachelorarbeit",
+    "help_url": "https://github.com/STIFTMAN/CVStudio",
     "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
     "components": {
         "comboboxextended": {

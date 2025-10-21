@@ -177,6 +177,7 @@ class FilterqueueWindow(customtkinter.CTkToplevel):
             else:
                 values.append([item["name"], key, root.all_filters[key]["type"], item["settings"]["type"], f"{item['settings']['size'][0]}x{item['settings']['size'][1]}"])  # type: ignore
         if self.comboboxextended is not None:
+            values = sorted(values, key=lambda row: row[0].casefold())
             self.comboboxextended.set_values(values)
 
     def save_project(self):

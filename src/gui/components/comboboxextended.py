@@ -25,8 +25,7 @@ class ComboBoxExtended(ctk.CTkFrame):
     def __init__(self, master, values: list[list[str]] = [], command=None, **kwargs):
         super().__init__(master, fg_color="transparent", **kwargs)
         self._layout_settings = get_setting("components")["comboboxextended"]
-        self._all_values = values
-        self._all_values.sort()
+        self._all_values = sorted(values, key=lambda row: row[0].casefold())
         self._filtered = self._all_values
         self._command = command
         self._max_visible = self._layout_settings["max_visible"]
@@ -55,7 +54,7 @@ class ComboBoxExtended(ctk.CTkFrame):
     def add_value(self, value: list[str]):
         self._all_values.append(value)
         self._all_values = list(set(self._all_values))
-        self._all_values.sort()
+        self._all_values = sorted(self._all_values, key=lambda row: row[0].casefold())
 
     def get(self) -> str:
         return self._entry.get() if self._entry else ""
@@ -68,8 +67,7 @@ class ComboBoxExtended(ctk.CTkFrame):
             self._filter_and_show()
 
     def set_values(self, values: list[list[str]] = []):
-        self._all_values = values
-        self._all_values.sort()
+        self._all_values = sorted(values, key=lambda row: row[0].casefold())
         self._filter_and_show()
 
     def set_updater(self, updater: Callable):
