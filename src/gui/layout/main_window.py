@@ -324,21 +324,22 @@ class MainWindow(TkinterDnD.Tk):
             settings_keybindings_temp_binding_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=settings_keybindings_temp_frame, width=self.layout_settings["settings"]["keybindings"]["binding_label"]["width"], fg_color=("grey", "black"), text_color=("white", "white"), corner_radius=5, text=re.sub(r"[<>]", "", root.all_keybindings[settings_keybindings_keys[key][1]]).replace("Control", "Ctrl").replace("-", " + "))
             settings_keybindings_temp_binding_label.grid(row=0, column=3, padx=self.layout_settings["settings"]["keybindings"]["binding_label"]["padding"], pady=self.layout_settings["settings"]["keybindings"]["binding_label"]["padding"])
 
-        settings_about_keys: list[str] = [
-            get_setting("name"),
-            root.version,
-            root.current_lang.get("main_window_settings_about_label_description").get(),
-            root.current_lang.get("main_window_settings_about_label_developer").get(),
-            root.current_lang.get("main_window_settings_about_label_license").get(),
-            get_setting("license_url")
-        ]
-
+        def about_text():
+            settings_about_keys: list[str] = [
+                get_setting("name"),
+                root.version,
+                root.current_lang.get("main_window_settings_about_label_description").get(),
+                root.current_lang.get("main_window_settings_about_label_developer").get(),
+                root.current_lang.get("main_window_settings_about_label_license").get(),
+                get_setting("license_url")
+            ]
+            return "\n".join(settings_about_keys)
         settings_about_frame: customtkinter.CTkScrollableFrame = customtkinter.CTkScrollableFrame(master=tabview.tab("main_window_settings_about"))
         settings_about_frame.grid(row=0, column=0, sticky="nswe")
         settings_about_frame.grid_columnconfigure(0, weight=1)
         settings_about_frame.grid_rowconfigure(0, weight=1)
 
-        settings_about_temp_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=settings_about_frame, wraplength=self.layout_settings["settings"]["about"]["label"]["wraplength"], justify="left", padx=self.layout_settings["settings"]["about"]["label"]["padding_inline"][0], pady=self.layout_settings["settings"]["about"]["label"]["padding_inline"][1], anchor="w", text="\n".join(settings_about_keys))
+        settings_about_temp_label: customtkinter.CTkLabel = customtkinter.CTkLabel(master=settings_about_frame, wraplength=self.layout_settings["settings"]["about"]["label"]["wraplength"], justify="left", padx=self.layout_settings["settings"]["about"]["label"]["padding_inline"][0], pady=self.layout_settings["settings"]["about"]["label"]["padding_inline"][1], anchor="w", text=about_text())
         settings_about_temp_label.grid(row=0, column=0, padx=self.layout_settings["settings"]["about"]["label"]["padding"][0], pady=self.layout_settings["settings"]["about"]["label"]["padding"][1], sticky="w")
 
         def load_log() -> str:
@@ -365,6 +366,7 @@ class MainWindow(TkinterDnD.Tk):
                     root.settings["lang"] = key
                     save_settings()
                     change_lang(key)
+                    self.build_settings("main_window_settings_look")
                 return
 
     def settings_look_darkmode_output(self, choice):
