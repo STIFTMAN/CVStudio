@@ -25,7 +25,9 @@ def surf(
             upright=config["upright"],
         )
     except Exception:
-        log.log.write(text=Error.XFEATURES2D.value, tag="CRITICAL ERROR", modulename=Path(__file__).stem)
+        log.log.write(text=Error.XFEATURES2D.value, tag="ERROR", modulename=Path(__file__).stem)
+        descriptors = np.empty((0, 128), dtype=np.float32)
+        return "point", ([], np.empty((0, 128), dtype=np.float32))
 
     keypoints, descriptors = surf_detector.detectAndCompute(gray_uint8, None)
     if descriptors is None:

@@ -1,0 +1,4 @@
+log.txt
+.venv/
+__pycache__/
+src/assets/action/additional.json

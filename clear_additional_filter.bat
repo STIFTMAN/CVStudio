@@ -1,1 +1,0 @@
-echo {} > "./src/assets/filters/additional.json"
