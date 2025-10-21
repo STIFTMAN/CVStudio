@@ -1,4 +1,5 @@
 log.txt
 .venv/
 __pycache__/
+src/assets/projects/
 src/assets/action/additional.json

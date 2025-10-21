@@ -222,7 +222,12 @@ class MainWindow(TkinterDnD.Tk):
         image_frame: customtkinter.CTkFrame = customtkinter.CTkFrame(master=self.container_frame)
         image_frame.grid(row=1, column=0, padx=self.layout_settings["image_container"]["image_frame"]["padding"][0:2], pady=self.layout_settings["image_container"]["image_frame"]["padding"][2:4], sticky="nswe")
 
-        switch_mode.configure(command=lambda: self.build_image_container_image_frame(image_frame, bool(switch_mode.get())))
+        def switch_func():
+            if root.current_project is not None and root.current_project.data is not None:
+                root.current_project.data["image_view_mode"] = bool(switch_mode.get())
+                self.build_image_container_image_frame(image_frame, root.current_project.data["image_view_mode"])
+
+        switch_mode.configure(command=switch_func)
 
         self.build_image_container_image_frame(image_frame, root.current_project.data["image_view_mode"])
         self.reload_button.configure(command=self.start_action_queue_thread)
@@ -407,16 +412,16 @@ class MainWindow(TkinterDnD.Tk):
 
     def resize_images(self, event):
         if root.current_project.image is not None:
-            if self.image_labels[0] is not None:
+            if self.image_labels[1] is not None:
                 try:
-                    if not bool(self.image_labels[0].winfo_viewable()):
-                        self.build_home()
+                    if not bool(self.image_labels[1].winfo_viewable()):
+                        self.after(100, self.build_home)
                         return
                 except Exception:
-                    self.build_home()
+                    self.after(100, self.build_home)
                     return
             else:
-                self.build_home()
+                self.after(100, self.build_home)
                 return
             if self.image_labels[0]:
                 self.image_labels[0].configure(image=resize_image_to_label(self.image_labels[0], root.current_project.image))
