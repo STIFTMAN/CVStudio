@@ -56,5 +56,5 @@ Less boilerplate, faster prototyping, clearer insights via live comparisons and 
 
 ## 3. Wiki
 
-[https://github.com/STIFTMAN/Bachelorarbeit/wiki](https://github.com/STIFTMAN/CVStudio/wiki)
+[https://github.com/STIFTMAN/CVStudio/wiki](https://github.com/STIFTMAN/CVStudio/wiki)
 
