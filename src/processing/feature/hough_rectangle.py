@@ -12,10 +12,11 @@ def hough_rectangle(
 ) -> tuple[Style, Tuple[List[cv2.KeyPoint], np.ndarray]]:
 
     cfg = processing_config["feature"]["hough_rectangle"]
-    assert cfg is not None
+    config_canny = processing_config["pipeline"]["canny"]
+    assert cfg is not None and config_canny is not None
     gray = to_gray_uint8(image)
 
-    edges = cv2.Canny(gray, int(cfg.get("canny1", 50)), int(cfg.get("canny2", 150)))
+    edges = cv2.Canny(gray, config_canny["canny1"], config_canny["canny2"], apertureSize=config_canny["aperture_size"])
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
     edges = cv2.morphologyEx(edges, cv2.MORPH_CLOSE, kernel, iterations=1)
 

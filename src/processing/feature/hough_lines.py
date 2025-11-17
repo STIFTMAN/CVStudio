@@ -12,10 +12,11 @@ def hough_lines(
     image: npt.NDArray[np.uint8 | np.float32]
 ) -> tuple[Style, Tuple[List[cv2.KeyPoint], np.ndarray]]:
     config = processing_config["feature"]["hough_lines"]
-    assert config is not None
+    config_canny = processing_config["pipeline"]["canny"]
+    assert config is not None and config_canny is not None
     gray = to_gray_uint8(image)
 
-    edges = cv2.Canny(gray, config["canny1"], config["canny2"], apertureSize=config["aperture_size"])
+    edges = cv2.Canny(gray, config_canny["canny1"], config_canny["canny2"], apertureSize=config_canny["aperture_size"])
 
     lines = cv2.HoughLinesP(
         edges,

@@ -1,7 +1,4 @@
 {
-    "canny1": 50,
-    "canny2": 150,
-    "aperture_size": 3,
     "rho": 1.0,
     "theta_deg": 0.5,
     "hough_threshold": 50,

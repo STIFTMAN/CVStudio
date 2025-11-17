@@ -60,6 +60,7 @@
     "filter": "Locale Filter",
     "operation": "Globale Operation",
     "feature": "Feature",
+    "pipeline": "Pipeline",
     "project_apply_action_queue_status_done": "Done !",
     "project_apply_action_queue_status_no_changes": "No Changes made !",
     "project_apply_action_queue_status_init": "Waiting for Input ...",

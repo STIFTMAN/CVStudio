@@ -20,6 +20,10 @@ def quick_test(image_before: np.ndarray, temp_images: list[np.ndarray], stats_li
             if end_index == -1:
                 end_index = i
     basic_before = compute_image_stats_global(image_before)
+
+    if end_index == -1:
+        end_index = len(temp_images) - 1
+
     if end_index - 1 < 0:
         basic_after = compute_image_stats_global(image_before)
     else:

@@ -8,12 +8,18 @@ def load() -> Config_Processing_Type:
         "feature": {},
         "stats_threshold": {},
         "feature_stats_threshold": {},
-        "tests": {}
+        "tests": {},
+        "pipeline": {}
     }
     modules = ["harris", "surf", "sift", "orb", "fast", "hough_lines", "hough_circle", "hough_rectangle"]
     for key in modules:
         with open(f"./src/assets/action/config/feature/{key}.json", "r", encoding="utf-8") as f:
             data["feature"][key] = json.load(f)
+
+    modules_pipeline = ["canny"]
+    for key in modules_pipeline:
+        with open(f"./src/assets/action/config/pipeline/{key}.json", "r", encoding="utf-8") as f:
+            data["pipeline"][key] = json.load(f)
 
     with open("./src/assets/action/config/stats_threshold.json", "r", encoding="utf-8") as f:
         data["stats_threshold"] = json.load(f)

@@ -1,1 +1,1 @@
-{}
+{"399dacf9-807d-41c8-8d97-e0ce561af6e8": {"type": "filter", "data": {"settings": {"size": [3, 3], "spatial_sampling_rate": [1, 1], "factor": 0.0625, "type": "smoothing", "mutable": true}, "grid": [[{"value": 1.0, "disabled": false}, {"value": 2.0, "disabled": true}, {"value": 1.0, "disabled": true}], [{"value": 2.0, "disabled": true}, {"value": 4.0, "disabled": true}, {"value": 2.0, "disabled": true}], [{"value": 1.0, "disabled": true}, {"value": 2.0, "disabled": true}, {"value": 1.0, "disabled": true}]], "name": "NewFilter-399dacf9"}}}

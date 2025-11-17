@@ -1,3 +1,4 @@
+from src.processing.pipeline.canny import canny
 from src.processing.feature.hough_circle import hough_circle
 from src.processing.feature.hough_rectangle import hough_rectangle
 from src.processing.utils.draw_keypoints import draw_keypoints
@@ -103,6 +104,10 @@ def apply_action(image: numpy.ndarray, action: Action_Type, draw_image: numpy.nd
                     "keypoints": f_data[1][0],
                     "descriptors": f_data[1][1]
                 }
+        case "pipeline":
+            assert isinstance(data, str)
+            if data == "canny":
+                new_img = canny(image)
     stats["time"] = time.time() - start_time
     if new_img is not None:
         return (new_img, stats, None)

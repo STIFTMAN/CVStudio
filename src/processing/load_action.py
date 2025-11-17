@@ -26,4 +26,11 @@ def load() -> dict:
         for key in temp_data:
             if key not in temp:
                 temp[key] = temp_data[key]
+
+    with open("./src/assets/action/default_pipeline.json", "r", encoding="utf-8") as f:
+        temp_data: dict = json.load(f)
+        for key in temp_data:
+            if key not in temp:
+                temp[key] = temp_data[key]
+
     return temp

@@ -1,5 +1,6 @@
 from typing_extensions import TypedDict
 
+from src.processing.types.canny_type import Canny_Type
 from src.processing.types.hough_rectangle_type import Hough_Rectangle_Type
 from src.processing.types.hough_circle_type import Hough_Circle_Type
 from src.processing.types.hough_lines_type import Hough_Lines_Type
@@ -17,6 +18,10 @@ class Config_Processing_Feature_Type(TypedDict):
     hough_lines: Hough_Lines_Type | None
     hough_circle: Hough_Circle_Type | None
     hough_rectangle: Hough_Rectangle_Type | None
+
+
+class Config_Processing_Pipeline_Type(TypedDict):
+    canny: Canny_Type | None
 
 
 class Config_Processing_Stats_Threshold_Type(TypedDict):
@@ -53,6 +58,7 @@ class Config_Processing_Tests_Type(TypedDict):
 
 class Config_Processing_Type(TypedDict):
     feature: Config_Processing_Feature_Type
+    pipeline: Config_Processing_Pipeline_Type
     stats_threshold: Config_Processing_Stats_Threshold_Type
     feature_stats_threshold: Config_Processing_Feature_Stats_Threshold_Type
     tests: Config_Processing_Tests_Type

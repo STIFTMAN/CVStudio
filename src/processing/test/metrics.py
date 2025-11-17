@@ -15,9 +15,19 @@ def affine_to_points(P: np.ndarray, M2x3: np.ndarray) -> np.ndarray:
 def repeatability(pred: np.ndarray, det: np.ndarray, tol_px: float = 3.0) -> float:
     if pred.size == 0 or det.size == 0:
         return 0.0
+
     d2 = ((pred[:, None, :] - det[None, :, :])**2).sum(axis=2)
-    hit = (np.min(d2, axis=1) <= (tol_px**2)).sum()
-    return float(hit) / float(pred.shape[0])
+    nearest_det = np.argmin(d2, axis=1)
+    used = np.zeros(det.shape[0], dtype=bool)
+
+    hits = 0
+    for i, j in enumerate(nearest_det):
+        if d2[i, j] <= tol_px**2 and not used[j]:
+            used[j] = True
+            hits += 1
+
+    denom = float(min(pred.shape[0], det.shape[0]))
+    return hits / denom
 
 
 def sift_match_metrics(desA: np.ndarray, desB: np.ndarray, kpA: List[cv2.KeyPoint], kpB: List[cv2.KeyPoint], ratio: float = 0.75, ransac_thresh: float = 3.0) -> Dict[str, Any]:
